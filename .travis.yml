@@ -1,29 +1,39 @@
 dist: trusty
 sudo: false
-
 language: node_js
 node_js:
-  - '13.0'
+  - node
 
 cache:
   directories:
     - ./node_modules
 
-install:
-  - npm install
+jobs:
+  include:
+    - stage: test
+      install:
+        - npm install
+      script:
+        - npm run test
+      after_success:
+        - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
+      after_failure:
+        - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh failure $WEBHOOK_URL
+    - stage: release
+      # script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: npx semantic-release
 
-script:
-  - npm run test
-  
-after_success:
-  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh success $WEBHOOK_URL
-  
-after_failure:
-  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
-  - chmod +x send.sh
-  - ./send.sh failure $WEBHOOK_URL
+stages:
+  - test
+  - name: release
+    if: branch = master
 
 notifications:
   email: false
