@@ -24,7 +24,7 @@ jobs:
         - chmod +x send.sh
         - ./send.sh failure $WEBHOOK_URL
     - stage: release
-      # script: skip
+      script: skip
       deploy:
         provider: script
         skip_cleanup: true
