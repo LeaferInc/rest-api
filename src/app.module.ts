@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import Joi = require('@hapi/joi');
+import { UserEntity } from './user/user.entity';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import Joi = require('@hapi/joi');
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [],
+      entities: [UserEntity],
       synchronize: true,
     }),
     CommonModule,
