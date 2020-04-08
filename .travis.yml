@@ -31,7 +31,6 @@ deploy:
     on:
       branch: master
   - provider: heroku
-    run: node dist/main
     api_key:
       secure: IFCPKX9uz1lhBK4tUoXyrpa28LWA3KjXImBjzj1eyKDWyizwPJnHtxuFWjQ0ZM53+9YwTywkkxAHBTm1mKw7YCYeIUu8uT4PWC6ZBC0knAgLRuuzXw3kGPGSoXqEy7bhPtbq89cw9CmnT/LSjnpBbxruNs2/ykuavjFrZ9v0eIXBBUM8BTjFpnVot7zlSEY0L3ehPrAHS/jn4nRFGCIL1wS8S6m9R/GLXkqQ58NASXo/4xVjiWvW9jjeQ98ovjbB73Z9lNLO460Vil6uylOd77JjlfkmJLjA/b/zCTl5IM0FaRKobkdq+3CxDPzEZhWgpBFqh1Z053QJDc+gUUL8BIj3vpsYumpVqRXtvoB5nlPtzKRWAcAgLE7tl5lW+xAVvz0kfYvFNmeNwGIBvnu+Lk+WX2Z2dYCapaL7xkAVOnUsXO4DE4tOWgJCiKog6Z13SV1/dQbp3fOqeP8yFA0oZYhDc8HOtGpgfXudgRBBgsf8iveUSQg9dF5ZIl6qzFCYQAEeOM2LGPxsZGXQ9YCHHYaaClMPDt8/tX4N8q+53FDms9TBtJMAjPl0T9o5CEvnin+wFuF4CDH3lg9mR+w1AOYEmVFZEf0shXQ8KjmwzdZGf94/6RDWlQwVjoM1CzgM4E3GqQcsm0DMzUIQeoNhUBpQFRJFag4BIUZf3lPUNCM=
     app:
