@@ -5,27 +5,33 @@ export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({default: new Date()})
     createdAt: Date;
+
+    @Column({default: true})
+    enabled: boolean;
 
     @Column()
     username: string;
 
     @Column()
-    firstName: string;
+    password: string;
 
     @Column()
-    lastName: string;
+    firstname: string;
 
     @Column()
-    birthDate: Date;
+    lastname: string;
 
-    @Column()
+    @Column({nullable: true})
+    birthdate: Date;
+
+    @Column({nullable: true})
     biography: string;
 
-    @Column()
+    @Column({nullable: true})
     location: string;
 
-    @Column()
+    @Column({nullable: true})
     pictureId: number;
 }
