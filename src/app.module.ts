@@ -5,8 +5,10 @@ import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { EventModule } from './event/event.module';
 import Joi = require('@hapi/joi');
-import { UserEntity } from './user/user.entity';
+import { UserEntity } from './common/entity/user.entity';
+import { EventEntity } from './common/entity/event.entity';
 
 @Module({
   imports: [
@@ -36,13 +38,14 @@ import { UserEntity } from './user/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity],
+      entities: [UserEntity, EventEntity],
       synchronize: true,
     }),
     CommonModule,
     UserModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
