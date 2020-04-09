@@ -14,7 +14,7 @@ describe('EventService', () => {
       providers: [
         EventService,
         {
-          provide: 'EventRepository',
+          provide: 'EventEntityRepository',
           useClass: Repository
         }
       ],
