@@ -20,12 +20,12 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number | string): Promise<UserEntity> {
+  findOne(@Param('id') id: string): Promise<UserEntity> {
     return this.userService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string | string): Promise<DeleteResult> {
+  remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.userService.remove(id);
   }
 }

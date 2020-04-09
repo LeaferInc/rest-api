@@ -6,7 +6,10 @@ import { CreateUserDto } from 'src/common/dto/user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
 
   create(userDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepository.create(userDto);
@@ -19,13 +22,17 @@ export class UserService {
 
   /**
    * Accept user id and username
-   * @param id 
+   * @param id
    */
   findOne(id: number | string): Promise<UserEntity> {
-    return this.userRepository.findOne(id);
+    return typeof id == 'number' || Number(id)
+      ? this.userRepository.findOne(id)
+      : this.userRepository.findOne({ username: id });
   }
 
   remove(id: number | string): Promise<DeleteResult> {
-    return this.userRepository.delete(id);
+    return typeof id == 'number' || Number(id)
+      ? this.userRepository.delete(id)
+      : this.userRepository.delete({ username: id });
   }
 }
