@@ -9,7 +9,7 @@ import { EventModule } from './event/event.module';
 import Joi = require('@hapi/joi');
 import { UserEntity } from './common/entity/user.entity';
 import { EventEntity } from './common/entity/event.entity';
-import { AuthentificationModule } from './authentification/authentification.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { AuthentificationModule } from './authentification/authentification.modu
     CommonModule,
     UserModule,
     EventModule,
-    AuthentificationModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,13 +19,19 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserEntity> {
-    return this.userService.findOne(id);
+  /**
+   * @param criteria is the userId or the username
+   */
+  @Get(':criteria')
+  findOne(@Param('criteria') criteria: string): Promise<UserEntity> {
+    return this.userService.findOne(criteria);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<DeleteResult> {
-    return this.userService.remove(id);
+  /**
+   * @param criteria is the userId or the username
+   */
+  @Delete(':criteria')
+  remove(@Param('criteria') criteria: string): Promise<DeleteResult> {
+    return this.userService.remove(criteria);
   }
 }

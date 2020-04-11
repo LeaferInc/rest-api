@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, DeleteResult, FindManyOptions, ObjectID, FindConditions, FindOneOptions } from 'typeorm';
 import { CreateUserDto } from 'src/common/dto/user.dto';
 
 @Injectable()
@@ -11,28 +11,40 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
+  /**
+   * Create an user in the database from the corresponding CreateUserDto
+   * @param userDto 
+   */
   create(userDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepository.create(userDto);
     return this.userRepository.save(user);
   }
 
-  findAll(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  /**
+   * Return many user based on the options
+   * @param options 
+   */
+  findAll(options?: FindManyOptions<UserEntity>): Promise<UserEntity[]> {
+    return this.userRepository.find(options);
   }
 
   /**
-   * Accept user id and username
-   * @param id
+   * Find the first occurence of an user
+   * @param criteria is the userId or the username
    */
-  findOne(id: number | string): Promise<UserEntity> {
-    return typeof id == 'number' || Number(id)
-      ? this.userRepository.findOne(id)
-      : this.userRepository.findOne({ username: id });
+  findOne(criteria: number | string): Promise<UserEntity> {
+    return typeof criteria == 'number' || Number(criteria)
+      ? this.userRepository.findOne(criteria)
+      : this.userRepository.findOne({ username: criteria });
   }
 
-  remove(id: number | string): Promise<DeleteResult> {
-    return typeof id == 'number' || Number(id)
-      ? this.userRepository.delete(id)
-      : this.userRepository.delete({ username: id });
+  /**
+   * Remove one or many user
+   * @param criteria is the userId or the username
+   */
+  remove(criteria: number | string): Promise<DeleteResult> {
+    return typeof criteria == 'number' || Number(criteria)
+      ? this.userRepository.delete(criteria)
+      : this.userRepository.delete({ username: criteria });
   }
 }

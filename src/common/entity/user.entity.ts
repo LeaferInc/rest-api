@@ -1,37 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { CommonEntity } from '../common.entity';
 
 @Entity()
-export class UserEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class UserEntity extends CommonEntity {
 
-    @Column({default: new Date()})
-    createdAt: Date;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({default: true})
-    enabled: boolean;
+  @Column({default: true})
+  enabled: boolean;
 
-    @Column()
-    username: string;
+  @Column()
+  username: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column()
-    firstname: string;
+  @Column()
+  firstname: string;
 
-    @Column()
-    lastname: string;
+  @Column()
+  lastname: string;
 
-    @Column({nullable: true})
-    birthdate: Date;
+  @Column({nullable: true})
+  birthdate: Date;
 
-    @Column({nullable: true})
-    biography: string;
+  @Column({nullable: true})
+  biography: string;
 
-    @Column({nullable: true})
-    location: string;
+  @Column({nullable: true})
+  location: string;
 
-    @Column({nullable: true})
-    pictureId: number;
+  @Column({nullable: true})
+  pictureId: number;
 }
