@@ -12,7 +12,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
-    return this.authService.login(req.user as UserDto);
+    return { user: req.user, token: this.authService.login(req.user as UserDto) };
   }
 
   /**
