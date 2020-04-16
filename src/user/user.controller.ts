@@ -12,7 +12,7 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.userService.create(createUserDto);
+    return this.userService.create(new CreateUserDto(createUserDto));
   }
 
   @Get()

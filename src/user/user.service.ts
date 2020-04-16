@@ -16,7 +16,7 @@ export class UserService {
    * @param userDto 
    */
   create(userDto: CreateUserDto): Promise<UserEntity> {
-    const user = this.userRepository.create(userDto);
+    const user = this.userRepository.create(userDto.toLowerCase());
     return this.userRepository.save(user);
   }
 
