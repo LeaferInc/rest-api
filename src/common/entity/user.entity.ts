@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { CommonEntity } from '../common.entity';
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class UserEntity extends CommonEntity {
@@ -11,15 +12,19 @@ export class UserEntity extends CommonEntity {
   enabled: boolean;
 
   @Column()
+  email: string;
+
+  @Column()
   username: string;
 
+  @Exclude()
   @Column()
   password: string;
 
-  @Column()
+  @Column({nullable: true})
   firstname: string;
 
-  @Column()
+  @Column({nullable: true})
   lastname: string;
 
   @Column({nullable: true})
