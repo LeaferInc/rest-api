@@ -34,6 +34,7 @@ describe('UserService', () => {
       id: 0,
       createdAt: new Date(2020, 1, 1),
       enabled: true,
+      email: 'test@test.com',
       username: 'test',
       password: 'test',
       firstname: 'test',
