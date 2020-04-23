@@ -11,6 +11,8 @@ import { UserEntity } from './common/entity/user.entity';
 import { EventEntity } from './common/entity/event.entity';
 import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
+import { PlantEntity } from './common/entity/plant.entity';
+import { PlantModule } from './plant/plant.module';
 
 @Module({
   imports: [
@@ -40,7 +42,7 @@ import { LocationModule } from './location/location.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity],
+      entities: [UserEntity, EventEntity, PlantEntity],
       synchronize: true,
     }),
     CommonModule,
@@ -48,6 +50,7 @@ import { LocationModule } from './location/location.module';
     EventModule,
     AuthModule,
     LocationModule,
+    PlantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
