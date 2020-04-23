@@ -5,6 +5,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
 
 describe('EventService', () => {
   let service: EventService;
@@ -12,10 +13,14 @@ describe('EventService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EventService,
+        EventService, 
+        {
+          provide: UserService,
+          useValue: {}
+        },
         {
           provide: 'EventEntityRepository',
-          useClass: Repository
+          useClass: Repository,
         }
       ],
     }).compile();

@@ -42,7 +42,8 @@ describe('UserService', () => {
       birthdate: new Date(2020, 1, 1),
       biography: 'test',
       location: 'test',
-      pictureId: 0
+      pictureId: 0,
+      events: []
     };
   })
 

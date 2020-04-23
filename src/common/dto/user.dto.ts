@@ -43,4 +43,5 @@ export class UserDto {
   biography: string;
   location: string;
   pictureId: number;
+  events: number[];
 }
