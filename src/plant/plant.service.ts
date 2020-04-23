@@ -51,6 +51,13 @@ export class PlantService {
     return this.plantRepository.find(JSON.parse(criteria));
   }
 
+  async findAllByByUser(user: Express.User): Promise<[Array<PlantEntity>, number]> {
+    const items = await this.plantRepository.findAndCount({
+      where: { owner: { id: user.userId } }
+    });
+    return items;
+  }
+
 
 
   /**

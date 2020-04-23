@@ -29,6 +29,11 @@ export class PlantController {
     return this.plantService.findByCriteria(criteria);
   }
 
+  @Get('my')
+  findAllByUser(@Request() request: Express.Request) {
+    return this.plantService.findAllByByUser(request.user);
+  }
+
   @Get()
   findAll(): Promise<PlantEntity[]> {
     return this.plantService.findAll();
