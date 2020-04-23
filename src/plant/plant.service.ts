@@ -18,11 +18,11 @@ export class PlantService {
    * Create an plant in the database from the corresponding CreatePlantDto
    * @param plantDto 
    */
-  async create(plantDto: CreatePlantDto): Promise<PlantEntity> {
+  async create(plantDto: CreatePlantDto, user: Express.User): Promise<PlantEntity> {
     const plant = this.plantRepository.create(plantDto);
 
-    const user: UserEntity = await this.userService.findOne(plantDto.userId);
-    plant.user = user;
+    const userEntity: UserEntity = await this.userService.findOne(user.userId);
+    plant.user = userEntity;
 
     return this.plantRepository.save(plant);
   }
