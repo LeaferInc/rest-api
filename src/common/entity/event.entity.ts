@@ -2,16 +2,14 @@
  * @author ddaninthe
  */
 
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { CommonEntity } from "../common.entity";
+import { UserEntity } from "./user.entity";
 
-@Entity()
+@Entity({name: 'event'})
 export class EventEntity extends CommonEntity {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({ default: false })
-    enabled: boolean;
 
     @Column()
     name: string;
@@ -39,4 +37,7 @@ export class EventEntity extends CommonEntity {
 
     @Column({ type: 'float8' })
     longitude: number;
+
+    @ManyToOne(() => UserEntity, organizer => organizer.events)
+    organizer: UserEntity;
 }

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
 import { PlantEntity } from './plant.entity';
+import { EventEntity } from './event.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
@@ -42,4 +43,7 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[];
+
+  @OneToMany(() => EventEntity, event => event.organizer)
+  events: EventEntity[];
 }

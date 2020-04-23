@@ -44,4 +44,5 @@ export class UserDto {
   location: string;
   pictureId: number;
   plants: number[];
+  events: number[];
 }

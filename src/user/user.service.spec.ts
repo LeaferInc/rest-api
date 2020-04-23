@@ -43,7 +43,8 @@ describe('UserService', () => {
       biography: 'test',
       location: 'test',
       pictureId: 0,
-      plants: []
+      plants: [],
+      events: []
     };
   })
 
