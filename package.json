@@ -25,8 +25,15 @@
     "@nestjs/common": "^7.0.0",
     "@nestjs/config": "^0.4.0",
     "@nestjs/core": "^7.0.0",
+    "@nestjs/jwt": "^7.0.0",
+    "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/typeorm": "^7.0.0",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -43,6 +50,8 @@
     "@types/hapi__joi": "^16.0.12",
     "@types/jest": "25.1.4",
     "@types/node": "^13.9.1",
+    "@types/passport-jwt": "^3.0.3",
+    "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
@@ -70,6 +79,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
