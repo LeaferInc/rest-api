@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserDto } from 'src/common/dto/user.dto';
 
@@ -60,7 +59,8 @@ describe('AuthService', () => {
       birthdate: new Date(2020, 1, 1),
       biography: 'test',
       location: 'test',
-      pictureId: 0
+      pictureId: 0,
+      events: []
     };
 
     userServiceMock.findOne.mockReturnValue(user);
@@ -83,11 +83,11 @@ describe('AuthService', () => {
     userDto.id = 0;
     userDto.username = 'test';
 
-    const access_token = service.login(userDto);
+    const accessToken = service.login(userDto);
 
     expect(jwtServiceMock.sign).toHaveBeenCalledTimes(1);
     expect(jwtServiceMock.sign).toHaveReturnedWith('test');
-    expect(access_token).toBe('test');
+    expect(accessToken).toBe('test');
   });
 
 });

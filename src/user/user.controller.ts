@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, Delete, Param } from '@nestjs/common';
-import { CreateUserDto, UserDto } from 'src/common/dto/user.dto';
+import { CreateUserDto } from 'src/common/dto/user.dto';
 import { UserService } from './user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { DeleteResult } from 'typeorm';

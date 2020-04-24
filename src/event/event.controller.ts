@@ -2,9 +2,10 @@
  * @author ddaninthe
  */
 
-import { Controller, Get, HttpCode, Post, Body, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request, NotFoundException } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
+import { EventDto } from 'src/common/dto/event.dto';
 
 @Controller('events')
 export class EventController {
@@ -36,8 +37,7 @@ export class EventController {
     }
 
     @Post()
-    @HttpCode(201)
-    async createEvent(@Body() event: EventEntity): Promise<EventEntity> {
-        return await this.eventService.createOne(event);
+    async createEvent(@Body() eventDto: EventDto): Promise<EventEntity> {
+        return await this.eventService.createOne(eventDto);
     }
 }
