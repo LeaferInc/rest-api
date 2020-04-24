@@ -3,20 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
 import { Repository, FindManyOptions, DeleteResult } from 'typeorm';
 import { CreatePlantDto } from 'src/common/dto/plant.dto';
+import { UserEntity } from 'src/common/entity/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class PlantService {
   constructor(
     @InjectRepository(PlantEntity)
     private plantRepository: Repository<PlantEntity>,
+    private userService: UserService
   ) { }
 
   /**
    * Create an plant in the database from the corresponding CreatePlantDto
    * @param plantDto 
    */
-  create(plantDto: CreatePlantDto): Promise<PlantEntity> {
+  async create(plantDto: CreatePlantDto): Promise<PlantEntity> {
     const plant = this.plantRepository.create(plantDto);
+
+    const user: UserEntity = await this.userService.findOne(plantDto.userId);
+    plant.user = user;
+
     return this.plantRepository.save(plant);
   }
 

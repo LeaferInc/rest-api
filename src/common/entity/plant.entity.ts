@@ -1,9 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 import { CommonEntity } from '../common.entity';
-import { Exclude } from "class-transformer";
 import { UserEntity } from './user.entity';
 
-@Entity()
+@Entity({ name: 'plant' })
 export class PlantEntity extends CommonEntity {
 
   @PrimaryGeneratedColumn()
@@ -36,8 +35,7 @@ export class PlantEntity extends CommonEntity {
   @Column()
   createdAt: Date;
 
-  @OneToOne(type => UserEntity)
-  @JoinColumn()
+  @ManyToOne(type => UserEntity, user => user.plants)
   user: UserEntity;
 
 }

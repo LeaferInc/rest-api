@@ -10,7 +10,7 @@ export class CreateUserDto {
   location: string;
 
   constructor(user?: CreateUserDto) {
-    if(user) {
+    if (user) {
       this.email = user.email || null;
       this.username = user.username || null;
       this.password = user.password || null;
@@ -43,4 +43,5 @@ export class UserDto {
   biography: string;
   location: string;
   pictureId: number;
+  plants: number[];
 }
