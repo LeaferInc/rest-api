@@ -8,7 +8,7 @@ import { UserDto } from 'src/common/dto/user.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
-  const userServiceMock = { 
+  const userServiceMock = {
     findOne: jest.fn()
   }
   const jwtServiceMock = {
@@ -48,7 +48,7 @@ describe('AuthService', () => {
   });
 
   it('should return the user found', async () => {
-    const user: UserEntity =  {
+    const user: UserEntity = {
       id: 0,
       createdAt: new Date(2020, 1, 1),
       enabled: true,
@@ -60,7 +60,8 @@ describe('AuthService', () => {
       birthdate: new Date(2020, 1, 1),
       biography: 'test',
       location: 'test',
-      pictureId: 0
+      pictureId: 0,
+      plants: []
     };
 
     userServiceMock.findOne.mockReturnValue(user);
