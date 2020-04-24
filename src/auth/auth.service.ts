@@ -32,4 +32,8 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id };
     return this.jwtService.sign(payload);
   }
+
+  async me(userId: number) {
+    return this.userService.findOne(userId);
+  }
 }
