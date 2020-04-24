@@ -15,6 +15,12 @@ export class AuthController {
     return { user: req.user, token: this.authService.login(req.user as UserDto) };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  me(@Request() req: Express.Request) {
+    return this.authService.me(req.user.userId);
+  }
+
   /**
    * Testing purpose only
    * @param req 
