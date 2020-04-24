@@ -12,7 +12,7 @@ export class PlantController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createPlantDto: CreatePlantDto): Promise<PlantEntity> {
-    return this.plantService.create(new CreatePlantDto(createPlantDto));
+    return this.plantService.create(createPlantDto);
   }
 
   @Get()

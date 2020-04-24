@@ -1,14 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
+import { PlantEntity } from './plant.entity';
 
-@Entity()
+@Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({default: true})
+  @Column({ default: true })
   enabled: boolean;
 
   @Column()
@@ -21,21 +22,24 @@ export class UserEntity extends CommonEntity {
   @Column()
   password: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   firstname: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   lastname: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   birthdate: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   biography: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   location: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   pictureId: number;
+
+  @OneToMany(() => PlantEntity, plant => plant.user)
+  plants: PlantEntity[];
 }

@@ -9,7 +9,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   /**
    * Create an user in the database from the corresponding CreateUserDto
