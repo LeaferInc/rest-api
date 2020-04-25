@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
-import { Repository, FindManyOptions, DeleteResult, ObjectID } from 'typeorm';
+import { Repository, FindManyOptions, DeleteResult } from 'typeorm';
 import { CreatePlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';

@@ -19,7 +19,7 @@ export class PlantController {
   /**
    * @param criteria is the plantId or the name
    */
-  @Get('piff')
+  @Get('one')
   findOne(@Query('criteria') criteria: string): Promise<PlantEntity> {
     return this.plantService.findOne(criteria);
   }
