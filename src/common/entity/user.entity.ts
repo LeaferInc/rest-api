@@ -3,6 +3,7 @@ import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
 import { PlantEntity } from './plant.entity';
 import { EventEntity } from './event.entity';
+import { CuttingEntity } from './cutting';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
@@ -46,4 +47,7 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => EventEntity, event => event.organizer)
   events: EventEntity[];
+
+  @OneToMany(() => CuttingEntity, cutting => cutting.owner)
+  cuttings: CuttingEntity[];
 }

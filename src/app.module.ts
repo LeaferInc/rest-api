@@ -13,6 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
 import { PlantEntity } from './common/entity/plant.entity';
 import { PlantModule } from './plant/plant.module';
+import { CuttingModule } from './cutting/cutting.module';
+import { CuttingEntity } from './common/entity/cutting';
 
 @Module({
   imports: [
@@ -42,8 +44,8 @@ import { PlantModule } from './plant/plant.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity, PlantEntity],
-      synchronize: true,
+      entities: [UserEntity, EventEntity, PlantEntity, CuttingEntity],
+      synchronize: process.env.NODE_ENV === 'development' ? true : false,
     }),
     CommonModule,
     UserModule,
@@ -51,6 +53,7 @@ import { PlantModule } from './plant/plant.module';
     AuthModule,
     LocationModule,
     PlantModule,
+    CuttingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
