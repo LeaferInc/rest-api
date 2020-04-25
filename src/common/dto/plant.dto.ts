@@ -8,7 +8,6 @@ export class CreatePlantDto {
   exposure: string;
   toxicity: string;
   potting: string;
-  userId: number;
 
   constructor(plant?: CreatePlantDto) {
   }
@@ -24,5 +23,5 @@ export class PlantDto {
   toxicity: string;
   potting: string;
   createdAt: Date;
-  userId: number;
+  owner: number;
 }

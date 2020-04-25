@@ -40,6 +40,6 @@ export class UserEntity extends CommonEntity {
   @Column({ nullable: true })
   pictureId: number;
 
-  @OneToMany(() => PlantEntity, plant => plant.user)
+  @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[];
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
-import { Repository, FindManyOptions, DeleteResult } from 'typeorm';
+import { Repository, FindManyOptions, DeleteResult, ObjectID } from 'typeorm';
 import { CreatePlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -22,7 +22,7 @@ export class PlantService {
     const plant = this.plantRepository.create(plantDto);
 
     const userEntity: UserEntity = await this.userService.findOne(user.userId);
-    plant.user = userEntity;
+    plant.owner = userEntity;
 
     return this.plantRepository.save(plant);
   }
@@ -39,11 +39,19 @@ export class PlantService {
    * Find the first occurence of a plant
    * @param criteria is the plantId or the name
    */
-  findOne(criteria: number | string): Promise<PlantEntity> {
-    return typeof criteria == 'number' || Number(criteria)
-      ? this.plantRepository.findOne(criteria)
-      : this.plantRepository.findOne({ name: criteria });
+  findOne(criteria: string): Promise<PlantEntity> {
+    return this.plantRepository.findOne(JSON.parse(criteria));
   }
+
+  /**
+   * Find all occurences of plants with this criteria
+   * @param criteria is the criteria of the search
+   */
+  findByCriteria(criteria: string): Promise<PlantEntity[]> {
+    return this.plantRepository.find(JSON.parse(criteria));
+  }
+
+
 
   /**
    * Remove one or many plant

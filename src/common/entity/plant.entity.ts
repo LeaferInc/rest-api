@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
 
@@ -35,7 +35,9 @@ export class PlantEntity extends CommonEntity {
   @Column()
   createdAt: Date;
 
-  @ManyToOne(type => UserEntity, user => user.plants)
-  user: UserEntity;
+  @ManyToOne(() => UserEntity, user => user.plants)
+  owner: UserEntity;
 
+  @RelationId((plant: PlantEntity) => plant.owner)
+  ownerId: number;
 }
