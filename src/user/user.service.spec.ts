@@ -45,7 +45,7 @@ describe('UserService', () => {
       pictureId: 0,
       events: []
     };
-  })
+  });
 
   it('should be defined', () => {
     expect(service).toBeDefined();

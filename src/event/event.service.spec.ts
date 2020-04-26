@@ -6,6 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { EventEntity } from 'src/common/entity/event.entity';
 
 describe('EventService', () => {
   let service: EventService;
@@ -19,7 +21,7 @@ describe('EventService', () => {
           useValue: {}
         },
         {
-          provide: 'EventEntityRepository',
+          provide: getRepositoryToken(EventEntity),
           useClass: Repository,
         }
       ],
