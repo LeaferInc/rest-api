@@ -19,13 +19,13 @@ export class CuttingController {
     return this.cuttingService.findAllByUser(request.user);
   }
 
+  @Get('exchange')
+  findAllExceptOwner(@Request() request: Express.Request) {
+    return this.cuttingService.findAllExceptOwner(request.user);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cuttingService.findOne(Number(id));
-  }
-
-  @Get()
-  findAll() {
-    return this.cuttingService.findAll();
   }
 }

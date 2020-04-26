@@ -1,7 +1,7 @@
-import { Cutting } from './cutting';
+import { CreateCuttingDto } from './cutting';
 
 describe('Cutting', () => {
   it('should be defined', () => {
-    expect(new Cutting()).toBeDefined();
+    expect(new CreateCuttingDto()).toBeDefined();
   });
 });

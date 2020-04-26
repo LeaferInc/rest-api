@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { CreateCuttingDto } from 'src/common/dto/cutting';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -36,17 +36,11 @@ export class CuttingService {
   }
 
   findAllByUser(user: Express.User): Promise<Array<CuttingEntity>> {
-    return this.cuttingRepository.find(
-      {
-        where: {
-          owner: { id: user.userId }
-        }
-      }
-    );
+    return this.cuttingRepository.find({ owner: { id: user.userId } });
   }
 
-  findAll(): Promise<any> {
-    return this.cuttingRepository.find();
+  findAllExceptOwner(user: Express.User): Promise<any> {
+    return this.cuttingRepository.find({ owner: { id: Not(user.userId) } });
   }
 
 }
