@@ -11,6 +11,7 @@ import { UserEntity } from './common/entity/user.entity';
 import { EventEntity } from './common/entity/event.entity';
 import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { LocationModule } from './location/location.module';
       database: process.env.DB_DATABASE,
       entities: [UserEntity, EventEntity],
       synchronize: true,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     CommonModule,
     UserModule,
