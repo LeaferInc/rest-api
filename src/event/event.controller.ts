@@ -2,7 +2,7 @@
  * @author ddaninthe
  */
 
-import { Controller, Get, Post, Body, Param, Request, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { EventDto } from 'src/common/dto/event.dto';
@@ -38,6 +38,9 @@ export class EventController {
 
     @Post()
     async createEvent(@Body() eventDto: EventDto): Promise<EventEntity> {
+        if (eventDto.startDate > eventDto.endDate) {
+            throw new BadRequestException("`startDate` is greater than `endDate`.");
+        }
         return await this.eventService.createOne(eventDto);
     }
 }

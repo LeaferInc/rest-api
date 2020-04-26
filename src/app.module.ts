@@ -22,6 +22,7 @@ import { ParticipantModule } from './participant/participant.module';
 import { RoomEntity } from './common/entity/room';
 import { ParticipantEntity } from './common/entity/participant';
 import { MessageGatewayModule } from './message-gateway/message-gateway.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { MessageGatewayModule } from './message-gateway/message-gateway.module';
         ParticipantEntity
       ],
       synchronize: process.env.NODE_ENV === 'development' ? true : false,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     CommonModule,
     UserModule,
