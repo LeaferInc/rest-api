@@ -14,6 +14,7 @@ export class EntryController {
      */
     @Post('/join/:event_id')
     async joinEvent(@Param() eventId: number): Promise<void> {
+        // TODO: remove
         const userId = 1;
         await this.entryService.joinEvent(eventId, userId);
         return;
@@ -25,6 +26,7 @@ export class EntryController {
      */
     @Delete('/join/:event_id')
     async unjoinEvent(@Param() eventId: number): Promise<void> {
+        // TODO: remove
         const userId = 1;
         await this.entryService.unjoinEvent(eventId, userId);
         return;

@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntryController } from './entry.controller';
 import { EntryService } from './entry.service';
-import { EntryServiceMock } from 'src/mocks/entry.service.mock';
-import { UserEntity } from 'src/common/entity/user.entity';
+import { EntryServiceMock } from 'src/mocks/services/entry.service.mock';
 
 describe('Entry Controller', () => {
   let controller: EntryController;

@@ -24,11 +24,23 @@ export class EventService {
     }
 
     /**
-     * Find an Event by its id
+     * Find an Event by its id.
      * @param id the event's id
      */
     findOne(id: number, options?: FindOneOptions): Promise<EventEntity> {
         return this.eventRepository.findOne(id, options);
+    }
+
+    /**
+     * Find an Event by its id.
+     * Sets a parameter indicating if the user has joined or not the event
+     * @param eventId the event's id
+     * @param userId the user requesting the resource
+     */
+    async findOneForUser(eventId: number, userId: number): Promise<EventEntity> {
+        const event: EventEntity = await this.findOne(eventId, { relations: ['entrants'] });
+        event['joined'] = event.entrants && event.entrants.find(user => user.id === userId);
+        return event;
     }
 
     /**

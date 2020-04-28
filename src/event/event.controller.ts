@@ -12,7 +12,7 @@ export class EventController {
     constructor(private eventService: EventService) { }
 
     /**
-     * Returns all {@link Event} or a 404 Status Code if none was present
+     * Returns all Event or a 404 Status Code if none was present
      */
     @Get()
     async getAll(): Promise<EventEntity[]> {
@@ -24,18 +24,25 @@ export class EventController {
     }
 
     /**
-     * Returns a single {@link Event} by its identifier or a 404 Status Code if none was found
-     * @param id the identifier of the {@link Event}
+     * Returns a single Event by its identifier or a 404 Status Code if none was found
+     * @param id the identifier of the Event
      */
     @Get("/:id")
     async getById(@Param() id: number): Promise<EventEntity> {
-        const event: EventEntity = await this.eventService.findOne(id);
+        // TODO: remove
+        const userId = 1;
+
+        const event: EventEntity = await this.eventService.findOneForUser(id, userId);
         if (!event) {
             throw new NotFoundException();
         }
         return event;
     }
 
+    /**
+     * Creates an Event
+     * @param eventDto the Event to create
+     */
     @Post()
     async createEvent(@Body() eventDto: EventDto): Promise<EventEntity> {
         if (eventDto.startDate > eventDto.endDate) {

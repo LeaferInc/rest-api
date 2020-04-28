@@ -4,10 +4,8 @@ import { UserService } from 'src/user/user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { EventEntity } from 'src/common/entity/event.entity';
 import { EventService } from 'src/event/event.service';
-import { Repository } from 'typeorm';
-import { EventServiceMock } from 'src/mocks/event.service.mock';
-import { UserServiceMock } from 'src/mocks/user.service.mock';
-import { of } from 'rxjs';
+import { EventServiceMock } from 'src/mocks/services/event.service.mock';
+import { UserServiceMock } from 'src/mocks/services/user.service.mock';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 describe('EntryService', () => {

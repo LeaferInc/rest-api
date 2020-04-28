@@ -8,7 +8,7 @@ import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { EventServiceMock } from 'src/mocks/event.service.mock';
+import { EventServiceMock } from 'src/mocks/services/event.service.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('Event Controller', () => {
