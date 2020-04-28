@@ -10,6 +10,7 @@ import { EventEntity } from 'src/common/entity/event.entity';
 import { eventRepositoryMock } from 'src/mocks/repositories/event.repository.mock';
 import { UserServiceMock } from 'src/mocks/services/user.service.mock';
 import { EventDto } from 'src/common/dto/event.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('EventService', () => {
   let service: EventService;
@@ -72,5 +73,14 @@ describe('EventService', () => {
     expect(event).toBeTruthy();
     expect(event.organizer.id).toBe(1);
     expect(event.organizer.firstname).toBe('John');
+  });
+
+  it('should throw a not found exception', async () => {
+    try {
+      await service.findOneForUser(219219, 1);
+      expect(true).toBeFalsy();
+    } catch(e) {
+      expect(e).toBeInstanceOf(NotFoundException);
+    }
   });
 });

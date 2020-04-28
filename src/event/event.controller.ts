@@ -28,15 +28,11 @@ export class EventController {
      * @param id the identifier of the Event
      */
     @Get("/:id")
-    async getById(@Param() id: number): Promise<EventEntity> {
+    getById(@Param() id: number): Promise<EventEntity> {
         // TODO: remove
         const userId = 1;
 
-        const event: EventEntity = await this.eventService.findOneForUser(id, userId);
-        if (!event) {
-            throw new NotFoundException();
-        }
-        return event;
+        return this.eventService.findOneForUser(id, userId);
     }
 
     /**
