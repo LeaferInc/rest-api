@@ -2,7 +2,7 @@
  * @author ddaninthe
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOneOptions } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
@@ -39,6 +39,9 @@ export class EventService {
      */
     async findOneForUser(eventId: number, userId: number): Promise<EventEntity> {
         const event: EventEntity = await this.findOne(eventId, { relations: ['entrants'] });
+        if (!event) {
+            throw new NotFoundException();
+        }
         event['joined'] = event.entrants && event.entrants.find(user => user.id === userId);
         return event;
     }
