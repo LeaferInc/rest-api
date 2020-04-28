@@ -44,6 +44,6 @@ export class EventEntity extends CommonEntity {
 
     @ManyToMany(() => UserEntity)
     @JoinTable({ name: 'entry' })
-    // @Exclude()
+    @Exclude()
     entrants: UserEntity[];
 }

@@ -38,7 +38,7 @@ export class EntryService {
 
         event.entrants.push(user);
 
-        return await this.eventRepository.save(event);
+        return this.eventRepository.save(event);
     }
 
     /**
@@ -58,7 +58,7 @@ export class EntryService {
                 entrant.id !== userId;
             });
 
-            return await this.eventRepository.save(event);
+            return this.eventRepository.save(event);
         }
     }
 }

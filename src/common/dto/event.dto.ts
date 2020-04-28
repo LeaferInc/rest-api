@@ -15,6 +15,7 @@ export class EventDto {
     maxPeople: number;
     latitude: number;
     longitude: number;
+    joined: boolean;
     organizer: number;
 
     /**

@@ -26,7 +26,7 @@ export class EventServiceMock {
         EventServiceMock.testEvent1.longitude = 5.1256;
         EventServiceMock.testEvent1.entrants = [this.testUser];
 
-        EventServiceMock.testEvent2.id = 1;
+        EventServiceMock.testEvent2.id = 2;
         EventServiceMock.testEvent2.name = 'Another Test event';
         EventServiceMock.testEvent2.description = 'Description for another testing';
         EventServiceMock.testEvent2.location = '2, Another Test city';
