@@ -15,6 +15,7 @@ import { PlantEntity } from './common/entity/plant.entity';
 import { PlantModule } from './plant/plant.module';
 import { CuttingModule } from './cutting/cutting.module';
 import { CuttingEntity } from './common/entity/cutting';
+import { MessageEntity } from './common/entity/message';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { CuttingEntity } from './common/entity/cutting';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity, PlantEntity, CuttingEntity],
+      entities: [UserEntity, EventEntity, PlantEntity, CuttingEntity, MessageEntity],
       synchronize: process.env.NODE_ENV === 'development' ? true : false,
     }),
     CommonModule,

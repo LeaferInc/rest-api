@@ -1,18 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
 import { PlantEntity } from './plant.entity';
 import { EventEntity } from './event.entity';
 import { CuttingEntity } from './cutting';
+import { MessageEntity } from './message';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ default: true })
-  enabled: boolean;
 
   @Column()
   email: string;
@@ -50,4 +48,11 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => CuttingEntity, cutting => cutting.owner)
   cuttings: CuttingEntity[];
+
+  @OneToMany(() => MessageEntity, message => message.buyer)
+  messages: MessageEntity[];
+
+  @ManyToMany(() => CuttingEntity)
+  @JoinTable({ name: 'users_favorites_cuttings' })
+  favoritesCuttings: CuttingEntity[];
 }
