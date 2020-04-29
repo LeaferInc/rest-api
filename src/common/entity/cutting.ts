@@ -1,8 +1,9 @@
 import { CommonEntity } from "../common.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId, OneToMany } from "typeorm";
 import { UserEntity } from "./user.entity";
+import { MessageEntity } from "./message";
 
-@Entity({name: 'cutting'})
+@Entity({name: 'cuttings'})
 export class CuttingEntity extends CommonEntity {
 
   @PrimaryGeneratedColumn()
@@ -18,11 +19,14 @@ export class CuttingEntity extends CommonEntity {
   tradeWith: string;
 
   @Column({default: 0})
-  views_count: number
+  viewsCount: number
 
   @ManyToOne(() => UserEntity, owner => owner.cuttings)
   owner: UserEntity;
 
   @RelationId((cutting: CuttingEntity) => cutting.owner)
   ownerId: number;
+
+  @OneToMany(() => MessageEntity, message => message.cutting)
+  messages: MessageEntity[];
 }

@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
 import { CuttingModule } from './cutting/cutting.module';
 import { CuttingEntity } from './common/entity/cutting';
+import { MessageEntity } from './common/entity/message';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { CuttingEntity } from './common/entity/cutting';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity, CuttingEntity],
+      entities: [UserEntity, EventEntity, CuttingEntity, MessageEntity],
       synchronize: process.env.NODE_ENV === 'development' ?  true : false,
     }),
     CommonModule,

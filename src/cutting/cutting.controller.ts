@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param, Query, ParseIntPipe } from '@nestjs/common';
 import { CreateCuttingDto } from 'src/common/dto/cutting';
 import { CuttingService } from './cutting.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -15,13 +15,13 @@ export class CuttingController {
   }
 
   @Get('my')
-  findAllByUser(@Request() request: Express.Request) {
-    return this.cuttingService.findAllByUser(request.user);
+  findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
+    return this.cuttingService.findAllByUser(request.user, {skip, take});
   }
 
   @Get('exchange')
-  findAllExceptOwner(@Request() request: Express.Request) {
-    return this.cuttingService.findAllExceptOwner(request.user);
+  findAllExceptOwner(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
+    return this.cuttingService.findAllExceptOwner(request.user, {skip, take});
   }
 
   @Get(':id')

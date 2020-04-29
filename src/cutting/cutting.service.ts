@@ -5,6 +5,7 @@ import { Repository, Not } from 'typeorm';
 import { CreateCuttingDto } from 'src/common/dto/cutting';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
+import { Pagination, ResultData } from 'src/common/dto/query';
 
 @Injectable()
 export class CuttingService {
@@ -35,12 +36,22 @@ export class CuttingService {
     return cutting;
   }
 
-  findAllByUser(user: Express.User): Promise<Array<CuttingEntity>> {
-    return this.cuttingRepository.find({ owner: { id: user.userId } });
+  async findAllByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+    const [items, count] = await this.cuttingRepository.findAndCount({ 
+      where: { owner: { id: user.userId } },
+      skip: pagination?.skip,
+      take: pagination?.take
+    });
+    return {items, count};
   }
 
-  findAllExceptOwner(user: Express.User): Promise<any> {
-    return this.cuttingRepository.find({ owner: { id: Not(user.userId) } });
+  async findAllExceptOwner(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+    const [items, count] = await this.cuttingRepository.findAndCount({
+      where: { owner: { id: Not(user.userId) } },
+      skip: pagination?.skip,
+      take: pagination?.take
+    });
+    return {items, count};
   }
 
 }
