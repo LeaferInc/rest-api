@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
-import { CuttingEntity } from './cutting';
 
 @Entity({ name: 'messages' })
 export class MessageEntity extends CommonEntity {
@@ -11,9 +10,15 @@ export class MessageEntity extends CommonEntity {
   @Column()
   message_content: string;
 
-  @ManyToOne(() => UserEntity, buyer => buyer.messages)
-  buyer: UserEntity;
+  @ManyToOne(
+    () => UserEntity,
+    user => user.messages_sent,
+  )
+  sender: UserEntity;
 
-  @ManyToOne(() => CuttingEntity, cutting => cutting.messages)
-  cutting: CuttingEntity;
+  @ManyToOne(
+    () => UserEntity,
+    user => user.messages_received,
+  )
+  receiver: UserEntity;
 }

@@ -14,6 +14,7 @@ import { LocationModule } from './location/location.module';
 import { CuttingModule } from './cutting/cutting.module';
 import { CuttingEntity } from './common/entity/cutting';
 import { MessageEntity } from './common/entity/message';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MessageEntity } from './common/entity/message';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
+      // logging: true,
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       username: process.env.DB_USERNAME,
@@ -52,6 +54,7 @@ import { MessageEntity } from './common/entity/message';
     AuthModule,
     LocationModule,
     CuttingModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

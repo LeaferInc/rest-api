@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult, FindManyOptions, ObjectID, FindConditions, FindOneOptions } from 'typeorm';
+import { Repository, DeleteResult, FindManyOptions, ObjectID, FindConditions, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto } from 'src/common/dto/user.dto';
 
 @Injectable()
@@ -26,6 +26,19 @@ export class UserService {
    */
   findAll(options?: FindManyOptions<UserEntity>): Promise<UserEntity[]> {
     return this.userRepository.find(options);
+  }
+
+  getTalkTo(userId: number): Promise<UserEntity[]> {
+    // TODO: refactor to typeorm syntax (GL HAVE FUN)
+    return getManager()
+      .query(
+        "SELECT u.id, u.email, u.username, u.firstname, u.lastname " +
+        "FROM users u " +
+        "LEFT JOIN messages m ON m.\"receiverId\" = u.id " +
+        "WHERE m.\"senderId\" = $1 " +
+        "GROUP BY u.id;",
+        [userId]
+      );
   }
 
   /**
