@@ -12,7 +12,9 @@ export class EventController {
     constructor(private eventService: EventService) { }
 
     /**
-     * Returns all Event or a 404 Status Code if none was present
+     * Get all Events
+     * @returns an array of events
+     * @throws NotFoundException if none was present
      */
     @Get()
     async getAll(): Promise<EventEntity[]> {

@@ -61,4 +61,14 @@ export class EntryService {
             return this.eventRepository.save(event);
         }
     }
+
+    /**
+     * Get the entry state of the event for a user
+     * @returns true if the user has joined the event, false otherwise
+     */
+    async entryState(eventId: number, userId: number): Promise<boolean> {
+        const event: EventEntity = await this.eventService.findOne(eventId, { relations: ['entrants'] });
+
+        return event.entrants && event.entrants.find(user => user.id === userId) != undefined;
+    }
 }

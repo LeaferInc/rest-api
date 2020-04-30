@@ -38,5 +38,10 @@ describe('Entry Controller', () => {
   it('should unjoin a user to an event', async () => {
     await controller.unjoinEvent(1);
     expect(EntryServiceMock.testEvent1.entrants).toHaveLength(0);
-  })
+  });
+
+  it('should return the entry state', async() => {
+    expect(await controller.getEntryState(1)).toBeTruthy();
+    expect(await controller.getEntryState(2)).toBeFalsy();
+  });
 });

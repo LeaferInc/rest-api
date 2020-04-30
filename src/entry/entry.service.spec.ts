@@ -17,7 +17,7 @@ describe('EntryService', () => {
         EntryService,
         {
           provide: EventService,
-          useValue: EventServiceMock.mock          
+          useValue: EventServiceMock.mock
         },
         {
           provide: UserService,
@@ -49,10 +49,10 @@ describe('EntryService', () => {
     expect(event.entrants).toStrictEqual([UserServiceMock.testUser]);
   });
 
-  it('should throw error when join a full event', async() => {
+  it('should throw error when join a full event', async () => {
     EventServiceMock.testEvent1.maxPeople = 0;
     try {
-      await service.joinEvent(1,1);
+      await service.joinEvent(1, 1);
       expect(true).toBeFalsy();
     } catch (error) {
       expect(error).toBeInstanceOf(ForbiddenException);
@@ -69,8 +69,13 @@ describe('EntryService', () => {
     }
   });
 
-  it('should unjoin a user to an event', async() => {
+  it('should unjoin a user to an event', async () => {
     const event = await service.unjoinEvent(1, 1);
     expect(event.entrants).toHaveLength(0);
+  });
+
+  it('should get the entry state of an event', async () => {
+    expect(await service.entryState(1, 1)).toBeTruthy();
+    expect(await service.entryState(2, 1)).toBeFalsy();
   });
 });

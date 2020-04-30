@@ -53,5 +53,9 @@ export class EntryServiceMock {
                 event.entrants.splice(index, 1);
             }
         }),
+        entryState: jest.fn((eventId: number, userId: number) => {
+            const event = EntryServiceMock.testEvents.find((event: EventEntity) => event.id === eventId);
+            return event.entrants.find(user => user.id === userId) != undefined;
+        }),
     }
 }
