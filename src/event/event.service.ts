@@ -17,7 +17,7 @@ export class EventService {
         private userService: UserService) { }
 
     /**
-     * Return all the Event
+     * Return all the Events
      */
     findAll(): Promise<EventEntity[]> {
         return this.eventRepository.find();
@@ -33,7 +33,7 @@ export class EventService {
 
     /**
      * Find an Event by its id.
-     * Sets a parameter indicating if the user has joined or not the event
+     * Sets a parameter indicating whether the user has joined or not the event
      * @param eventId the event's id
      * @param userId the user requesting the resource
      */

@@ -2,7 +2,7 @@
  * @author ddaninthe
  */
 
-import { Controller, Post, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Param, Delete, Get } from '@nestjs/common';
 import { EntryService } from './entry.service';
 
 @Controller('entry')
@@ -30,5 +30,12 @@ export class EntryController {
         const userId = 1;
         await this.entryService.unjoinEvent(eventId, userId);
         return;
+    }
+
+    @Get('/state/:event_id')
+    async getEntryState(@Param() eventId: number): Promise<boolean> {
+        // TODO: remove
+        const userId = 1;
+        return this.entryService.entryState(eventId, userId);
     }
 }
