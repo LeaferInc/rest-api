@@ -1,14 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
-import { Exclude } from "class-transformer";
-import { PlantEntity } from './plant.entity';
 import { EventEntity } from './event.entity';
 import { CuttingEntity } from './cutting';
 import { MessageEntity } from './message';
+import { PlantEntity } from './plant.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -43,14 +49,29 @@ export class UserEntity extends CommonEntity {
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[];
 
-  @OneToMany(() => EventEntity, event => event.organizer)
+  @OneToMany(
+    () => EventEntity,
+    event => event.organizer,
+  )
   events: EventEntity[];
 
-  @OneToMany(() => CuttingEntity, cutting => cutting.owner)
+  @OneToMany(
+    () => CuttingEntity,
+    cutting => cutting.owner,
+  )
   cuttings: CuttingEntity[];
 
-  @OneToMany(() => MessageEntity, message => message.buyer)
-  messages: MessageEntity[];
+  @OneToMany(
+    () => MessageEntity,
+    message => message.sender,
+  )
+  messages_sent: MessageEntity[];
+
+  @OneToMany(
+    () => MessageEntity,
+    message => message.receiver,
+  )
+  messages_received: MessageEntity[];
 
   @ManyToMany(() => CuttingEntity)
   @JoinTable({ name: 'users_favorites_cuttings' })
