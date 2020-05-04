@@ -4,11 +4,12 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions } from 'typeorm';
+import { Repository, FindOneOptions, MoreThan } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
 import { EventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
+import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class EventService {
@@ -24,8 +25,38 @@ export class EventService {
     }
 
     /**
+     * Find all incoming events and take only the few firsts
+     */
+    findIncomings(): Promise<EventEntity[]> {
+        return this.eventRepository.find({
+            where: {
+                startDate: MoreThan(AppTime.now)
+            },
+            order: {
+                startDate: 'ASC'
+            },
+            take: 12
+        });
+    }
+
+    /**
+     * Returns the list of all joined events of a user
+     * @param userId the related user's id
+     */
+    async findJoined(userId: number): Promise<EventEntity[]> {
+        const user: UserEntity = await this.userService.findOne(userId, { relations: ['joinedEvents']});
+
+        // Indicate that events have been join
+        user.joinedEvents.map((event) => {
+            event['joined'] = true;
+        });
+        return user.joinedEvents;
+    }
+
+    /**
      * Find an Event by its id.
      * @param id the event's id
+     * @param options additional options for querying database
      */
     findOne(id: number, options?: FindOneOptions): Promise<EventEntity> {
         return this.eventRepository.findOne(id, options);

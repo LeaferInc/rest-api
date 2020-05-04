@@ -90,4 +90,8 @@ export class UserEntity extends CommonEntity {
   )
   participants: ParticipantEntity[];
 
+  @Exclude()
+  @ManyToMany(() => EventEntity, event => event.entrants)
+  @JoinTable({ name: 'entry' })
+  joinedEvents: EventEntity[];
 }

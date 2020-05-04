@@ -12,7 +12,7 @@ export class EventController {
     constructor(private eventService: EventService) { }
 
     /**
-     * Get all Events
+     * Gets all Events
      * @returns an array of events
      * @throws NotFoundException if none was present
      */
@@ -24,6 +24,26 @@ export class EventController {
         }
         return events;
     }
+
+    /**
+     * Returns a list of incoming events ordered by start date
+     */
+    @Get('incoming')
+    getIncoming(): Promise<EventEntity[]> {
+        return this.eventService.findIncomings();
+    }
+
+    /**
+     * Returns the list of all joined events of a user
+     */
+    @Get('joined')
+    getJoined(): Promise<EventEntity[]> {
+        // TODO: remove
+        const userId = 1;
+
+        return this.eventService.findJoined(userId);
+    }
+    
 
     /**
      * Returns a single Event by its identifier or a 404 Status Code if none was found
@@ -43,6 +63,10 @@ export class EventController {
      */
     @Post()
     async createEvent(@Body() eventDto: EventDto): Promise<EventEntity> {
+        // TODO: remove
+        const userId = 1;
+        eventDto.organizer = userId;
+
         if (eventDto.startDate > eventDto.endDate) {
             throw new BadRequestException("`startDate` is greater than `endDate`.");
         }

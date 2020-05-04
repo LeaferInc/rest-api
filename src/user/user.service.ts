@@ -22,7 +22,7 @@ export class UserService {
 
   /**
    * Return many user based on the options
-   * @param options 
+   * @param options additional option for querying database
    */
   findAll(options?: FindManyOptions<UserEntity>): Promise<UserEntity[]> {
     return this.userRepository.find(options);
@@ -67,11 +67,12 @@ export class UserService {
   /**
    * Find the first occurence of an user
    * @param criteria is the userId or the username
+   * @param options additional option for querying database
    */
-  findOne(criteria: number | string): Promise<UserEntity> {
+  findOne(criteria: number | string, options?: FindOneOptions): Promise<UserEntity> {
     return typeof criteria == 'number' || Number(criteria)
-      ? this.userRepository.findOne(criteria)
-      : this.userRepository.findOne({ username: criteria });
+      ? this.userRepository.findOne(criteria, options)
+      : this.userRepository.findOne({ username: criteria }, options);
   }
 
   /**
