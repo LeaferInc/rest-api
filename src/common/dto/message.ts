@@ -1,5 +1,9 @@
+import { IsString, IsNumber } from "class-validator";
 
 export class CreateMessageDto {
+  @IsString()
   message_content: string;
-  receiverId: number;
+
+  @IsNumber()
+  roomId: number;
 }

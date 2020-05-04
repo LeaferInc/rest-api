@@ -13,8 +13,13 @@ export class MessageController {
     return this.messageService.create(createMessageDto, req.user.userId);
   }
 
+  @Post('createOffer')
+  createOffer(@Request() req: Express.Request, @Body() createMessageDto: CreateMessageDto) {
+    return this.messageService.create(createMessageDto, req.user.userId);
+  }
+
   @Get('conversation')
-  findConversation(@Request() req: Express.Request, @Query('receiverId') receiverId) {
-    return this.messageService.findConversation(req.user.userId, receiverId)
+  findConversation(@Request() req: Express.Request, @Query('roomId') roomId: number) {
+    return this.messageService.findConversation(req.user.userId, roomId)
   }
 }

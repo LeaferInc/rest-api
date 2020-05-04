@@ -32,13 +32,36 @@ export class UserService {
     // TODO: refactor to typeorm syntax (GL HAVE FUN)
     return getManager()
       .query(
-        "SELECT u.id, u.email, u.username, u.firstname, u.lastname " +
-        "FROM users u " +
-        "LEFT JOIN messages m ON m.\"receiverId\" = u.id " +
-        "WHERE m.\"senderId\" = $1 " +
-        "GROUP BY u.id;",
+        "SELECT * " +
+        "FROM participants p " +
+        "LEFT JOIN users u ON u.id = p.\"userId\" " +
+        "WHERE p.\"userId\" != $1 AND p.\"roomId\" IN ( " +
+        "   SELECT p.\"roomId\" " +
+        "   FROM participants p " +
+        "   WHERE p.\"userId\" = $1 " +
+        ");",
         [userId]
       );
+
+      /** 
+        SELECT u.id, u.email, u.username, u.firstname, u.lastname
+        FROM users u
+        LEFT JOIN messages m ON m."receiverId" = u.id
+        WHERE m."senderId" = 3
+        GROUP BY u.id
+
+        UNION
+
+        SELECT u.id, u.email, u.username, u.firstname, u.lastname
+        FROM users u
+        WHERE u.id IN (
+          SELECT m."senderId"
+          FROM users u
+          LEFT JOIN messages m ON m."receiverId" = u.id
+          WHERE m."receiverId" = 3
+          GROUP BY m."senderId"
+        );
+       */
   }
 
   /**

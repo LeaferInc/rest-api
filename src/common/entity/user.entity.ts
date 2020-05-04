@@ -4,13 +4,14 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  JoinTable,
+  JoinTable
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
 import { EventEntity } from './event.entity';
 import { CuttingEntity } from './cutting';
 import { MessageEntity } from './message';
+import { ParticipantEntity } from './participant';
 
 @Entity({ name: 'users' })
 export class UserEntity extends CommonEntity {
@@ -57,19 +58,32 @@ export class UserEntity extends CommonEntity {
   )
   cuttings: CuttingEntity[];
 
-  @OneToMany(
-    () => MessageEntity,
-    message => message.sender,
-  )
-  messages_sent: MessageEntity[];
+  // @OneToMany(
+  //   () => MessageEntity,
+  //   message => message.sender,
+  // )
+  // messages_sent: MessageEntity[];
+
+  // @OneToMany(
+  //   () => MessageEntity,
+  //   message => message.receiver,
+  // )
+  // messages_received: MessageEntity[];
 
   @OneToMany(
     () => MessageEntity,
-    message => message.receiver,
+    message => message.user
   )
-  messages_received: MessageEntity[];
+  messages: MessageEntity[];
 
   @ManyToMany(() => CuttingEntity)
   @JoinTable({ name: 'users_favorites_cuttings' })
   favoritesCuttings: CuttingEntity[];
+
+  @OneToMany(
+    () => ParticipantEntity,
+    participant => participant.user
+  )
+  participants: ParticipantEntity[];
+
 }

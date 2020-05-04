@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
-import { CreateCuttingDto } from 'src/common/dto/cutting';
+import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Pagination, ResultData } from 'src/common/dto/query';
@@ -52,6 +52,16 @@ export class CuttingService {
       take: pagination?.take
     });
     return {items, count};
+  }
+
+  async edit(updateCuttingDto: UpdateCuttingDto) {
+    let { id, ...updateCutting } = updateCuttingDto;
+    await this.cuttingRepository.update(id, updateCutting);
+    return this.cuttingRepository.findOne(id);
+  }
+
+  async delete(id: string | number) {
+    return this.cuttingRepository.delete(id);
   }
 
 }

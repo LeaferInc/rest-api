@@ -1,40 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { MessageEntity } from 'src/common/entity/message';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateMessageDto } from 'src/common/dto/message';
-import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
+import { RoomService } from 'src/room/room.service';
 
 @Injectable()
 export class MessageService {
   constructor(
     @InjectRepository(MessageEntity) private readonly messageRepository: Repository<MessageEntity>,
-    private userService: UserService
+    private userService: UserService,
+    private roomService: RoomService
   ) {}
 
   async create(createMessageDto: CreateMessageDto, userId: number): Promise<MessageEntity> {
+    //TODO: check if user can create a message in the specific room
     let message: MessageEntity = new MessageEntity();
-
-    // TODO: Promise all this
-    const sender: UserEntity = await this.userService.findOne(userId);
-    const receiver: UserEntity = await this.userService.findOne(createMessageDto.receiverId);
-
     message.message_content = createMessageDto.message_content;
-    message.sender = sender;
-    message.receiver = receiver;
-
+    message.room = await this.roomService.findOne(createMessageDto.roomId);
+    message.user = await this.userService.findOne(userId);
     return this.messageRepository.save(message);
   }
 
-  findConversation(senderId: number, receiverId: number): Promise<MessageEntity[]> {
+
+  async createOffer(createMessageDto: CreateMessageDto, userId: number): Promise<MessageEntity> {
+    return null;
+  }
+
+  findConversation(userId: number, roomId: number): Promise<MessageEntity[]> {
     return this.messageRepository.find({
-      relations: ['sender', 'receiver'],
-      // select: ['id', 'sender'],
-      where: [
-        { sender: { id: senderId }, receiver: { id: receiverId } },
-        { sender: { id: receiverId}, receiver: { id: senderId} }
-      ]
+      relations: ['user', 'room'],
+      where: { 
+        room: { id: roomId }
+      },
+      order: {
+        createdAt: "ASC"
+      }
     });
   }
 }
