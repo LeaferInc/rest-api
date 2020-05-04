@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param, Query, ParseIntPipe } from '@nestjs/common';
-import { CreateCuttingDto } from 'src/common/dto/cutting';
+import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting';
 import { CuttingService } from './cutting.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
@@ -27,5 +27,16 @@ export class CuttingController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cuttingService.findOne(Number(id));
+  }
+
+  @Put()
+  edit(@Request() req: Express.Request, @Body() updateCuttingDto: UpdateCuttingDto) {
+    console.log(updateCuttingDto);
+    return this.cuttingService.edit(updateCuttingDto);
+  }
+
+  @Delete(':id')
+  delete(@Request() req: Express.Request, @Param('id') id: string) {
+    return this.cuttingService.delete(id);
   }
 }

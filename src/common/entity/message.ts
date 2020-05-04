@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
+import { RoomEntity } from './room';
 
 @Entity({ name: 'messages' })
 export class MessageEntity extends CommonEntity {
@@ -10,15 +11,27 @@ export class MessageEntity extends CommonEntity {
   @Column()
   message_content: string;
 
-  @ManyToOne(
-    () => UserEntity,
-    user => user.messages_sent,
-  )
-  sender: UserEntity;
+  // @ManyToOne(
+  //   () => UserEntity,
+  //   user => user.messages_sent,
+  // )
+  // sender: UserEntity;
+
+  // @ManyToOne(
+  //   () => UserEntity,
+  //   user => user.messages_received,
+  // )
+  // receiver: UserEntity;
 
   @ManyToOne(
     () => UserEntity,
-    user => user.messages_received,
+    user => user.messages
   )
-  receiver: UserEntity;
+  user: UserEntity;
+
+  @ManyToOne(
+    () => RoomEntity,
+    room => room.rooms
+  )
+  room: RoomEntity;
 }

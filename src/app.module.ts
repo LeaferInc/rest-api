@@ -17,6 +17,11 @@ import { CuttingModule } from './cutting/cutting.module';
 import { CuttingEntity } from './common/entity/cutting';
 import { MessageEntity } from './common/entity/message';
 import { MessageModule } from './message/message.module';
+import { RoomModule } from './room/room.module';
+import { ParticipantModule } from './participant/participant.module';
+import { RoomEntity } from './common/entity/room';
+import { ParticipantEntity } from './common/entity/participant';
+import { MessageGatewayModule } from './message-gateway/message-gateway.module';
 
 @Module({
   imports: [
@@ -47,7 +52,15 @@ import { MessageModule } from './message/message.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity, PlantEntity, CuttingEntity, MessageEntity],
+      entities: [
+        UserEntity,
+        EventEntity,
+        PlantEntity,
+        CuttingEntity,
+        MessageEntity,
+        RoomEntity,
+        ParticipantEntity
+      ],
       synchronize: process.env.NODE_ENV === 'development' ? true : false,
     }),
     CommonModule,
@@ -58,6 +71,9 @@ import { MessageModule } from './message/message.module';
     PlantModule,
     CuttingModule,
     MessageModule,
+    ParticipantModule,
+    RoomModule,
+    MessageGatewayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

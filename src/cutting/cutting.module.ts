@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CuttingEntity } from 'src/common/entity/cutting';
 import { UserService } from 'src/user/user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CuttingEntity, UserEntity])],
+  imports: [TypeOrmModule.forFeature([CuttingEntity, UserEntity]), UserModule],
   controllers: [CuttingController],
-  providers: [CuttingService, UserService],
-  exports: [CuttingService]
+  providers: [CuttingService],
+  exports: [CuttingService],
 })
 export class CuttingModule {}
