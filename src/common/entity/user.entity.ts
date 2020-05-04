@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
 import { EventEntity } from './event.entity';
@@ -42,4 +42,9 @@ export class UserEntity extends CommonEntity {
 
   @OneToMany(() => EventEntity, event => event.organizer)
   events: EventEntity[];
+
+  @Exclude()
+  @ManyToMany(() => EventEntity, event => event.entrants)
+  @JoinTable({ name: 'entry' })
+  joinedEvents: EventEntity[];
 }

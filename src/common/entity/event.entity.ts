@@ -42,8 +42,8 @@ export class EventEntity extends CommonEntity {
     @ManyToOne(() => UserEntity, organizer => organizer.events)
     organizer: UserEntity;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({ name: 'entry' })
     @Exclude()
+    @ManyToMany(() => UserEntity, user => user.joinedEvents)
+    @JoinTable({ name: 'entry' })
     entrants: UserEntity[];
 }
