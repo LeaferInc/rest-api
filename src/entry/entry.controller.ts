@@ -2,8 +2,9 @@
  * @author ddaninthe
  */
 
-import { Controller, Post, Param, Delete, Get } from '@nestjs/common';
+import { Controller, Post, Param, Delete, Get, UseGuards, Request } from '@nestjs/common';
 import { EntryService } from './entry.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('entry')
 export class EntryController {
@@ -13,10 +14,9 @@ export class EntryController {
      * Join an event
      */
     @Post('/join/:event_id')
-    async joinEvent(@Param() eventId: number): Promise<void> {
-        // TODO: remove
-        const userId = 1;
-        await this.entryService.joinEvent(eventId, userId);
+    @UseGuards(JwtAuthGuard)
+    async joinEvent(@Request() req: Express.Request, @Param() eventId: number): Promise<void> {
+        await this.entryService.joinEvent(eventId, req.user.userId);
         return;
     }
 
@@ -25,17 +25,15 @@ export class EntryController {
      * @param eventId the Event to unjoin
      */
     @Delete('/join/:event_id')
-    async unjoinEvent(@Param() eventId: number): Promise<void> {
-        // TODO: remove
-        const userId = 1;
-        await this.entryService.unjoinEvent(eventId, userId);
+    @UseGuards(JwtAuthGuard)
+    async unjoinEvent(@Request() req: Express.Request, @Param() eventId: number): Promise<void> {
+        await this.entryService.unjoinEvent(eventId, req.user.userId);
         return;
     }
 
     @Get('/state/:event_id')
-    async getEntryState(@Param() eventId: number): Promise<boolean> {
-        // TODO: remove
-        const userId = 1;
-        return this.entryService.entryState(eventId, userId);
+    @UseGuards(JwtAuthGuard)
+    async getEntryState(@Request() req: Express.Request, @Param() eventId: number): Promise<boolean> {
+        return this.entryService.entryState(eventId, req.user.userId);
     }
 }

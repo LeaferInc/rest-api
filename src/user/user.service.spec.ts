@@ -44,8 +44,9 @@ describe('UserService', () => {
       location: 'test',
       pictureId: 0,
       plants: [],
+      cuttings: [],
       events: [],
-      cuttings: []
+      joinedEvents: []
     };
   });
 
