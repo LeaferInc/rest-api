@@ -2,10 +2,11 @@
  * @author ddaninthe
  */
 
-import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException, BadRequestException, UseGuards, Request } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { EventDto } from 'src/common/dto/event.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('events')
 export class EventController {
@@ -37,11 +38,9 @@ export class EventController {
      * Returns the list of all joined events of a user
      */
     @Get('joined')
-    getJoined(): Promise<EventEntity[]> {
-        // TODO: remove
-        const userId = 1;
-
-        return this.eventService.findJoined(userId);
+    @UseGuards(JwtAuthGuard)
+    getJoined(@Request() req: Express.Request): Promise<EventEntity[]> {
+        return this.eventService.findJoined(req.user.userId);
     }
     
 
@@ -50,11 +49,9 @@ export class EventController {
      * @param id the identifier of the Event
      */
     @Get("/:id")
-    getById(@Param() id: number): Promise<EventEntity> {
-        // TODO: remove
-        const userId = 1;
-
-        return this.eventService.findOneForUser(id, userId);
+    @UseGuards(JwtAuthGuard)
+    getById(@Request() req: Express.Request, @Param() id: number): Promise<EventEntity> {
+        return this.eventService.findOneForUser(id, req.user.userId);
     }
 
     /**
@@ -62,10 +59,9 @@ export class EventController {
      * @param eventDto the Event to create
      */
     @Post()
-    async createEvent(@Body() eventDto: EventDto): Promise<EventEntity> {
-        // TODO: remove
-        const userId = 1;
-        eventDto.organizer = userId;
+    @UseGuards(JwtAuthGuard)
+    async createEvent(@Request() req: Express.Request, @Body() eventDto: EventDto): Promise<EventEntity> {
+        eventDto.organizer = req.user.userId;
 
         if (eventDto.startDate > eventDto.endDate) {
             throw new BadRequestException("`startDate` is greater than `endDate`.");
