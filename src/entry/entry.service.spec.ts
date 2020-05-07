@@ -56,7 +56,7 @@ describe('EntryService', () => {
       expect(true).toBe(false);
     } catch (error) {
       expect(error).toBeInstanceOf(ForbiddenException);
-      expect(error).toHaveProperty('message', 'The places limit of 0 has been reached');
+      expect(error).toHaveProperty('message', 'Event capacity of 0 has been reached');
     }
   });
 
