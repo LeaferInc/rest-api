@@ -15,7 +15,7 @@ export class EntryController {
      */
     @Post('/join/:event_id')
     @UseGuards(JwtAuthGuard)
-    async joinEvent(@Request() req: Express.Request, @Param() eventId: number): Promise<void> {
+    async joinEvent(@Request() req: Express.Request, @Param('event_id') eventId: number): Promise<void> {
         await this.entryService.joinEvent(eventId, req.user.userId);
         return;
     }
@@ -26,14 +26,14 @@ export class EntryController {
      */
     @Delete('/join/:event_id')
     @UseGuards(JwtAuthGuard)
-    async unjoinEvent(@Request() req: Express.Request, @Param() eventId: number): Promise<void> {
+    async unjoinEvent(@Request() req: Express.Request, @Param('event_id') eventId: number): Promise<void> {
         await this.entryService.unjoinEvent(eventId, req.user.userId);
         return;
     }
 
     @Get('/state/:event_id')
     @UseGuards(JwtAuthGuard)
-    async getEntryState(@Request() req: Express.Request, @Param() eventId: number): Promise<boolean> {
+    async getEntryState(@Request() req: Express.Request, @Param('event_id') eventId: number): Promise<boolean> {
         return this.entryService.entryState(eventId, req.user.userId);
     }
 }

@@ -50,7 +50,7 @@ export class EventController {
      */
     @Get("/:id")
     @UseGuards(JwtAuthGuard)
-    getById(@Request() req: Express.Request, @Param() id: number): Promise<EventEntity> {
+    getById(@Request() req: Express.Request, @Param('id') id: number): Promise<EventEntity> {
         return this.eventService.findOneForUser(id, req.user.userId);
     }
 
