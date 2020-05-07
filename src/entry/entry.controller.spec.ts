@@ -43,7 +43,7 @@ describe('Entry Controller', () => {
   });
 
   it('should return the entry state', async() => {
-    expect(await controller.getEntryState(requestMock, 1)).toBeTruthy();
-    expect(await controller.getEntryState(requestMock, 2)).toBeFalsy();
+    expect(await controller.getEntryState(requestMock, 1)).toBe(true);
+    expect(await controller.getEntryState(requestMock, 2)).toBe(false);
   });
 });
