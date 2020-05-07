@@ -46,4 +46,6 @@ export class EventEntity extends CommonEntity {
     @ManyToMany(() => UserEntity, user => user.joinedEvents)
     @JoinTable({ name: 'entry' })
     entrants: UserEntity[];
+
+    joined?: boolean;
 }

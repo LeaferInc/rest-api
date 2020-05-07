@@ -53,7 +53,7 @@ describe('EventService', () => {
     expect(event).toBeTruthy();
     expect(event.id).toBe(1);
     expect(event.name).toBe('Test event');
-    expect(event['joined']).toBeTruthy();
+    expect(event.joined).toBe(true);
   });
 
   it('should create an event', async () => {
@@ -78,7 +78,7 @@ describe('EventService', () => {
   it('should throw a not found exception', async () => {
     try {
       await service.findOneForUser(219219, 1);
-      expect(true).toBeFalsy();
+      expect(true).toBe(false);
     } catch(e) {
       expect(e).toBeInstanceOf(NotFoundException);
     }

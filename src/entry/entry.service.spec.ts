@@ -53,7 +53,7 @@ describe('EntryService', () => {
     EventServiceMock.testEvent1.maxPeople = 0;
     try {
       await service.joinEvent(1, 1);
-      expect(true).toBeFalsy();
+      expect(true).toBe(false);
     } catch (error) {
       expect(error).toBeInstanceOf(ForbiddenException);
       expect(error).toHaveProperty('message', 'The places limit of 0 has been reached');
@@ -63,7 +63,7 @@ describe('EntryService', () => {
   it('should throw an error when event is not found', async () => {
     try {
       await service.joinEvent(323, 1);
-      expect(true).toBeFalsy();
+      expect(true).toBe(false);
     } catch (error) {
       expect(error).toBeInstanceOf(NotFoundException);
     }
@@ -75,7 +75,7 @@ describe('EntryService', () => {
   });
 
   it('should get the entry state of an event', async () => {
-    expect(await service.entryState(1, 1)).toBeTruthy();
-    expect(await service.entryState(2, 1)).toBeFalsy();
+    expect(await service.entryState(1, 1)).toBe(true);
+    expect(await service.entryState(2, 1)).toBe(false);
   });
 });

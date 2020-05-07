@@ -48,7 +48,7 @@ export class EventService {
 
         // Indicate that events have been join
         user.joinedEvents.map((event) => {
-            event['joined'] = true;
+            event.joined = true;
         });
         return user.joinedEvents;
     }
@@ -73,7 +73,7 @@ export class EventService {
         if (!event) {
             throw new NotFoundException();
         }
-        event['joined'] = event.entrants && event.entrants.find(user => user.id === userId);
+        event.joined = event.entrants && event.entrants.find(user => user.id === userId) != null;
         return event;
     }
 
