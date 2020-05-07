@@ -33,7 +33,7 @@ export class EntryService {
         if (!event.entrants) event.entrants = [];
 
         if (event.entrants.length >= event.maxPeople) {
-            throw new ForbiddenException(`The places limit of ${event.maxPeople} has been reached`);
+            throw new ForbiddenException(`Event capacity of ${event.maxPeople} has been reached`);
         }
 
         event.entrants.push(user);

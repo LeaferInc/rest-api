@@ -39,6 +39,7 @@ export class EventEntity extends CommonEntity {
     @Column({ type: 'float8' })
     longitude: number;
 
+    @Exclude()
     @ManyToOne(() => UserEntity, organizer => organizer.events)
     organizer: UserEntity;
 
