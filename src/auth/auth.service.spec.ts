@@ -60,7 +60,8 @@ describe('AuthService', () => {
       biography: 'test',
       location: 'test',
       pictureId: 0,
-      events: []
+      events: [],
+      cuttings: []
     };
 
     userServiceMock.findOne.mockReturnValue(user);
