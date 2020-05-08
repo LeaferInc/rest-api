@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Exclude } from "class-transformer";
+import { EventEntity } from './event.entity';
 
-@Entity()
+@Entity({name: 'user'})
 export class UserEntity extends CommonEntity {
 
   @PrimaryGeneratedColumn()
@@ -36,6 +37,9 @@ export class UserEntity extends CommonEntity {
   @Column({nullable: true})
   location: string;
 
-  @Column({nullable: true})
+  @Column({nullable: true, name: 'picture_id'})
   pictureId: number;
+
+  @OneToMany(() => EventEntity, event => event.organizer)
+  events: EventEntity[];
 }
