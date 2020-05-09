@@ -1,14 +1,16 @@
-import { Controller, Get, Param, Query, LoggerService, Redirect } from '@nestjs/common';
+import { Controller, Get, Query, HttpService, HttpException, HttpStatus } from '@nestjs/common';
 
 @Controller('location')
 export class LocationController {
 
-  constructor() {}
+  constructor(private httpService: HttpService) {}
 
   @Get()
-  @Redirect('https://api-adresse.data.gouv.fr/search/')
-  getLocation(@Query('address') address: string) {
-    return { url: `https://api-adresse.data.gouv.fr/search?q=${!address ? '' : address}` };
+  async getLocation(@Query('address') address: string) {
+    if(!address) {
+      throw new HttpException('', HttpStatus.NO_CONTENT);
+    }
+    const { data } = await this.httpService.get(`https://api-adresse.data.gouv.fr/search?q=${address}`).toPromise();
+    return data;
   }
-
 }
