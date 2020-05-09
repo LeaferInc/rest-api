@@ -1,15 +1,15 @@
-import { EventDto } from './event.dto';
 import { EventEntity } from '../entity/event.entity';
+import { CreateEventDto } from './event.dto';
 
 describe('EventDto', () => {
   it('should be defined', () => {
-    expect(new EventDto()).toBeDefined();
+    expect(new CreateEventDto()).toBeDefined();
   });
 
   it('should convert a dto to an entity', () => {
     const startDate: Date = new Date(2020, 10, 5, 10);
     const endDate: Date = new Date(2020, 10, 6, 5);
-    const dto: EventDto = new EventDto();
+    const dto: CreateEventDto = new CreateEventDto();
     dto.name = "Name";
     dto.description = "Description";
     dto.location = "Location";

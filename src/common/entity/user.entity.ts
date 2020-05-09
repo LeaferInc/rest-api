@@ -9,9 +9,9 @@ import {
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
 import { EventEntity } from './event.entity';
-import { CuttingEntity } from './cutting';
-import { MessageEntity } from './message';
-import { ParticipantEntity } from './participant';
+import { CuttingEntity } from './cutting.entity';
+import { MessageEntity } from './message.entity';
+import { ParticipantEntity } from './participant.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
@@ -77,7 +77,7 @@ export class UserEntity extends CommonEntity {
   messages: MessageEntity[];
 
   @ManyToMany(() => CuttingEntity)
-  @JoinTable({ name: 'users_favorites_cuttings' })
+  @JoinTable({ name: 'user_favorite_cutting' })
   favoritesCuttings: CuttingEntity[];
 
   @OneToMany(

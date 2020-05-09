@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Post, Get, Body, Request, Param, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ParticipantService } from './participant.service';
-import { CreateParticipantDto } from 'src/common/dto/participant';
+import { CreateParticipantDto } from 'src/common/dto/participant.dto';
 
 @Controller('participant')
 @UseGuards(JwtAuthGuard)

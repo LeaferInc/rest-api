@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { ParticipantEntity } from 'src/common/entity/participant';
+import { ParticipantEntity } from 'src/common/entity/participant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { RoomService } from 'src/room/room.service';
 import { UserService } from 'src/user/user.service';
-import { CreateParticipantDto } from 'src/common/dto/participant';
+import { CreateParticipantDto } from 'src/common/dto/participant.dto';
 
 @Injectable()
 export class ParticipantService {
@@ -23,7 +23,7 @@ export class ParticipantService {
       );
     }
     console.log('eee', createParticipantDto.roomId);
-    let participant = new ParticipantEntity();
+    const participant = new ParticipantEntity();
     participant.room = await this.roomService.findOne(createParticipantDto.roomId);
     participant.user = await this.userService.findOne(userId);
     return this.participantRepository.save(participant);
@@ -47,7 +47,7 @@ export class ParticipantService {
     const room = await this.roomService.create();
     const participantsCreated = [];
     for (const userId of usersId) {
-      let participant = await this.create({roomId: room.id}, userId);
+      const participant = await this.create({roomId: room.id}, userId);
       participantsCreated.push(participant);
     }
     return {participants: participantsCreated, room: room}; // return participant avec la room

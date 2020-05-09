@@ -1,9 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, Column } from "typeorm";
-import { UserEntity } from "./user.entity";
-import { ParticipantEntity } from "./participant";
-import { MessageEntity } from "./message";
+import { Entity, PrimaryGeneratedColumn, OneToMany, Column } from "typeorm";
+import { ParticipantEntity } from "./participant.entity";
+import { MessageEntity } from "./message.entity";
 
-@Entity('rooms')
+@Entity('room')
 export class RoomEntity {
   @PrimaryGeneratedColumn()
   id: number;

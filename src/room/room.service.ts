@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RoomEntity } from 'src/common/entity/room';
+import { RoomEntity } from 'src/common/entity/room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';

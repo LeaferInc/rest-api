@@ -1,15 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
-import { RoomEntity } from './room';
+import { RoomEntity } from './room.entity';
 
-@Entity({ name: 'messages' })
+@Entity({ name: 'message' })
 export class MessageEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  message_content: string;
+  messageContent: string;
 
   // @ManyToOne(
   //   () => UserEntity,

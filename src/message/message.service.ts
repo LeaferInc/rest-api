@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { MessageEntity } from 'src/common/entity/message';
+import { MessageEntity } from 'src/common/entity/message.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMessageDto } from 'src/common/dto/message';
+import { CreateMessageDto } from 'src/common/dto/message.dto';
 import { UserService } from 'src/user/user.service';
 import { RoomService } from 'src/room/room.service';
 
@@ -16,8 +16,8 @@ export class MessageService {
 
   async create(createMessageDto: CreateMessageDto, userId: number): Promise<MessageEntity> {
     //TODO: check if user can create a message in the specific room
-    let message: MessageEntity = new MessageEntity();
-    message.message_content = createMessageDto.message_content;
+    const message: MessageEntity = new MessageEntity();
+    message.messageContent = createMessageDto.messageContent;
     message.room = await this.roomService.findOne(createMessageDto.roomId);
     message.user = await this.userService.findOne(userId);
     return this.messageRepository.save(message);

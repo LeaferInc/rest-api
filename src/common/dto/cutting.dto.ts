@@ -1,4 +1,4 @@
-import { CuttingEntity } from "../entity/cutting";
+import { CuttingEntity } from "../entity/cutting.entity";
 import { IsNumber, IsString, IsOptional } from "class-validator";
 
 export class CreateCuttingDto {

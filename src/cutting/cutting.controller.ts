@@ -1,9 +1,9 @@
-import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param, Query, ParseIntPipe } from '@nestjs/common';
-import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting';
+import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param, Query } from '@nestjs/common';
+import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting.dto';
 import { CuttingService } from './cutting.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@Controller('cutting')
+@Controller('cuttings')
 @UseGuards(JwtAuthGuard)
 export class CuttingController {
 

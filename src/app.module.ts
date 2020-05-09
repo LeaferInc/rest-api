@@ -12,13 +12,13 @@ import { EventEntity } from './common/entity/event.entity';
 import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
 import { CuttingModule } from './cutting/cutting.module';
-import { CuttingEntity } from './common/entity/cutting';
-import { MessageEntity } from './common/entity/message';
+import { CuttingEntity } from './common/entity/cutting.entity';
+import { MessageEntity } from './common/entity/message.entity';
 import { MessageModule } from './message/message.module';
 import { RoomModule } from './room/room.module';
 import { ParticipantModule } from './participant/participant.module';
-import { RoomEntity } from './common/entity/room';
-import { ParticipantEntity } from './common/entity/participant';
+import { RoomEntity } from './common/entity/room.entity';
+import { ParticipantEntity } from './common/entity/participant.entity';
 import { MessageGatewayModule } from './message-gateway/message-gateway.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 

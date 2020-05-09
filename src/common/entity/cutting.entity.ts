@@ -8,7 +8,7 @@ import {
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'cuttings' })
+@Entity({ name: 'cutting' })
 export class CuttingEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
   id: number;

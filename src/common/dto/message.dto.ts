@@ -2,7 +2,7 @@ import { IsString, IsNumber } from "class-validator";
 
 export class CreateMessageDto {
   @IsString()
-  message_content: string;
+  messageContent: string;
 
   @IsNumber()
   roomId: number;
