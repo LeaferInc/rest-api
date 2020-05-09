@@ -6,7 +6,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOneOptions, MoreThan } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
-import { EventDto } from '../common/dto/event.dto';
+import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { AppTime } from 'src/common/app.time';
@@ -46,6 +46,9 @@ export class EventService {
     async findJoined(userId: number): Promise<EventEntity[]> {
         const user: UserEntity = await this.userService.findOne(userId, { relations: ['joinedEvents']});
 
+        if(!user) {
+          throw new NotFoundException();
+        }
         // Indicate that events have been join
         user.joinedEvents.map((event) => {
             event.joined = true;
@@ -81,10 +84,10 @@ export class EventService {
      * Create an Event in the databe
      * @param eventDto the Event to create
      */
-    async createOne(eventDto: EventDto): Promise<EventEntity> {
+    async createOne(eventDto: CreateEventDto, organizer: number): Promise<EventEntity> {
         const event: EventEntity = eventDto.toEntity();
 
-        const user: UserEntity = await this.userService.findOne(eventDto.organizer);
+        const user: UserEntity = await this.userService.findOne(organizer);
         event.organizer = user;
 
         return this.eventRepository.save(event);
