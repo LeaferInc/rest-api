@@ -47,24 +47,23 @@ describe('AuthService', () => {
   });
 
   it('should return the user found', async () => {
-    const user: UserEntity = {
-      id: 0,
-      createdAt: new Date(2020, 1, 1),
-      enabled: true,
-      email: 'test@test.com',
-      username: 'test',
-      password: 'test',
-      firstname: 'test',
-      lastname: 'test',
-      birthdate: new Date(2020, 1, 1),
-      biography: 'test',
-      location: 'test',
-      pictureId: 0,
-      plants: [],
-      cuttings: [],
-      events: [],
-      joinedEvents: [],
-    };
+    const user: UserEntity = new UserEntity();
+    user.id = 0;
+    user.createdAt = new Date(2020, 1, 1);
+    user.enabled = true;
+    user.email = 'test@test.com';
+    user.username = 'test';
+    user.password = 'test';
+    user.firstname = 'test';
+    user.lastname = 'test';
+    user.birthdate = new Date(2020, 1, 1);
+    user.biography = 'test';
+    user.location = 'test';
+    user.pictureId = 0;
+    user.events = [];
+    user.cuttings = [];
+    user.joinedEvents = [];
+    user.plants = [];
 
     userServiceMock.findOne.mockReturnValue(user);
 

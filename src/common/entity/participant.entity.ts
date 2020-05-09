@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
-import { RoomEntity } from "./room";
+import { RoomEntity } from "./room.entity";
 
-@Entity('participants')
+@Entity('participant')
 export class ParticipantEntity {
   @PrimaryGeneratedColumn()
   id: number;

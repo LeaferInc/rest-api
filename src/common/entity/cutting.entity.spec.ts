@@ -1,4 +1,4 @@
-import { CuttingEntity } from './cutting';
+import { CuttingEntity } from './cutting.entity';
 
 describe('Cutting', () => {
   it('should be defined', () => {

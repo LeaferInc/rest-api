@@ -9,7 +9,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EventEntity } from 'src/common/entity/event.entity';
 import { eventRepositoryMock } from 'src/mocks/repositories/event.repository.mock';
 import { UserServiceMock } from 'src/mocks/services/user.service.mock';
-import { EventDto } from 'src/common/dto/event.dto';
+import { CreateEventDto } from 'src/common/dto/event.dto';
 import { NotFoundException } from '@nestjs/common';
 
 describe('EventService', () => {
@@ -57,7 +57,7 @@ describe('EventService', () => {
   });
 
   it('should create an event', async () => {
-    const dto: EventDto = new EventDto();
+    const dto: CreateEventDto = new CreateEventDto();
     dto.name = 'Event name';
     dto.description = 'Event description';
     dto.location = '76, Test St.';
@@ -67,9 +67,8 @@ describe('EventService', () => {
     dto.maxPeople = 20;
     dto.latitude = 46.7887;
     dto.longitude = 5.1256;
-    dto.organizer = 1;
 
-    const event: EventEntity = await service.createOne(dto);
+    const event: EventEntity = await service.createOne(dto, 1);
     expect(event).toBeTruthy();
     expect(event.organizer.id).toBe(1);
     expect(event.organizer.firstname).toBe('John');

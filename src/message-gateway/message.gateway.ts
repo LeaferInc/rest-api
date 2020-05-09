@@ -11,7 +11,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateMessageDto } from 'src/common/dto/message';
+import { CreateMessageDto } from 'src/common/dto/message.dto';
 import { RoomService } from 'src/room/room.service';
 import { ParticipantService } from 'src/participant/participant.service';
 import { MessageService } from 'src/message/message.service';
@@ -36,9 +36,7 @@ export class MessageGateway
 
   constructor(
     private messageService: MessageService,
-    private roomService: RoomService,
-    private participant: ParticipantService
-  ) {}
+    private roomService: RoomService) {}
 
   afterInit(server) {
     this.logger.log('Chat Initialized');
@@ -65,13 +63,13 @@ export class MessageGateway
   async addMessage(@MessageBody() data: CreateMessageDto, @ConnectedSocket() client: Socket) {
     this.logger.log(
       `User ${this.sessionStore[client.id]} created message '${
-        data.message_content
+        data.messageContent
       }' to ${data.roomId}`,
     );
     
     // Message
     const message = await this.messageService.create(data, this.sessionStore[client.id]);
-    this.logger.log(`Client ${this.sessionStore[client.id]} make a message with content '${message.message_content}'`);
+    this.logger.log(`Client ${this.sessionStore[client.id]} make a message with content '${message.messageContent}'`);
 
     this.server.to(String(data.roomId)).emit('messageServerToClient', message);
 

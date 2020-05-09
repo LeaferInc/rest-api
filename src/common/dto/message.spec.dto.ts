@@ -1,4 +1,4 @@
-import { Message } from './message';
+import { Message } from './message.dto';
 
 describe('Message', () => {
   it('should be defined', () => {
