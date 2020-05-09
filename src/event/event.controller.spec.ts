@@ -8,11 +8,11 @@ import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { EventServiceMock } from 'src/mocks/services/event.service.mock';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('Event Controller', () => {
   let controller: EventController;
-
-  const events = [new EventEntity(), new EventEntity(), new EventEntity()];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,10 +20,7 @@ describe('Event Controller', () => {
       providers: [
         {
           provide: EventService,
-          useFactory: () => ({
-            findAll: jest.fn(() => events),
-            findOne: jest.fn((id: number) => events[id - 1]),
-          })
+          useValue: EventServiceMock.mock
         },
       ],
     }).compile();
@@ -31,37 +28,34 @@ describe('Event Controller', () => {
     controller = module.get<EventController>(EventController);
   });
 
+  beforeEach(() => {
+    EventServiceMock.setup();
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
   it('should return an array of events', async () => {
-    expect(await controller.getAll()).toBe(events);
+    expect(await controller.getAll()).toBe(EventServiceMock.testEvents);
   });
 });
 
 describe('Event Controller end-to-end', () => {
-  let events: EventEntity[] = [new EventEntity(), new EventEntity(), new EventEntity()];
-
   let app: INestApplication;
-  const mockEventService = {
-    findAll: () => events,
-    findOne: (id: number) => events[id - 1],
-    createOne: (event: EventEntity) => events.push(event),
-  };
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       providers: [
         EventService,
         {
-          provide: 'EventRepository',
+          provide: getRepositoryToken(EventEntity),
           useValue: {}
         }
       ]
     })
       .overrideProvider(EventService)
-      .useValue(mockEventService)
+      .useValue(EventServiceMock.mock)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -69,7 +63,7 @@ describe('Event Controller end-to-end', () => {
   });
 
   beforeEach(() => {
-    events = [new EventEntity(), new EventEntity(), new EventEntity()];
+    EventServiceMock.setup();
   });
 
   /*it('/events (GET)', () => {

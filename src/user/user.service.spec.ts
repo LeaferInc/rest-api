@@ -44,9 +44,13 @@ describe('UserService', () => {
       location: 'test',
       pictureId: 0,
       events: [],
-      cuttings: []
+      cuttings: [],
+      joinedEvents: [],
+      favoritesCuttings: [],
+      messages: [],
+      participants: []
     };
-  })
+  });
 
   it('should be defined', () => {
     expect(service).toBeDefined();

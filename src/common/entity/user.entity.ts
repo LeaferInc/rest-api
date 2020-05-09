@@ -13,7 +13,7 @@ import { CuttingEntity } from './cutting';
 import { MessageEntity } from './message';
 import { ParticipantEntity } from './participant';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,7 +43,7 @@ export class UserEntity extends CommonEntity {
   @Column({ nullable: true })
   location: string;
 
-  @Column({ nullable: true, name: 'picture_id' })
+  @Column({ nullable: true })
   pictureId: number;
 
   @OneToMany(
@@ -86,4 +86,7 @@ export class UserEntity extends CommonEntity {
   )
   participants: ParticipantEntity[];
 
+  @Exclude()
+  @ManyToMany(() => EventEntity, event => event.entrants)
+  joinedEvents: EventEntity[];
 }
