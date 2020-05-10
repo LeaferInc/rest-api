@@ -2,42 +2,78 @@
  * @author ddaninthe
  */
 
-import { Controller, Get, HttpCode, Post, Body, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  BadRequestException,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
+import { CreateEventDto } from 'src/common/dto/event.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('events')
 export class EventController {
-    constructor(private eventService: EventService) { }
+  constructor(private eventService: EventService) {}
 
-    /**
-     * Returns all {@link Event} or a 404 Status Code if none was present
-     */
-    @Get()
-    async getAll(): Promise<EventEntity[]> {
-        const events: EventEntity[] = await this.eventService.findAll();
-        if (events.length === 0) {
-            throw new NotFoundException();
-        }
-        return events;
-    }
+  /**
+   * Gets all Events
+   * @returns an array of events
+   * @throws NotFoundException if none was present
+   */
+  @Get()
+  getAll(): Promise<EventEntity[]> {
+    return this.eventService.findAll();
+  }
 
-    /**
-     * Returns a single {@link Event} by its identifier or a 404 Status Code if none was found
-     * @param id the identifier of the {@link Event}
-     */
-    @Get("/:id")
-    async getById(@Param() id: number): Promise<EventEntity> {
-        const event: EventEntity = await this.eventService.findOne(id);
-        if (!event) {
-            throw new NotFoundException();
-        }
-        return event;
-    }
+  /**
+   * Returns a list of incoming events ordered by start date
+   */
+  @Get('incoming')
+  getIncoming(): Promise<EventEntity[]> {
+    return this.eventService.findIncomings();
+  }
 
-    @Post()
-    @HttpCode(201)
-    async createEvent(@Body() event: EventEntity): Promise<EventEntity> {
-        return await this.eventService.createOne(event);
+  /**
+   * Returns the list of all joined events of a user
+   */
+  @Get('joined')
+  @UseGuards(JwtAuthGuard)
+  getJoined(@Request() req: Express.Request): Promise<EventEntity[]> {
+    return this.eventService.findJoined(req.user.userId);
+  }
+
+  /**
+   * Returns a single Event by its identifier or a 404 Status Code if none was found
+   * @param id the identifier of the Event
+   */
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  getById(
+    @Request() req: Express.Request,
+    @Param('id') id: number,
+  ): Promise<EventEntity> {
+    return this.eventService.findOneForUser(id, req.user.userId);
+  }
+
+  /**
+   * Creates an Event
+   * @param eventDto the Event to create
+   */
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  async createEvent(
+    @Request() req: Express.Request,
+    @Body() eventDto: CreateEventDto,
+  ): Promise<EventEntity> {
+    if (eventDto.startDate > eventDto.endDate) {
+      throw new BadRequestException('`startDate` is greater than `endDate`.');
     }
+    return await this.eventService.createOne(eventDto, req.user.userId);
+  }
 }

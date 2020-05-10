@@ -30,7 +30,7 @@ describe('UserService', () => {
   });
 
   beforeEach(() => {
-    userEntity =  {
+    userEntity = {
       id: 0,
       createdAt: new Date(2020, 1, 1),
       enabled: true,
@@ -42,9 +42,16 @@ describe('UserService', () => {
       birthdate: new Date(2020, 1, 1),
       biography: 'test',
       location: 'test',
-      pictureId: 0
+      pictureId: 0,
+      plants: [],
+      cuttings: [],
+      events: [],
+      joinedEvents: [],
+      favoritesCuttings: [],
+      messages: [],
+      participants: []
     };
-  })
+  });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
