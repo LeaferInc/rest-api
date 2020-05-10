@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/LeaferInc/rest-api/compare/v1.0.0...v1.1.0) (2020-05-10)
+
+
+### Features
+
+* **all:** migrate bootstrap to ng-zorro ([81a60fd](https://github.com/LeaferInc/rest-api/commit/81a60fd14b9d52523a4697e7bfe5626f069775ad))
+* a User can now join/unjoin an Event an Event ([be305e9](https://github.com/LeaferInc/rest-api/commit/be305e98562b4c659b2383f42b2c20059c7511d1))
+* **all:** migrate bootstrap to ng-zorro ([18eaf27](https://github.com/LeaferInc/rest-api/commit/18eaf2719a9caf478dbfe3661d501cb57a9c10ba))
+* a User can now join/unjoin an Event an Event ([b3ae52c](https://github.com/LeaferInc/rest-api/commit/b3ae52ca95f3b9b10c0e28a8cc171547784a0400))
+* **plant component:** add Plant component ([cb012d7](https://github.com/LeaferInc/rest-api/commit/cb012d7a0fa1cb7f980471d145a4e02bb4b6c6be))
+* **plant component:** add Plant component ([6a8630a](https://github.com/LeaferInc/rest-api/commit/6a8630a8f12b2da7f1e9cd29c228d585c3fd4388))
+
 # 1.0.0 (2020-04-23)
 
 
