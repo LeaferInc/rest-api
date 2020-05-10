@@ -11,6 +11,16 @@ import { UserEntity } from './common/entity/user.entity';
 import { EventEntity } from './common/entity/event.entity';
 import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
+import { CuttingModule } from './cutting/cutting.module';
+import { CuttingEntity } from './common/entity/cutting.entity';
+import { MessageEntity } from './common/entity/message.entity';
+import { MessageModule } from './message/message.module';
+import { RoomModule } from './room/room.module';
+import { ParticipantModule } from './participant/participant.module';
+import { RoomEntity } from './common/entity/room.entity';
+import { ParticipantEntity } from './common/entity/participant.entity';
+import { MessageGatewayModule } from './message-gateway/message-gateway.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -35,19 +45,33 @@ import { LocationModule } from './location/location.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
+      // logging: true,
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, EventEntity],
-      synchronize: true,
+      entities: [
+        UserEntity,
+        EventEntity,
+        CuttingEntity,
+        MessageEntity,
+        RoomEntity,
+        ParticipantEntity
+      ],
+      synchronize: process.env.NODE_ENV === 'development' ?  true : false,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     CommonModule,
     UserModule,
     EventModule,
     AuthModule,
     LocationModule,
+    CuttingModule,
+    MessageModule,
+    ParticipantModule,
+    RoomModule,
+    MessageGatewayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

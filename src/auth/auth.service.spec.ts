@@ -2,13 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserDto } from 'src/common/dto/user.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
-  const userServiceMock = { 
+  const userServiceMock = {
     findOne: jest.fn()
   }
   const jwtServiceMock = {
@@ -48,20 +47,22 @@ describe('AuthService', () => {
   });
 
   it('should return the user found', async () => {
-    const user: UserEntity =  {
-      id: 0,
-      createdAt: new Date(2020, 1, 1),
-      enabled: true,
-      email: 'test@test.com',
-      username: 'test',
-      password: 'test',
-      firstname: 'test',
-      lastname: 'test',
-      birthdate: new Date(2020, 1, 1),
-      biography: 'test',
-      location: 'test',
-      pictureId: 0
-    };
+    const user: UserEntity = new UserEntity();
+    user.id = 0;
+    user.createdAt = new Date(2020, 1, 1);
+    user.enabled = true;
+    user.email = 'test@test.com';
+    user.username = 'test';
+    user.password = 'test';
+    user.firstname = 'test';
+    user.lastname = 'test';
+    user.birthdate = new Date(2020, 1, 1);
+    user.biography = 'test';
+    user.location = 'test';
+    user.pictureId = 0;
+    user.events = [];
+    user.cuttings = [];
+    user.joinedEvents = [];
 
     userServiceMock.findOne.mockReturnValue(user);
 
@@ -83,11 +84,11 @@ describe('AuthService', () => {
     userDto.id = 0;
     userDto.username = 'test';
 
-    const access_token = service.login(userDto);
+    const accessToken = service.login(userDto);
 
     expect(jwtServiceMock.sign).toHaveBeenCalledTimes(1);
     expect(jwtServiceMock.sign).toHaveReturnedWith('test');
-    expect(access_token).toBe('test');
+    expect(accessToken).toBe('test');
   });
 
 });

@@ -1,12 +1,33 @@
+import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional } from "class-validator";
 
 export class CreateUserDto {
+  @IsEmail()
   email: string;
+
+  @IsString()
   username: string;
+
+  @IsString()
   password: string;
+
+  @IsOptional()
+  @IsString()
   firstname: string;
+
+  @IsOptional()
+  @IsString()
   lastname: string;
+
+  @IsOptional()
+  @IsDateString()
   birthdate: Date;
+
+  @IsOptional()
+  @IsString()
   biography: string;
+
+  @IsOptional()
+  @IsString()
   location: string;
 
   constructor(user?: CreateUserDto) {
@@ -32,15 +53,39 @@ export class CreateUserDto {
 }
 
 export class UserDto {
+  @IsNumber()
   id: number;
+
+  @IsDateString()
   createdAt: Date;
+
+  @IsBoolean()
   enabled: boolean;
+
+  @IsString()
   email: string;
+
+  @IsString()
   username: string;
+
+  @IsString()
   firstname: string;
+
+  @IsString()
   lastname: string;
+
+  @IsDateString()
   birthdate: Date;
+
+  @IsString()
   biography: string;
+
+  @IsString()
   location: string;
+  
+  @IsNumber()
   pictureId: number;
+
+  @IsArray()
+  events: number[];
 }

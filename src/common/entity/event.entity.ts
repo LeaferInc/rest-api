@@ -2,16 +2,15 @@
  * @author ddaninthe
  */
 
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { CommonEntity } from "../common.entity";
+import { UserEntity } from "./user.entity";
+import { Exclude } from "class-transformer";
 
-@Entity()
+@Entity({ name: 'event' })
 export class EventEntity extends CommonEntity {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({ default: false })
-    enabled: boolean;
 
     @Column()
     name: string;
@@ -22,16 +21,16 @@ export class EventEntity extends CommonEntity {
     @Column()
     location: string;
 
-    @Column({ name: 'start_date' })
+    @Column()
     startDate: Date;
 
-    @Column({ name: 'end_date' })
+    @Column()
     endDate: Date;
 
     @Column({ default: 0 })
     price: number;
 
-    @Column({ name: 'max_people' })
+    @Column()
     maxPeople: number;
 
     @Column({ type: 'float8' })
@@ -39,4 +38,15 @@ export class EventEntity extends CommonEntity {
 
     @Column({ type: 'float8' })
     longitude: number;
+
+    @Exclude()
+    @ManyToOne(() => UserEntity, organizer => organizer.events)
+    organizer: UserEntity;
+
+    @Exclude()
+    @ManyToMany(() => UserEntity, user => user.joinedEvents)
+    @JoinTable({ name: 'entry' })
+    entrants: UserEntity[];
+
+    joined?: boolean;
 }
