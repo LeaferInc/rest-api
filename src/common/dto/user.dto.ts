@@ -82,7 +82,6 @@ export class UserDto {
 
   @IsString()
   location: string;
-
   @IsNumber()
   pictureId: number;
 

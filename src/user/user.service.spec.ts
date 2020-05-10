@@ -46,7 +46,10 @@ describe('UserService', () => {
       plants: [],
       cuttings: [],
       events: [],
-      joinedEvents: []
+      joinedEvents: [],
+      favoritesCuttings: [],
+      messages: [],
+      participants: []
     };
   });
 
