@@ -35,11 +35,11 @@ export class UserService {
         "SELECT " +
         "   p.id, p.user_id as \"userId\", p.room_id as \"roomId\", u.created_at, u.enabled, u.id, u.email, u.username, u.firstname, " +
         "   u.lastname, u.birthdate, u.biography, u.location, u.picture_id as \"pictureId\" " +
-        "FROM participants p " +
+        "FROM participant p " +
         "LEFT JOIN \"user\" u ON u.id = p.user_id " +
         "WHERE p.user_id != $1 AND p.room_id IN ( " +
         "   SELECT p.room_id " +
-        "   FROM participants p " +
+        "   FROM participant p " +
         "   WHERE p.user_id = $1 " +
         ");",
         [userId]
