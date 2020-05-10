@@ -22,7 +22,6 @@ export class ParticipantService {
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
-    console.log('eee', createParticipantDto.roomId);
     const participant = new ParticipantEntity();
     participant.room = await this.roomService.findOne(createParticipantDto.roomId);
     participant.user = await this.userService.findOne(userId);
@@ -34,7 +33,6 @@ export class ParticipantService {
       throw new HttpException('UsersId doit etre plus grand que 1', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     // TODO: si une room avec les id utilisateurs existe deja, retourner cette room
-    console.log(usersId);
 
     // const participants = await this.participantRepository.find({
     //   relations: ['user', 'room'],

@@ -31,7 +31,6 @@ export class CuttingController {
 
   @Put()
   edit(@Request() req: Express.Request, @Body() updateCuttingDto: UpdateCuttingDto) {
-    console.log(updateCuttingDto);
     return this.cuttingService.edit(updateCuttingDto);
   }
 
