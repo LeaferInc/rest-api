@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/LeaferInc/rest-api/compare/v1.1.0...v1.1.1) (2020-05-11)
+
+
+### Bug Fixes
+
+* **bdd:** enable synchronize in prod ([2c75740](https://github.com/LeaferInc/rest-api/commit/2c75740c033d0096fcdbd49eaf1b4a4eba3ac3dd))
+* **socket:** fix socketio port. Now http and socketio have the same port ([db0453a](https://github.com/LeaferInc/rest-api/commit/db0453a0d344327ecd32feaa9c6f3f07d0dba59d))
+
 # [1.1.0](https://github.com/LeaferInc/rest-api/compare/v1.0.0...v1.1.0) (2020-05-10)
 
 
