@@ -62,7 +62,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         RoomEntity,
         ParticipantEntity
       ],
-      synchronize: process.env.NODE_ENV === 'development' ? true : false,
+      // synchronize: process.env.NODE_ENV === 'development' ? true : false,
+      synchronize: true, // disable this when release
       namingStrategy: new SnakeNamingStrategy(),
     }),
     CommonModule,
