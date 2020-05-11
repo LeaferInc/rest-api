@@ -16,7 +16,7 @@ import { RoomService } from 'src/room/room.service';
 import { ParticipantService } from 'src/participant/participant.service';
 import { MessageService } from 'src/message/message.service';
 
-@WebSocketGateway(3001, {namespace: 'chat'})
+@WebSocketGateway({namespace: 'chat'})
 @UsePipes(new ValidationPipe({transform: true}))
 export class MessageGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
