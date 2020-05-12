@@ -1,5 +1,9 @@
-import { Controller, Get, Query, HttpService, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Query, HttpService, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('location')
 export class LocationController {
 

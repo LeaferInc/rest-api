@@ -2,7 +2,9 @@ import { Controller, Post, Body, Request, UseGuards, Get, Put, Delete, Param, Qu
 import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting.dto';
 import { CuttingService } from './cutting.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('cuttings')
 @UseGuards(JwtAuthGuard)
 export class CuttingController {

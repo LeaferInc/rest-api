@@ -1,15 +1,19 @@
 import { CuttingEntity } from "../entity/cutting.entity";
 import { IsNumber, IsString, IsOptional } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateCuttingDto {
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiProperty()
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsString()
-  tradeWith: string;
+  tradeWith?: string;
 
   toEntity(): CuttingEntity {
     const cutting: CuttingEntity = new CuttingEntity();
@@ -21,26 +25,27 @@ export class CreateCuttingDto {
 }
 
 export class UpdateCuttingDto {
+  @ApiProperty()
   @IsNumber()
   id: number;
 
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiProperty()
   @IsOptional()
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsOptional()
   @IsString()
   tradeWith: string;
 
+  @ApiProperty()
   @IsOptional()
   @IsNumber()
   viewsCount: number;
   // ownerId: number;
-
-  public test() {
-    return 'test';
-  }
 }

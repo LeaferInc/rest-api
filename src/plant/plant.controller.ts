@@ -4,7 +4,9 @@ import { CreatePlantDto } from 'src/common/dto/plant.dto';
 import { PlantEntity } from 'src/common/entity/plant.entity';
 import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('plant')
 export class PlantController {

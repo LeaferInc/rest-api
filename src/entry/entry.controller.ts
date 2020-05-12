@@ -5,7 +5,9 @@
 import { Controller, Post, Param, Delete, Get, UseGuards, Request } from '@nestjs/common';
 import { EntryService } from './entry.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('entry')
 export class EntryController {
     constructor(private entryService: EntryService) { }

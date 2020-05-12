@@ -13,6 +13,7 @@ import { CuttingEntity } from './cutting.entity';
 import { MessageEntity } from './message.entity';
 import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum Role {
   USER,
@@ -21,49 +22,63 @@ export enum Role {
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column()
   email: string;
 
+  @ApiProperty()
   @Column()
   username: string;
 
+  @ApiProperty()
   @Exclude()
   @Column()
   password: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   firstname: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   lastname: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   birthdate: Date;
 
+  @ApiProperty()
   @Column({ nullable: true })
   biography: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   location: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   pictureId: number;
 
+  @ApiProperty()
   @Column({ default: Role.USER })
   role: Role;
 
+  @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[];
 
+  @ApiProperty({ type: () => [EventEntity] })
   @OneToMany(
     () => EventEntity,
     event => event.organizer,
   )
   events: EventEntity[];
 
+  @ApiProperty({ type: () => [CuttingEntity] })
   @OneToMany(
     () => CuttingEntity,
     cutting => cutting.owner,
@@ -82,22 +97,26 @@ export class UserEntity extends CommonEntity {
   // )
   // messages_received: MessageEntity[];
 
+  @ApiProperty({ type: () => [MessageEntity] })
   @OneToMany(
     () => MessageEntity,
     message => message.user
   )
   messages: MessageEntity[];
 
+  @ApiProperty({ type: () => [CuttingEntity] })
   @ManyToMany(() => CuttingEntity)
   @JoinTable({ name: 'user_favorite_cutting' })
   favoritesCuttings: CuttingEntity[];
 
+  @ApiProperty({ type: () => [ParticipantEntity] })
   @OneToMany(
     () => ParticipantEntity,
     participant => participant.user
   )
   participants: ParticipantEntity[];
 
+  @ApiProperty({ type: () => [EventEntity] })
   @Exclude()
   @ManyToMany(() => EventEntity, event => event.entrants)
   joinedEvents: EventEntity[];

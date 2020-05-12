@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -15,12 +16,14 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
   }
 
+  @ApiBearerAuth()
   @Get('talkto')
   @UseGuards(JwtAuthGuard)
   getTalkTo(@Request() req: Express.Request): Promise<UserEntity[]> {
@@ -30,6 +33,7 @@ export class UserController {
   /**
    * @param criteria is the userId or the username
    */
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: number): Promise<UserEntity> {
@@ -39,6 +43,7 @@ export class UserController {
   /**
    * @param criteria is the userId or the username
    */
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete()
   remove(@Request() req: Express.Request): Promise<DeleteResult> {
