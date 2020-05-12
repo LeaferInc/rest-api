@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { UserEntity } from 'src/common/entity/user.entity';
+import { UserEntity, Role } from 'src/common/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateUserDto } from 'src/common/dto/user.dto';
 
@@ -43,6 +43,7 @@ describe('UserService', () => {
       biography: 'test',
       location: 'test',
       pictureId: 0,
+      role: Role.USER,
       plants: [],
       cuttings: [],
       events: [],
