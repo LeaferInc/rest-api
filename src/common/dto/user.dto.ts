@@ -1,4 +1,5 @@
-import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum } from "class-validator";
+import { Role } from "../entity/user.entity";
 
 export class CreateUserDto {
   @IsEmail()
@@ -82,8 +83,12 @@ export class UserDto {
 
   @IsString()
   location: string;
+
   @IsNumber()
   pictureId: number;
+
+  @IsEnum(Role)
+  role: Role
 
   @IsArray()
   plants: number[];

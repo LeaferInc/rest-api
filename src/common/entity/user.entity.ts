@@ -14,6 +14,11 @@ import { MessageEntity } from './message.entity';
 import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 
+export enum Role {
+  USER,
+  ADMIN
+}
+
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
   @PrimaryGeneratedColumn()
@@ -46,6 +51,9 @@ export class UserEntity extends CommonEntity {
 
   @Column({ nullable: true })
   pictureId: number;
+
+  @Column({ default: Role.USER })
+  role: Role;
 
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[];
