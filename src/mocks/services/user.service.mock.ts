@@ -12,6 +12,6 @@ export class UserServiceMock {
     }
 
     static mock = {
-        findOne: jest.fn((id) => UserServiceMock.testUser)
+      findOneById: jest.fn((id) => UserServiceMock.testUser)
     }
 }

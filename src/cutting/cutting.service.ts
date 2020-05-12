@@ -18,7 +18,7 @@ export class CuttingService {
   async create(createCuttingDto: CreateCuttingDto, ownerId: number): Promise<CuttingEntity> {
     const cutting: CuttingEntity = createCuttingDto.toEntity();
 
-    const user: UserEntity = await this.userService.findOne(ownerId);
+    const user: UserEntity = await this.userService.findOneById(ownerId);
     cutting.owner = user;
 
     return this.cuttingRepository.save(cutting);

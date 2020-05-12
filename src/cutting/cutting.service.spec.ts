@@ -19,7 +19,7 @@ describe('CuttingService', () => {
     findAndCount: jest.fn(() => of([[cuttingEntity, cuttingEntity], 2])),
   };
   const userServiceMock = {
-    findOne: jest.fn()
+    findOneById: jest.fn()
   }
 
   beforeEach(async () => {

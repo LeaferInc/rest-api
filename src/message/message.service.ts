@@ -19,7 +19,7 @@ export class MessageService {
     const message: MessageEntity = new MessageEntity();
     message.messageContent = createMessageDto.messageContent;
     message.room = await this.roomService.findOne(createMessageDto.roomId);
-    message.user = await this.userService.findOne(userId);
+    message.user = await this.userService.findOneById(userId);
     return this.messageRepository.save(message);
   }
 

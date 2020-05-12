@@ -23,7 +23,7 @@ export class EntryService {
      * @param userId the User who wants to join
      */
     async joinEvent(eventId: number, userId: number): Promise<EventEntity> {
-        const user: UserEntity = await this.userService.findOne(userId);
+        const user: UserEntity = await this.userService.findOneById(userId);
         const event: EventEntity = await this.eventService.findOne(eventId, { relations: ['organizer'] });
 
         if (!event) {

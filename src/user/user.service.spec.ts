@@ -10,7 +10,7 @@ describe('UserService', () => {
     create: jest.fn(),
     save: jest.fn(),
     find: jest.fn(),
-    findOne: jest.fn(),
+    findOneOrFail: jest.fn(),
     delete: jest.fn()
   }
   let userEntity: UserEntity;
@@ -67,6 +67,7 @@ describe('UserService', () => {
 
     repositoryMock.create.mockReturnValue({});
     repositoryMock.save.mockReturnValue(userEntity);
+    repositoryMock.find.mockReturnValue([]);
 
     const userNewlyCreated = await service.create(createUserDto);
 
@@ -78,7 +79,7 @@ describe('UserService', () => {
   });
 
   it('should return all users', async () => {
-
+    repositoryMock.find.mockReset();
     repositoryMock.find.mockReturnValue([userEntity, userEntity, userEntity]);
 
     const users = await service.findAll();
@@ -89,18 +90,19 @@ describe('UserService', () => {
   });
 
   it('should return one user', async () => {
-    repositoryMock.findOne.mockReturnValue(userEntity);
+    repositoryMock.findOneOrFail.mockReset();
+    repositoryMock.findOneOrFail.mockReturnValue(userEntity);
 
-    const user = await service.findOne(userEntity.id);
+    const user = await service.findOneById(userEntity.id);
 
-    expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(repositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(user).toEqual(userEntity);
   });
 
   it('should remove the user and return a DeleteResult', async () => {
     repositoryMock.delete.mockReturnValue({});
 
-    const res = await service.remove(userEntity.id);
+    const res = await service.removeById(userEntity.id);
 
     expect(repositoryMock.delete).toHaveBeenCalledTimes(1);
     expect(res).toEqual({});

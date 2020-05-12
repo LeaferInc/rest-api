@@ -24,7 +24,7 @@ export class ParticipantService {
     }
     const participant = new ParticipantEntity();
     participant.room = await this.roomService.findOne(createParticipantDto.roomId);
-    participant.user = await this.userService.findOne(userId);
+    participant.user = await this.userService.findOneById(userId);
     return this.participantRepository.save(participant);
   }
 

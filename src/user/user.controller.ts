@@ -15,6 +15,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
@@ -29,16 +30,18 @@ export class UserController {
   /**
    * @param criteria is the userId or the username
    */
-  @Get(':criteria')
-  findOne(@Param('criteria') criteria: string): Promise<UserEntity> {
-    return this.userService.findOne(criteria);
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<UserEntity> {
+    return this.userService.findOneById(id);
   }
 
   /**
    * @param criteria is the userId or the username
    */
-  @Delete(':criteria')
-  remove(@Param('criteria') criteria: string): Promise<DeleteResult> {
-    return this.userService.remove(criteria);
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  remove(@Request() req: Express.Request): Promise<DeleteResult> {
+    return this.userService.removeById(req.user.userId);
   }
 }

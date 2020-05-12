@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, ObjectID, FindConditions, FindOneOptions, getManager } from 'typeorm';
@@ -15,8 +15,20 @@ export class UserService {
    * Create an user in the database from the corresponding CreateUserDto
    * @param userDto 
    */
-  create(userDto: CreateUserDto): Promise<UserEntity> {
+  async create(userDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepository.create(userDto.toLowerCase());
+    
+    const usersFound = await this.userRepository.find({
+      where: [
+        { username: user.username },
+        { email: user.email }
+      ]
+    });
+
+    if(usersFound.length) {
+      throw new HttpException('User is already created with this username or email', HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     return this.userRepository.save(user);
   }
 
@@ -44,46 +56,43 @@ export class UserService {
         ");",
         [userId]
       );
-
-      /** 
-        SELECT u.id, u.email, u.username, u.firstname, u.lastname
-        FROM users u
-        LEFT JOIN messages m ON m."receiverId" = u.id
-        WHERE m."senderId" = 3
-        GROUP BY u.id
-
-        UNION
-
-        SELECT u.id, u.email, u.username, u.firstname, u.lastname
-        FROM users u
-        WHERE u.id IN (
-          SELECT m."senderId"
-          FROM users u
-          LEFT JOIN messages m ON m."receiverId" = u.id
-          WHERE m."receiverId" = 3
-          GROUP BY m."senderId"
-        );
-       */
   }
 
   /**
-   * Find the first occurence of an user
-   * @param criteria is the userId or the username
+   * Find the first occurence of an user by an id
+   * @param id is the userId
    * @param options additional option for querying database
    */
-  findOne(criteria: number | string, options?: FindOneOptions): Promise<UserEntity> {
-    return typeof criteria == 'number' || Number(criteria)
-      ? this.userRepository.findOne(criteria, options)
-      : this.userRepository.findOne({ username: criteria }, options);
+  async findOneById(id: number, options?: FindOneOptions): Promise<UserEntity> {
+    let userFound: UserEntity;
+    try {
+      userFound = await this.userRepository.findOneOrFail(id, options);
+    } catch(err) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return userFound;
   }
 
   /**
-   * Remove one or many user
-   * @param criteria is the userId or the username
+   * Find the first occurence of an user by an username
+   * @param username is the username
+   * @param options additional option for querying database
    */
-  remove(criteria: number | string): Promise<DeleteResult> {
-    return typeof criteria == 'number' || Number(criteria)
-      ? this.userRepository.delete(criteria)
-      : this.userRepository.delete({ username: criteria });
+  async findOneByUsername(username: string, options?: FindOneOptions): Promise<UserEntity> {
+    let userFound: UserEntity;
+    try {
+      userFound = await this.userRepository.findOne({ username: username }, options)
+    } catch(err) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return userFound;
+  }
+
+  /**
+   * Remove one user by id
+   * @param id is the userId
+   */
+  removeById(id: number | string): Promise<DeleteResult> {
+    return this.userRepository.delete(id);
   }
 }

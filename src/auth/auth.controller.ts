@@ -4,18 +4,17 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserDto } from 'src/common/dto/user.dto';
 
+@UseGuards(LocalAuthGuard)
 @Controller('auth')
 export class AuthController {
 
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
     return { user: req.user, token: this.authService.login(req.user as UserDto) };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
   me(@Request() req: Express.Request) {
     return this.authService.me(req.user.userId);
@@ -25,7 +24,6 @@ export class AuthController {
    * Testing purpose only
    * @param req 
    */
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
