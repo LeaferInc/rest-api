@@ -10,13 +10,13 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Logger, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateMessageDto } from 'src/common/dto/message.dto';
+import { Logger, UsePipes, ValidationPipe, UseFilters } from '@nestjs/common';
 import { RoomService } from 'src/room/room.service';
-import { ParticipantService } from 'src/participant/participant.service';
-import { MessageService } from 'src/message/message.service';
+import { MessageEntity } from 'src/common/entity/message.entity';
+import { WsExceptionFilterExtended } from './gateway.filter';
 
 @WebSocketGateway({namespace: 'chat'})
+@UseFilters(new WsExceptionFilterExtended())
 @UsePipes(new ValidationPipe({transform: true}))
 export class MessageGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -35,8 +35,8 @@ export class MessageGateway
   private sessionStore: any = {};
 
   constructor(
-    private messageService: MessageService,
-    private roomService: RoomService) {}
+    private roomService: RoomService
+  ) {}
 
   afterInit(server) {
     this.logger.log('Chat Initialized');
@@ -59,23 +59,6 @@ export class MessageGateway
     delete this.sessionStore[client.id];
   }
 
-  @SubscribeMessage('messageClientToServer')
-  async addMessage(@MessageBody() data: CreateMessageDto, @ConnectedSocket() client: Socket) {
-    this.logger.log(
-      `User ${this.sessionStore[client.id]} created message '${
-        data.messageContent
-      }' to ${data.roomId}`,
-    );
-    
-    // Message
-    const message = await this.messageService.create(data, this.sessionStore[client.id]);
-    this.logger.log(`Client ${this.sessionStore[client.id]} make a message with content '${message.messageContent}'`);
-
-    this.server.to(String(data.roomId)).emit('messageServerToClient', message);
-
-    return message;
-  }
-
   @SubscribeMessage('joinRoom')
   async joinRoom(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
     // TODO: Add security
@@ -94,6 +77,7 @@ export class MessageGateway
 
   @SubscribeMessage('leaveRoom')
   async leaveRoom(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
+    // TODO: Add security
     const roomId = Number(_roomId);
     if(!roomId) throw new WsException('roomId is not a number');
       
@@ -110,5 +94,17 @@ export class MessageGateway
   @SubscribeMessage('debug')
   async debug(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
     return { connected: client.connected, rooms: client.adapter.rooms }
+  }
+
+  /**
+   * Fonction used by MessageService to send a message to the socketio pipeline
+   * The responsability to send a message to socketio pipeline is not from the client (user) 
+   * but from our backend
+   * @param message 
+   */
+  async addMessageExternal(message: MessageEntity) {
+    // Message
+    this.logger.log(`Client ${message.user.username} make a message with content '${message.messageContent}' in room ${message.room.id}`);
+    this.server.to(String(message.room.id)).emit('messageServerToClient', message);
   }
 }

@@ -10,3 +10,13 @@ export class CreateMessageDto {
   @IsNumber()
   roomId: number;
 }
+
+export class CreateDiscussionMessageDto {
+  @ApiProperty()
+  @IsString()
+  messageContent: string;
+
+  @ApiProperty()
+  @IsNumber()
+  receiverId: number;
+}

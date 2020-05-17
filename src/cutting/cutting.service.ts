@@ -55,12 +55,14 @@ export class CuttingService {
   }
 
   async edit(updateCuttingDto: UpdateCuttingDto) {
+    // TODO: edit only if the cutting belongs to the user
     const { id, ...updateCutting } = updateCuttingDto;
     await this.cuttingRepository.update(id, updateCutting);
     return this.cuttingRepository.findOne(id);
   }
 
   async delete(id: string | number) {
+    // TODO: delete only if the cutting belongs to the user
     return this.cuttingRepository.delete(id);
   }
 

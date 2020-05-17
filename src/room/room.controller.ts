@@ -9,19 +9,5 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class RoomController {
 
   constructor(private roomService: RoomService) { }
-  
-  @Post()
-  create() {
-    return this.roomService.create();
-  }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roomService.findOne(Number(id));
-  }
-
-  @Get('/name/:name')
-  findOneByName(@Param('name') name: string)  {
-    return this.roomService.findOneByName(name);
-  }
 }

@@ -9,6 +9,7 @@ import { ParticipantEntity } from 'src/common/entity/participant.entity';
 import { UserModule } from 'src/user/user.module';
 import { ParticipantModule } from 'src/participant/participant.module';
 import { RoomModule } from 'src/room/room.module';
+import { MessageGateway } from './message.gateway';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RoomModule } from 'src/room/room.module';
     ParticipantModule,
     RoomModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, MessageGateway],
   controllers: [MessageController],
   exports: [MessageService],
 })
