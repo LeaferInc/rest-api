@@ -41,7 +41,6 @@ export class PlantController {
     return this.plantService.findAll();
   }
 
-
   /**
    * @param criteria is the plantId or the name
    */
