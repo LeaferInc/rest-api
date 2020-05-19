@@ -1,20 +1,27 @@
-import { UserEntity } from "../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsString, IsNumber } from "class-validator";
 
 export class CreatePlantDto {
   @ApiProperty()
+  @IsString()
   name: string;
   @ApiProperty()
+  @IsNumber()
   humidity: number;
   @ApiProperty()
+  @IsString()
   watering: string;
   @ApiProperty()
+  @IsNumber()
   difficulty: number;
   @ApiProperty()
+  @IsString()
   exposure: string;
   @ApiProperty()
+  @IsString()
   toxicity: string;
   @ApiProperty()
+  @IsString()
   potting: string;
 
   constructor(plant?: CreatePlantDto) {
