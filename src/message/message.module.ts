@@ -10,6 +10,8 @@ import { UserModule } from 'src/user/user.module';
 import { ParticipantModule } from 'src/participant/participant.module';
 import { RoomModule } from 'src/room/room.module';
 import { MessageGateway } from './message.gateway';
+import { JwtCommonModule } from 'src/jwt-common/jwt-common.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { MessageGateway } from './message.gateway';
     UserModule,
     ParticipantModule,
     RoomModule,
+    JwtCommonModule,
   ],
   providers: [MessageService, MessageGateway],
   controllers: [MessageController],
