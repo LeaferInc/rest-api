@@ -4,15 +4,15 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, MoreThan } from 'typeorm';
+import { Repository, FindOneOptions, MoreThan, Raw } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
-import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class EventService {
+    private static readonly LIMIT = 30;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
         private userService: UserService) { }
@@ -25,18 +25,47 @@ export class EventService {
     }
 
     /**
-     * Find all incoming events and take only the few firsts
+     * Find all events after a given date
+     * @param date the date after the event has to begin
      */
-    findIncomings(): Promise<EventEntity[]> {
+    findAfterDate(date: Date): Promise<EventEntity[]> {
         return this.eventRepository.find({
             where: {
-                startDate: MoreThan(AppTime.now)
+                startDate: MoreThan(date),
             },
             order: {
-                startDate: 'ASC'
+                startDate: 'ASC',
             },
-            take: 12
+            take: EventService.LIMIT,
         });
+    }
+
+    /**
+     * Finds events matching the keyword in either their name or description.
+     * Case insensitive.
+     * @param keywords the words to search
+     */
+    findByKeywords(keywords: string): Promise<EventEntity[]> {
+        return this.eventRepository.find({
+            where: [
+                { name: Raw(alias => `${alias} ILIKE '%${keywords}%'`) },
+                { description: Raw(alias => `${alias} ILIKE '%${keywords}%'`) },
+            ],
+            order: {
+                startDate: 'ASC',
+            },
+            take: EventService.LIMIT,
+        });
+    }
+
+    /**
+     * Find closest events to the given coordinates
+     * @param latitude latitude coordinate
+     * @param longitude longitude coordinate
+     */
+    findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
+        // TODO
+        return;
     }
 
     /**
@@ -44,10 +73,10 @@ export class EventService {
      * @param userId the related user's id
      */
     async findJoined(userId: number): Promise<EventEntity[]> {
-        const user: UserEntity = await this.userService.findOneById(userId, { relations: ['joinedEvents']});
+        const user: UserEntity = await this.userService.findOneById(userId, { relations: ['joinedEvents'] });
 
-        if(!user) {
-          throw new NotFoundException();
+        if (!user) {
+            throw new NotFoundException();
         }
         // Indicate that events have been join
         user.joinedEvents.map((event) => {
