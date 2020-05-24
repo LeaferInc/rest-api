@@ -8,7 +8,8 @@ import { UserDto } from 'src/common/dto/user.dto';
 describe('AuthService', () => {
   let service: AuthService;
   const userServiceMock = {
-    findOne: jest.fn()
+    findOneByUsername: jest.fn(),
+    findOneById: jest.fn()
   }
   const jwtServiceMock = {
     sign: jest.fn()
@@ -27,7 +28,7 @@ describe('AuthService', () => {
   });
 
   beforeEach(() => {
-    userServiceMock.findOne.mockReset();
+    userServiceMock.findOneById.mockReset();
   })
 
   it('should be defined', () => {
@@ -35,14 +36,14 @@ describe('AuthService', () => {
   });
 
   it('should return null', async () => {
-    userServiceMock.findOne.mockReturnValue({});
+    userServiceMock.findOneByUsername.mockReturnValue({});
     const username = 'test';
     const password = 'test';
 
     const data = await service.validateUser(username, password);
 
-    expect(userServiceMock.findOne).toHaveBeenCalledTimes(1);
-    expect(userServiceMock.findOne).toHaveReturnedWith({});
+    expect(userServiceMock.findOneByUsername).toHaveBeenCalledTimes(1);
+    expect(userServiceMock.findOneByUsername).toHaveReturnedWith({});
     expect(data).toBeNull();
   });
 
@@ -65,7 +66,8 @@ describe('AuthService', () => {
     user.joinedEvents = [];
     user.plants = [];
 
-    userServiceMock.findOne.mockReturnValue(user);
+    userServiceMock.findOneByUsername.mockReset();
+    userServiceMock.findOneByUsername.mockReturnValue(user);
 
     const username = 'test';
     const passwordParam = 'test';
@@ -73,8 +75,8 @@ describe('AuthService', () => {
     const data = await service.validateUser(username, passwordParam);
     const { password, ...result } = user;
 
-    expect(userServiceMock.findOne).toHaveBeenCalledTimes(1);
-    expect(userServiceMock.findOne).toHaveReturnedWith(user);
+    expect(userServiceMock.findOneByUsername).toHaveBeenCalledTimes(1);
+    expect(userServiceMock.findOneByUsername).toHaveReturnedWith(user);
     expect(data).toEqual(result);
   });
 

@@ -1,4 +1,6 @@
-import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum } from "class-validator";
+import { Role } from "../entity/user.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
   @IsEmail()
@@ -12,23 +14,23 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  firstname: string;
+  firstname?: string;
 
   @IsOptional()
   @IsString()
-  lastname: string;
+  lastname?: string;
 
   @IsOptional()
   @IsDateString()
-  birthdate: Date;
+  birthdate?: Date;
 
   @IsOptional()
   @IsString()
-  biography: string;
+  biography?: string;
 
   @IsOptional()
   @IsString()
-  location: string;
+  location?: string;
 
   constructor(user?: CreateUserDto) {
     if (user) {
@@ -53,41 +55,59 @@ export class CreateUserDto {
 }
 
 export class UserDto {
+  @ApiProperty()
   @IsNumber()
   id: number;
 
+  @ApiProperty()
   @IsDateString()
   createdAt: Date;
 
+  @ApiProperty()
   @IsBoolean()
   enabled: boolean;
 
+  @ApiProperty()
   @IsString()
   email: string;
 
+  @ApiProperty()
   @IsString()
   username: string;
 
+  @ApiProperty()
   @IsString()
   firstname: string;
 
+  @ApiProperty()
   @IsString()
   lastname: string;
 
+  @ApiProperty()
   @IsDateString()
   birthdate: Date;
 
+  @ApiProperty()
   @IsString()
   biography: string;
 
+  @ApiProperty()
   @IsString()
   location: string;
+
+  @ApiProperty()
   @IsNumber()
   pictureId: number;
 
+  @ApiProperty({ enum: ['USER', 'ADMIN']})
+  @IsEnum(Role)
+  role: Role
+
+  @ApiProperty({ type: [Number] })
   @IsArray()
   plants: number[];
 
+  @ApiProperty({ type: [Number] })
   @IsArray()
   events: number[];
 }

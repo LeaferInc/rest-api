@@ -3,12 +3,21 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UserDto } from 'src/common/dto/user.dto';
+import { ApiBody, ApiProperty } from '@nestjs/swagger';
+
+class Login {
+  @ApiProperty()
+  username: string;
+  @ApiProperty()
+  password: string;
+}
 
 @Controller('auth')
 export class AuthController {
 
   constructor(private authService: AuthService) {}
 
+  @ApiBody({ type: Login })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
@@ -20,15 +29,4 @@ export class AuthController {
   me(@Request() req: Express.Request) {
     return this.authService.me(req.user.userId);
   }
-
-  /**
-   * Testing purpose only
-   * @param req 
-   */
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
-  
 }

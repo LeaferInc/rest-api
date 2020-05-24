@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -15,11 +16,14 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
   }
 
+  @ApiBearerAuth()
   @Get('talkto')
   @UseGuards(JwtAuthGuard)
   getTalkTo(@Request() req: Express.Request): Promise<UserEntity[]> {
@@ -29,16 +33,20 @@ export class UserController {
   /**
    * @param criteria is the userId or the username
    */
-  @Get(':criteria')
-  findOne(@Param('criteria') criteria: string): Promise<UserEntity> {
-    return this.userService.findOne(criteria);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<UserEntity> {
+    return this.userService.findOneById(id);
   }
 
   /**
    * @param criteria is the userId or the username
    */
-  @Delete(':criteria')
-  remove(@Param('criteria') criteria: string): Promise<DeleteResult> {
-    return this.userService.remove(criteria);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  remove(@Request() req: Express.Request): Promise<DeleteResult> {
+    return this.userService.removeById(req.user.userId);
   }
 }

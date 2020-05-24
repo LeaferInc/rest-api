@@ -44,7 +44,7 @@ export class EventService {
      * @param userId the related user's id
      */
     async findJoined(userId: number): Promise<EventEntity[]> {
-        const user: UserEntity = await this.userService.findOne(userId, { relations: ['joinedEvents']});
+        const user: UserEntity = await this.userService.findOneById(userId, { relations: ['joinedEvents']});
 
         if(!user) {
           throw new NotFoundException();
@@ -87,7 +87,7 @@ export class EventService {
     async createOne(eventDto: CreateEventDto, organizer: number): Promise<EventEntity> {
         const event: EventEntity = eventDto.toEntity();
 
-        const user: UserEntity = await this.userService.findOne(organizer);
+        const user: UserEntity = await this.userService.findOneById(organizer);
         event.organizer = user;
 
         return this.eventRepository.save(event);

@@ -1,8 +1,10 @@
 import { Controller, Request, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { CreateMessageDto } from 'src/common/dto/message.dto';
+import { CreateMessageDto, CreateDiscussionMessageDto } from 'src/common/dto/message.dto';
 import { MessageService } from './message.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('message')
 @UseGuards(JwtAuthGuard)
 export class MessageController {
@@ -13,9 +15,9 @@ export class MessageController {
     return this.messageService.create(createMessageDto, req.user.userId);
   }
 
-  @Post('createOffer')
-  createOffer(@Request() req: Express.Request, @Body() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto, req.user.userId);
+  @Post('createDiscussion')
+  createDiscussion(@Request() req: Express.Request, @Body() createDiscussionMessageDto: CreateDiscussionMessageDto) {
+    return this.messageService.createDiscussion(createDiscussionMessageDto, req.user.userId);
   }
 
   @Get('conversation')

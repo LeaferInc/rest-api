@@ -16,7 +16,9 @@ import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from 'src/common/dto/event.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('events')
 export class EventController {
   constructor(private eventService: EventService) {}

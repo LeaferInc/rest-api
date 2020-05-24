@@ -4,32 +4,42 @@
 
 import { EventEntity } from '../entity/event.entity';
 import { IsString, IsNumber, IsDateString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEventDto {
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiProperty()
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsString()
   location: string;
 
+  @ApiProperty()
   @IsDateString()
   startDate: Date;
 
+  @ApiProperty()
   @IsDateString()
   endDate: Date;
 
+  @ApiProperty()
   @IsNumber()
   price: number;
 
+  @ApiProperty()
   @IsNumber()
   maxPeople: number;
 
+  @ApiProperty()
   @IsNumber()
   latitude: number;
 
+  @ApiProperty()
   @IsNumber()
   longitude: number;
 
