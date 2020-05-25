@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsDateString, IsOptional } from "class-validator";
+import { IsString, IsDateString, IsOptional, IsLatitude, IsLongitude } from "class-validator";
 
 export class EventSearchDto {
     @ApiProperty()
-    @IsNumber()
+    @IsLatitude()
     @IsOptional()
     latitude?: number;
 
     @ApiProperty()
-    @IsNumber()
+    @IsLongitude()
     @IsOptional()
     longitude?: number;
 

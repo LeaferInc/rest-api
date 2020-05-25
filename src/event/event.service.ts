@@ -9,10 +9,12 @@ import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
+import { GeoPosition } from 'geo-position.ts';
 
 @Injectable()
 export class EventService {
     private static readonly LIMIT = 30;
+    private static readonly MAX_METER_DISTANCE = 1000;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
         private userService: UserService) { }
@@ -60,12 +62,18 @@ export class EventService {
 
     /**
      * Find closest events to the given coordinates
-     * @param latitude latitude coordinate
-     * @param longitude longitude coordinate
+     * @param latitude latitude coordinate to compare
+     * @param longitude longitude coordinate to compare
      */
-    findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
-        // TODO
-        return;
+    async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
+        const from = new GeoPosition(latitude, longitude);
+        const events: EventEntity[] = await this.findAll();
+        
+        return events.filter((event => {
+            const eventPosition = new GeoPosition(event.latitude, event.longitude);
+            const distance = +from.Distance(eventPosition).toFixed(0);
+            return distance < EventService.MAX_METER_DISTANCE;
+        }));
     }
 
     /**
