@@ -10,13 +10,26 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Logger, UsePipes, ValidationPipe, UseFilters } from '@nestjs/common';
+import { Logger, UsePipes, ValidationPipe, UseFilters, UseGuards } from '@nestjs/common';
 import { RoomService } from 'src/room/room.service';
 import { MessageEntity } from 'src/common/entity/message.entity';
 import { WsExceptionFilterExtended } from './gateway.filter';
+import { JwtService } from '@nestjs/jwt';
+import { WsJwtGuard } from './ws-jwt-guard.guard';
 
-@WebSocketGateway({namespace: 'chat'})
-@UseFilters(new WsExceptionFilterExtended())
+@WebSocketGateway({
+  namespace: 'chat',
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+      "Access-Control-Allow-Credentials": true
+    };
+    res.writeHead(200, headers);
+    res.end();
+  }
+})
+@UseFilters(WsExceptionFilterExtended)
 @UsePipes(new ValidationPipe({transform: true}))
 export class MessageGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -35,21 +48,36 @@ export class MessageGateway
   private sessionStore: any = {};
 
   constructor(
-    private roomService: RoomService
+    private roomService: RoomService,
+    private jwtService: JwtService
   ) {}
 
   afterInit(server) {
     this.logger.log('Chat Initialized');
   }
 
-  handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
+  async handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
     //TODO: Add security here ; user header to transfer jwt and get userId
-    this.userStore[client.handshake.query['userId']] = { clientId: client.id, roomSession: null };
-    this.sessionStore[client.id] = client.handshake.query['userId'];
-    this.logger.log(
-      `User ${client.handshake.query['userId']} connected with session ${client.id} `,
-    );
-    client.emit('init', `User ${this.sessionStore[client.id]} initialized`);
+
+    const token = client.handshake.headers.authorization.split(' ')[1];
+    
+    if(!token) {
+      throw new WsException('Missing jwt token');
+    }
+
+    try {
+      const decoded = this.jwtService.verify(token);
+
+      this.userStore[decoded.sub] = { clientId: client.id, roomSession: null };
+      this.sessionStore[client.id] = decoded.sub;
+      this.logger.log(
+        `User ${decoded.sub} connected with session ${client.id} `,
+      );
+      client.emit('init', `User ${this.sessionStore[client.id]} initialized`);
+    } catch(err) {
+      client.disconnect(true);
+      throw new WsException('Forbiden');
+    }
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -59,6 +87,7 @@ export class MessageGateway
     delete this.sessionStore[client.id];
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('joinRoom')
   async joinRoom(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
     // TODO: Add security
@@ -75,6 +104,7 @@ export class MessageGateway
     });
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('leaveRoom')
   async leaveRoom(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
     // TODO: Add security
@@ -91,6 +121,7 @@ export class MessageGateway
     });
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('debug')
   async debug(@MessageBody() _roomId: string, @ConnectedSocket() client: Socket) {
     return { connected: client.connected, rooms: client.adapter.rooms }

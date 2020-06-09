@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/LeaferInc/rest-api/compare/v1.1.1...v1.2.0) (2020-05-24)
+
+
+### Bug Fixes
+
+* **message:** change message behavior ([7256dad](https://github.com/LeaferInc/rest-api/commit/7256dad45c2d82f974530f9abf1ae6fd04a0364e))
+* **user test:** fix user tests ([15d013b](https://github.com/LeaferInc/rest-api/commit/15d013b1cf7e315d8f2293aeadab467c46406906))
+
+
+### Features
+
+* **swagger:** add swagger to the project ([f1191e1](https://github.com/LeaferInc/rest-api/commit/f1191e1fc3fcaf95dd36bb37dfaaa0c7012e0f28))
+
 ## [1.1.1](https://github.com/LeaferInc/rest-api/compare/v1.1.0...v1.1.1) (2020-05-11)
 
 

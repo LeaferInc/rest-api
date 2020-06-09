@@ -22,6 +22,7 @@ import { ParticipantModule } from './participant/participant.module';
 import { RoomEntity } from './common/entity/room.entity';
 import { ParticipantEntity } from './common/entity/participant.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { JwtCommonModule } from './jwt-common/jwt-common.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     MessageModule,
     ParticipantModule,
     RoomModule,
+    JwtCommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
