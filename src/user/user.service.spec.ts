@@ -2,18 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserEntity, Role } from 'src/common/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/common/dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
 
 describe('UserService', () => {
+  let userEntity: UserEntity;
+  
   let service: UserService;
   const repositoryMock = {
     create: jest.fn(),
     save: jest.fn(),
+    findOne: jest.fn(),
     find: jest.fn(),
     findOneOrFail: jest.fn(),
     delete: jest.fn()
   }
-  let userEntity: UserEntity;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -100,6 +102,30 @@ describe('UserService', () => {
     expect(user).toEqual(userEntity);
   });
 
+  it('should update a user', async () => {
+    repositoryMock.findOne.mockReset();
+    repositoryMock.save.mockReset();
+    repositoryMock.findOne.mockReturnValue(userEntity);
+
+    const changes: UpdateUserDto = new UpdateUserDto();
+    changes.biography = "New biography";
+    changes.firstname = "John";
+
+    const resUser = userEntity;
+    resUser.biography = "New Biography";
+    repositoryMock.save.mockReturnValue(resUser);
+
+    const result = await service.update(userEntity.id, changes);
+
+    expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
+
+    expect(result).toBeTruthy();
+    expect(result.biography).toBe("New biography");
+    expect(result.firstname).toBe("John");
+
+    expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+  });
+
   it('should remove the user and return a DeleteResult', async () => {
     repositoryMock.delete.mockReturnValue({});
 
@@ -107,6 +133,5 @@ describe('UserService', () => {
 
     expect(repositoryMock.delete).toHaveBeenCalledTimes(1);
     expect(res).toEqual({});
-  })
-
+  });
 });

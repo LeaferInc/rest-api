@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Get, Delete, Param, Request, UseGuards } from '@nestjs/common';
-import { CreateUserDto } from 'src/common/dto/user.dto';
+import { Controller, Post, Body, Get, Delete, Param, Request, UseGuards, Put } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
 import { UserService } from './user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { DeleteResult } from 'typeorm';
@@ -31,7 +31,7 @@ export class UserController {
   }
 
   /**
-   * @param criteria is the userId or the username
+   * @param id the userId
    */
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -41,7 +41,19 @@ export class UserController {
   }
 
   /**
-   * @param criteria is the userId or the username
+   * Update a user
+   * @param req the request containing the token
+   * @param updateUserDto the fields to update
+   */
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Put()
+  update(@Request() req: Express.Request, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    return this.userService.update(req.user.userId, updateUserDto);
+  }
+
+  /**
+   * Delete a user
    */
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
