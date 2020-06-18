@@ -30,6 +30,13 @@ export class UserController {
     return this.userService.getTalkTo(req.user.userId);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  findMe(@Request() req: Express.Request): Promise<UserEntity> {
+    return this.userService.findOneById(req.user.userId);
+  }
+
   /**
    * @param id the userId
    */
