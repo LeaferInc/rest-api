@@ -5,6 +5,7 @@ import { PlantEntity } from 'src/common/entity/plant.entity';
 import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { ResultData } from 'src/common/dto/query.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -37,8 +38,8 @@ export class PlantController {
   }
 
   @Get()
-  findAll(): Promise<PlantEntity[]> {
-    return this.plantService.findAll();
+  findAllExceptOwner(@Request() req: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantEntity>> {
+    return this.plantService.findAllExceptOwner(req.user, {skip, take});
   }
 
   /**

@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Difficulty, Time } from '../dto/plant.dto';
+import { PlantCollectionEntity } from './plant-collection.entity';
 
 @Entity({ name: 'plant' })
 export class PlantEntity extends CommonEntity {
@@ -16,6 +17,7 @@ export class PlantEntity extends CommonEntity {
   name: string;
 
   @ApiProperty()
+  @Column()
   height: number;
   
   @ApiProperty()
@@ -61,4 +63,11 @@ export class PlantEntity extends CommonEntity {
   @ApiProperty()
   @RelationId((plant: PlantEntity) => plant.owner)
   ownerId: number;
+
+  @ApiProperty()
+  @OneToMany(
+    () => PlantCollectionEntity,
+    plantCollection => plantCollection.plant
+  )
+  users: PlantCollectionEntity[];
 }

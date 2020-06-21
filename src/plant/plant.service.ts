@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
-import { Repository, FindManyOptions, DeleteResult } from 'typeorm';
+import { Repository, FindManyOptions, DeleteResult, Not } from 'typeorm';
 import { CreatePlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
+import { Pagination, ResultData } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class PlantService {
@@ -28,19 +29,32 @@ export class PlantService {
   }
 
   /**
-   * Return many plant based on the options
+   * Return many plant with pagination
    * @param options 
    */
-  findAll(options?: FindManyOptions<PlantEntity>): Promise<PlantEntity[]> {
-    return this.plantRepository.find(options);
+  async findAllExceptOwner(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+    const [items, count] = await this.plantRepository.findAndCount({
+      where: { owner: { id: Not(owner.userId) } },
+      skip: pagination?.skip,
+      take: pagination?.take
+    });
+    return {items, count};
   }
 
   /**
    * Find the first occurence of a plant
    * @param criteria is the plantId or the name
    */
-  findOne(criteria: string): Promise<PlantEntity> {
-    return this.plantRepository.findOne(JSON.parse(criteria));
+  async findOne(criteria: string): Promise<PlantEntity> {
+    let plant: PlantEntity;
+
+    try  {
+      plant = await this.plantRepository.findOneOrFail(criteria);
+    } catch(e) {
+      throw new HttpException('No plant found', HttpStatus.NOT_FOUND);
+    }
+
+    return plant;
   }
 
   /**
@@ -57,8 +71,6 @@ export class PlantService {
     });
     return items;
   }
-
-
 
   /**
    * Remove one or many plant
