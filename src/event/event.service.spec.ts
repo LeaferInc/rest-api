@@ -82,4 +82,12 @@ describe('EventService', () => {
       expect(e).toBeInstanceOf(NotFoundException);
     }
   });
+
+  it('should return the closest event', async () => {
+    const lat = 46.789637;
+    const long = 5.126527;
+    const closestEvents = await service.findClosest(lat, long);
+    expect(closestEvents).toHaveLength(1);
+    expect(closestEvents[0].id).toBe(1);
+  });
 });
