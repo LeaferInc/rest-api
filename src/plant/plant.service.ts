@@ -1,7 +1,7 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
-import { Repository, FindManyOptions, DeleteResult, Not } from 'typeorm';
+import { Repository, DeleteResult, Not, getRepository } from 'typeorm';
 import { CreatePlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -12,7 +12,7 @@ export class PlantService {
   constructor(
     @InjectRepository(PlantEntity)
     private plantRepository: Repository<PlantEntity>,
-    private userService: UserService
+    private userService: UserService,
   ) { }
 
   /**
@@ -41,6 +41,18 @@ export class PlantService {
     return {items, count};
   }
 
+  async findAllMyGarden(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+    const [items, count] = await getRepository(PlantEntity)
+      .createQueryBuilder('plant')
+      .innerJoin('plant.users', 'plant_collection')
+      .where('plant_collection.user_id = :userId', { userId: owner.userId })
+      .take(pagination.take || 12)
+      .skip(pagination.skip || 0)
+      .getManyAndCount();
+    
+    return {items, count};
+  }
+
   /**
    * Find the first occurence of a plant
    * @param criteria is the plantId or the name
@@ -65,11 +77,13 @@ export class PlantService {
     return this.plantRepository.find(JSON.parse(criteria));
   }
 
-  async findAllByByUser(user: Express.User): Promise<[Array<PlantEntity>, number]> {
-    const items = await this.plantRepository.findAndCount({
-      where: { owner: { id: user.userId } }
+  async findAllByByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+    const [items, count] = await this.plantRepository.findAndCount({
+      where: { owner: { id: user.userId } },
+      skip: pagination?.skip,
+      take: pagination?.take
     });
-    return items;
+    return {items, count};
   }
 
   /**

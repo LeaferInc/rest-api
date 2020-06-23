@@ -9,8 +9,11 @@ import { UserEntity } from 'src/common/entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PlantCollectionEntity, PlantEntity, UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PlantCollectionEntity, PlantEntity, UserEntity]),
+  ],
   controllers: [PlantCollectionController],
-  providers: [PlantCollectionService, UserService, PlantService]
+  providers: [PlantCollectionService, UserService, PlantService],
+  exports: [PlantCollectionService],
 })
 export class PlantCollectionModule {}

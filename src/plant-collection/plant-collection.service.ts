@@ -3,7 +3,6 @@ import { PlantCollectionEntity } from 'src/common/entity/plant-collection.entity
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
-import { CreatePlantCollectionDto } from 'src/common/dto/plant-collection.dto';
 import { PlantService } from 'src/plant/plant.service';
 
 @Injectable()

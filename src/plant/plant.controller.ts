@@ -27,27 +27,27 @@ export class PlantController {
     return this.plantService.findOne(criteria);
   }
 
-  @Get('search')
-  findAllByCriteria(@Query('criteria') criteria: string): Promise<PlantEntity[]> {
-    return this.plantService.findByCriteria(criteria);
-  }
-
   @Get('my')
-  findAllByUser(@Request() request: Express.Request) {
-    return this.plantService.findAllByByUser(request.user);
+  findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
+    return this.plantService.findAllByByUser(request.user, {skip, take});
   }
 
-  @Get()
+  @Get('findAllExceptOwner')
   findAllExceptOwner(@Request() req: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantEntity>> {
     return this.plantService.findAllExceptOwner(req.user, {skip, take});
+  }
+
+  @Get('my-garden')
+  findAllMyGarden(@Request() req: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantEntity>> {
+    return this.plantService.findAllMyGarden(req.user, {skip, take});
   }
 
   /**
    * @param criteria is the plantId or the name
    */
-  @Delete(':criteria')
-  remove(@Param('criteria') criteria: string): Promise<DeleteResult> {
-    return this.plantService.remove(criteria);
+  @Delete(':id')
+  remove(@Request() req: Express.Request, @Param('id') id: string): Promise<DeleteResult> {
+    return this.plantService.remove(id);
   }
 
 }
