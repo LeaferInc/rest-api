@@ -14,6 +14,7 @@ import { MessageEntity } from './message.entity';
 import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { PlantCollectionEntity } from './plant-collection.entity';
 
 export enum Role {
   USER,
@@ -69,7 +70,7 @@ export class UserEntity extends CommonEntity {
 
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
-  plants: PlantEntity[];
+  plants: PlantEntity[]; // Plant ownn by user
 
   @ApiProperty({ type: () => [EventEntity] })
   @OneToMany(
@@ -84,18 +85,6 @@ export class UserEntity extends CommonEntity {
     cutting => cutting.owner,
   )
   cuttings: CuttingEntity[];
-
-  // @OneToMany(
-  //   () => MessageEntity,
-  //   message => message.sender,
-  // )
-  // messages_sent: MessageEntity[];
-
-  // @OneToMany(
-  //   () => MessageEntity,
-  //   message => message.receiver,
-  // )
-  // messages_received: MessageEntity[];
 
   @ApiProperty({ type: () => [MessageEntity] })
   @OneToMany(
@@ -120,4 +109,12 @@ export class UserEntity extends CommonEntity {
   @Exclude()
   @ManyToMany(() => EventEntity, event => event.entrants)
   joinedEvents: EventEntity[];
+
+  @ApiProperty()
+  @OneToMany(
+    () => PlantCollectionEntity,
+    plantCollection => plantCollection.user
+  )
+  plantCollection: PlantCollectionEntity[];
+
 }

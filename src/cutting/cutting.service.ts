@@ -30,7 +30,7 @@ export class CuttingService {
     try {
       cutting = await this.cuttingRepository.findOneOrFail(id);
     } catch {
-      throw new HttpException('No cutting found', HttpStatus.NO_CONTENT);
+      throw new HttpException('No cutting found', HttpStatus.NOT_FOUND);
     }
 
     return cutting;
