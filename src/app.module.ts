@@ -23,6 +23,8 @@ import { RoomEntity } from './common/entity/room.entity';
 import { ParticipantEntity } from './common/entity/participant.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { JwtCommonModule } from './jwt-common/jwt-common.module';
+import { PlantCollectionModule } from './plant-collection/plant-collection.module';
+import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
 
 @Module({
   imports: [
@@ -60,7 +62,8 @@ import { JwtCommonModule } from './jwt-common/jwt-common.module';
         CuttingEntity,
         MessageEntity,
         RoomEntity,
-        ParticipantEntity
+        ParticipantEntity,
+        PlantCollectionEntity,
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -78,6 +81,7 @@ import { JwtCommonModule } from './jwt-common/jwt-common.module';
     ParticipantModule,
     RoomModule,
     JwtCommonModule,
+    PlantCollectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
