@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/LeaferInc/rest-api/compare/v1.2.0...v1.3.0) (2020-06-26)
+
+
+### Bug Fixes
+
+* **fix package-json:** fix package-json ([311e27a](https://github.com/LeaferInc/rest-api/commit/311e27aacac40c68374157ab7ad7b85aa6739ee5))
+
+
+### Features
+
+* **plants:** add plants ([1331fa0](https://github.com/LeaferInc/rest-api/commit/1331fa0f9f087ce91427a172f053708c2f9bf78f))
+
 # [1.2.0](https://github.com/LeaferInc/rest-api/compare/v1.1.1...v1.2.0) (2020-05-24)
 
 
