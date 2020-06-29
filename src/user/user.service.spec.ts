@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { UserEntity, Role } from 'src/common/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
+import { ImageService } from 'src/image/image.service';
 
 describe('UserService', () => {
   let userEntity: UserEntity;
@@ -21,6 +22,7 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
+        { provide: ImageService, useValue: { saveAvatar: jest.fn() }},
         {
           provide: getRepositoryToken(UserEntity),
           useValue: repositoryMock
@@ -116,7 +118,7 @@ describe('UserService', () => {
     resUser.biography = "New Biography";
     repositoryMock.save.mockReturnValue(resUser);
 
-    const result = await service.update(userEntity.id, changes);
+    const result = await service.update(userEntity.id, changes, null);
 
     expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
 
