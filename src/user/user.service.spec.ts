@@ -51,7 +51,8 @@ describe('UserService', () => {
       favoritesCuttings: [],
       messages: [],
       participants: [],
-      plantCollection: []
+      plantCollection: [],
+      notifications: []
     };
   });
 
