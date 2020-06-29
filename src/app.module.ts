@@ -25,6 +25,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { JwtCommonModule } from './jwt-common/jwt-common.module';
 import { PlantCollectionModule } from './plant-collection/plant-collection.module';
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
+import { NotificationModule } from './notification/notification.module';
+import { NotificationEntity } from './common/entity/notification.entity';
 
 @Module({
   imports: [
@@ -64,6 +66,7 @@ import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
         RoomEntity,
         ParticipantEntity,
         PlantCollectionEntity,
+        NotificationEntity,
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -82,6 +85,7 @@ import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
     RoomModule,
     JwtCommonModule,
     PlantCollectionModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

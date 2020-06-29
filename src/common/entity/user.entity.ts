@@ -15,6 +15,7 @@ import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
+import { NotificationEntity } from './notification.entity';
 
 export enum Role {
   USER,
@@ -117,4 +118,10 @@ export class UserEntity extends CommonEntity {
   )
   plantCollection: PlantCollectionEntity[];
 
+  @ApiProperty()
+  @OneToMany(
+    () => NotificationEntity,
+    notification => notification.notifier
+  )
+  notifications: NotificationEntity[];
 }
