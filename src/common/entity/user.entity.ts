@@ -61,8 +61,8 @@ export class UserEntity extends CommonEntity {
   location: string;
 
   @ApiProperty()
-  @Column({ nullable: true, type: 'bigint' })
-  pictureId: number;
+  @Column({ nullable: true })
+  pictureId: string;
 
   @ApiProperty()
   @Column({ default: Role.USER })

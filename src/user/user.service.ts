@@ -3,7 +3,7 @@ import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
-import { ImageService } from 'src/image/image.service';
+import { ImageService, ImageType } from 'src/image/image.service';
 import { File } from 'src/common/file';
 
 @Injectable()
@@ -104,7 +104,8 @@ export class UserService {
 
     // Save image
     if (avatar) {
-      this.imageService.saveAvatar(avatar, user.username);
+      if (user.pictureId) this.imageService.deleteFile(ImageType.AVATAR, user.pictureId);
+      user.pictureId = this.imageService.saveFile(ImageType.AVATAR, user.username, avatar);
     }
 
     return this.userRepository.save(user);

@@ -7,24 +7,43 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { File } from 'src/common/file';
 
+// Types of images to store
+export enum ImageType {
+    AVATAR,
+    CUTTING,
+    EVENT,
+    PLANT,
+}
+
 @Injectable()
 export class ImageService {
-    private static BASE_FOLDER = 'pictures';
-    private static AVATAR_FOLDER = 'avatars';
+    // Base images folder
+    private static BASE_DIRECTORY = 'pictures';
+
+    // Images subdirectories
+    private static folderMap: Map<ImageType, string> = new Map([
+        [ImageType.AVATAR, 'avatars'],
+        [ImageType.CUTTING, 'cuttings'],
+        [ImageType.EVENT, 'events'],
+        [ImageType.PLANT, 'plants'],
+    ]);
 
     /**
      * Creates all needed folders
      */
     constructor() {
-        this.createSubDir(ImageService.AVATAR_FOLDER);
+        for (const key of ImageService.folderMap.keys()) {
+            this.createSubDir(ImageService.folderMap.get(key));
+        }
     }
 
     /**
-     * Create a directory to store pictures
+     * Creates a directory
      * @param subdir the name of the directory
      */
-    private createSubDir(subdir: string) : void {
-        fs.mkdir(path.join(__dirname, ImageService.BASE_FOLDER, subdir), { recursive: true }, (err: NodeJS.ErrnoException) => {
+    private createSubDir(subdir: string): void {
+        fs.mkdir(path.join(__dirname, ImageService.BASE_DIRECTORY, subdir), { recursive: true }, (err: NodeJS.ErrnoException) => {
+            // Ignore "already created folder" error
             if (err && err.code !== 'EEXIST') {
                 console.log(err);
             }
@@ -32,23 +51,40 @@ export class ImageService {
     }
 
     /**
-     * Saves a user's avatar
-     * @param picture the picture to save
-     * @param username the username of the sender
+     * Returns the fullPath of a file
+     * @param imageType the type of the image
+     * @param filename the filename
      */
-    saveAvatar(picture: File, username: string): void {
-        const filename: string = username + '.' + picture.originalname.split('.').pop();
-        this.saveFile(path.join(ImageService.AVATAR_FOLDER, filename), picture);
+    getPath(imageType: ImageType, filename: string): string {
+        return path.join(__dirname, ImageService.BASE_DIRECTORY, ImageService.folderMap.get(imageType), filename);
+    }
+
+    /**
+     * Deletes a file
+     * @param imageType the type of image to delete
+     * @param filename the name of the file
+     */
+    deleteFile(imageType: ImageType, filename: string): void {
+        const filepath = this.getPath(imageType, filename);
+        fs.unlink(filepath, () => {
+            console.log(`Deleted File: ${filepath}`);
+        });
     }
 
     /**
      * Stores a file in the file system
-     * @param path the path to store the file
+     * @param imageType the type of file to save
+     * @param filename the file name (without extension)
      * @param file the file to store
      */
-    private saveFile(filename: string, file: File): void {
-        const fullPath = path.join(__dirname, ImageService.BASE_FOLDER, filename);
-        console.log(file);
-        fs.writeFileSync(fullPath, file.buffer);
+    saveFile(imageType: ImageType, filename: string, file: File): string {
+        const fullname: string = filename + '.' + file.originalname.split('.').pop();
+
+        const fullPath = this.getPath(imageType, fullname);
+        fs.writeFile(fullPath, file.buffer, () => {
+            console.log(`Saved File: ${fullPath}`);
+        });
+
+        return fullname;
     }
 }
