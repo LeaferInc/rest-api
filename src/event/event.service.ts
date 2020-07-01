@@ -10,6 +10,8 @@ import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
+import { File } from 'src/common/file';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 @Injectable()
 export class EventService {
@@ -17,7 +19,8 @@ export class EventService {
     private static readonly MAX_METER_DISTANCE = 1000;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
-        private userService: UserService) { }
+        private userService: UserService,
+        private imageService: ImageService) { }
 
     /**
      * Return all the Events
@@ -68,7 +71,7 @@ export class EventService {
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
         const events: EventEntity[] = await this.findAll();
-        
+
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);
             const distance = +from.Distance(eventPosition).toFixed(0);
@@ -118,14 +121,18 @@ export class EventService {
     }
 
     /**
-     * Create an Event in the databe
+     * Create an Event in the database
      * @param eventDto the Event to create
      */
-    async createOne(eventDto: CreateEventDto, organizer: number): Promise<EventEntity> {
+    async createOne(eventDto: CreateEventDto, organizer: number, picture: File): Promise<EventEntity> {
         const event: EventEntity = eventDto.toEntity();
 
         const user: UserEntity = await this.userService.findOneById(organizer);
         event.organizer = user;
+
+        if (picture) {
+            event.pictureId = this.imageService.saveFile(ImageType.EVENT, 'event_' + event.id, picture);
+        }
 
         return this.eventRepository.save(event);
     }

@@ -18,4 +18,4 @@ export function fileFilter(req, file: File, cb) {
     const extension = file.originalname.split('.').pop().toLowerCase();
 
     cb(null, allowedFiles.includes(extension))
-  }
+}

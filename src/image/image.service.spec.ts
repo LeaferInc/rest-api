@@ -20,10 +20,10 @@ describe('ImageService', () => {
   });
 
   it('should return the right file path', () => {
-    expect(service.getPath(ImageType.AVATAR, 'avatar.png')
+    expect(ImageService.getPath(ImageType.AVATAR, 'avatar.png')
     .endsWith(path.join('pictures', 'avatars', 'avatar.png'))).toBe(true);
     
-    expect(service.getPath(ImageType.EVENT, 'event.png')
+    expect(ImageService.getPath(ImageType.EVENT, 'event.png')
     .endsWith(path.join('pictures', 'events', 'event.png'))).toBe(true);
   });
 });

@@ -40,6 +40,18 @@ export class UserController {
   }
 
   /**
+   * Get the profile picture of the current user
+   * @param req the request object
+   * @param res the response object
+   */
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('avatar')
+  getUserAvatar(@Request() req: Express.Request): Promise<string> {
+    return this.userService.findAvatar(req.user.userId);
+  }
+
+  /**
    * @param id the userId
    */
   @ApiBearerAuth()

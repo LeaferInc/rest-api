@@ -7,6 +7,8 @@ import { CommonEntity } from "../common.entity";
 import { UserEntity } from "./user.entity";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
+import { EventDto } from "../dto/event.dto";
+import { ImageService, ImageType } from "src/image/image.service";
 
 @Entity({ name: 'event' })
 export class EventEntity extends CommonEntity {
@@ -50,6 +52,10 @@ export class EventEntity extends CommonEntity {
     @Column({ type: 'float8' })
     longitude: number;
 
+    @ApiProperty()
+    @Column({ nullable: true })
+    pictureId: string;
+
     @ApiProperty({ type: () => UserEntity })
     @Exclude()
     @ManyToOne(() => UserEntity, organizer => organizer.events)
@@ -62,4 +68,22 @@ export class EventEntity extends CommonEntity {
     entrants: UserEntity[];
 
     joined?: boolean;
+
+    toDto(): EventDto {
+        const dto = new EventDto();
+        dto.id = this.id;
+        dto.name = this.name;
+        dto.description = this.description;
+        dto.startDate = this.startDate;
+        dto.endDate = this.endDate;
+        dto.location = this.location;
+        dto.price = this.price;
+        dto.maxPeople = this.maxPeople;
+        dto.latitude = this.latitude;
+        dto.longitude = this.longitude;
+        if (this.organizer) dto.organizer = this.organizer.id;
+        if (this.joined != null) dto.joined = this.joined;
+        dto.picture = ImageService.readFile(ImageType.EVENT, this.pictureId);
+        return dto;
+    }
 }

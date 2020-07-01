@@ -12,14 +12,18 @@ import {
   UseGuards,
   Request,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
-import { CreateEventDto } from 'src/common/dto/event.dto';
+import { CreateEventDto, EventDto } from 'src/common/dto/event.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AppTime } from 'src/common/app.time';
 import { EventSearchDto } from 'src/common/dto/eventSearch.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { fileFilter, File } from 'src/common/file';
 
 @ApiBearerAuth()
 @Controller('events')
@@ -32,16 +36,16 @@ export class EventController {
    * @throws NotFoundException if none was present
    */
   @Get()
-  getAll(): Promise<EventEntity[]> {
-    return this.eventService.findAll();
+  async getAll(): Promise<EventDto[]> {
+    return (await this.eventService.findAll()).map((e: EventEntity) => e.toDto());
   }
 
   /**
    * Returns a list of incoming events ordered by start date
    */
   @Get('incoming')
-  getIncoming(): Promise<EventEntity[]> {
-    return this.eventService.findAfterDate(AppTime.now);
+  async getIncoming(): Promise<EventDto[]> {
+    return (await this.eventService.findAfterDate(AppTime.now)).map((e: EventEntity) => e.toDto());
   }
 
   /**
@@ -49,17 +53,20 @@ export class EventController {
    * @param params a dto which can have several properties depending on the search
    */
   @Get('search')
-  searchEventsByDate(@Query() params: EventSearchDto): Promise<EventEntity[]> {
+  async searchEventsByDate(@Query() params: EventSearchDto): Promise<EventDto[]> {
+    let res: EventEntity[];
     if (params.keywords) {
-      return this.eventService.findByKeywords(params.keywords);
+      res = await this.eventService.findByKeywords(params.keywords);
     }
     else if (params.startDate) {
-      return this.eventService.findAfterDate(params.startDate);
+      res = await this.eventService.findAfterDate(params.startDate);
     }
     else if (params.latitude && params.longitude) {
-      return this.eventService.findClosest(params.latitude, params.longitude);
+      res = await this.eventService.findClosest(params.latitude, params.longitude);
     }
     else throw new BadRequestException('Invalid Query');
+
+    return res.map((e: EventEntity) => e.toDto());
   }
 
   /**
@@ -67,21 +74,20 @@ export class EventController {
    */
   @Get('joined')
   @UseGuards(JwtAuthGuard)
-  getJoined(@Request() req: Express.Request): Promise<EventEntity[]> {
-    return this.eventService.findJoined(req.user.userId);
+  async getJoined(@Request() req: Express.Request): Promise<EventDto[]> {
+    return (await this.eventService.findJoined(req.user.userId)).map((e: EventEntity) => e.toDto());
   }
 
   /**
    * Returns a single Event by its identifier or a 404 Status Code if none was found
+   * @param req the request object
+   * @param res the response object
    * @param id the identifier of the Event
    */
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
-  getById(
-    @Request() req: Express.Request,
-    @Param('id') id: number,
-  ): Promise<EventEntity> {
-    return this.eventService.findOneForUser(id, req.user.userId);
+  async getById(@Request() req: Express.Request, @Param('id') id: number): Promise<EventDto> {
+    return (await this.eventService.findOneForUser(id, req.user.userId)).toDto();
   }
 
   /**
@@ -89,14 +95,16 @@ export class EventController {
    * @param eventDto the Event to create
    */
   @Post()
+  @UseInterceptors(FileInterceptor('picture', { fileFilter: fileFilter }))
   @UseGuards(JwtAuthGuard)
   async createEvent(
     @Request() req: Express.Request,
     @Body() eventDto: CreateEventDto,
-  ): Promise<EventEntity> {
+    @UploadedFile() picture: File,
+  ): Promise<EventDto> {
     if (eventDto.startDate > eventDto.endDate) {
       throw new BadRequestException('`startDate` is greater than `endDate`.');
     }
-    return await this.eventService.createOne(eventDto, req.user.userId);
+    return (await this.eventService.createOne(eventDto, req.user.userId, picture)).toDto();
   }
 }

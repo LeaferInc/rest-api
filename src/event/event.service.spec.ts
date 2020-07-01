@@ -11,6 +11,8 @@ import { eventRepositoryMock } from 'src/mocks/repositories/event.repository.moc
 import { UserServiceMock } from 'src/mocks/services/user.service.mock';
 import { CreateEventDto } from 'src/common/dto/event.dto';
 import { NotFoundException } from '@nestjs/common';
+import { ImageService } from 'src/image/image.service';
+import { ImageServiceMock } from 'src/mocks/services/image.service.mock';
 
 describe('EventService', () => {
   let service: EventService;
@@ -18,7 +20,10 @@ describe('EventService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EventService, 
+        EventService,
+        {
+          provide: ImageService, useValue: ImageServiceMock.mock
+        },
         {
           provide: UserService,
           useValue: UserServiceMock.mock
@@ -35,6 +40,7 @@ describe('EventService', () => {
 
   beforeEach(() => {
     UserServiceMock.setup();
+    ImageServiceMock.setup();
   });
 
   it('should be defined', () => {
@@ -68,7 +74,7 @@ describe('EventService', () => {
     dto.latitude = 46.7887;
     dto.longitude = 5.1256;
 
-    const event: EventEntity = await service.createOne(dto, 1);
+    const event: EventEntity = await service.createOne(dto, 1, null);
     expect(event).toBeTruthy();
     expect(event.organizer.id).toBe(1);
     expect(event.organizer.firstname).toBe('John');

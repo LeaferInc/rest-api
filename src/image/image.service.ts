@@ -55,7 +55,7 @@ export class ImageService {
      * @param imageType the type of the image
      * @param filename the filename
      */
-    getPath(imageType: ImageType, filename: string): string {
+    static getPath(imageType: ImageType, filename: string): string {
         return path.join(__dirname, ImageService.BASE_DIRECTORY, ImageService.folderMap.get(imageType), filename);
     }
 
@@ -65,7 +65,7 @@ export class ImageService {
      * @param filename the name of the file
      */
     deleteFile(imageType: ImageType, filename: string): void {
-        const filepath = this.getPath(imageType, filename);
+        const filepath = ImageService.getPath(imageType, filename);
         fs.unlink(filepath, () => {
             console.log(`Deleted File: ${filepath}`);
         });
@@ -80,11 +80,29 @@ export class ImageService {
     saveFile(imageType: ImageType, filename: string, file: File): string {
         const fullname: string = filename + '.' + file.originalname.split('.').pop();
 
-        const fullPath = this.getPath(imageType, fullname);
+        const fullPath = ImageService.getPath(imageType, fullname);
         fs.writeFile(fullPath, file.buffer, () => {
             console.log(`Saved File: ${fullPath}`);
         });
 
         return fullname;
+    }
+
+    /**
+     * Returns a file from the fs as base64 encoded string
+     * @param imageType the type of file to read
+     * @param filename the filename to read
+     */
+    static readFile(imageType: ImageType, filename: string): string {
+        const fullPath = ImageService.getPath(imageType, filename ? filename : 'placeholder.jpg');
+
+        let file: Buffer;
+        try {
+            file = fs.readFileSync(fullPath);
+        } catch (_) { }
+
+        if (!file) return null;
+
+        return file.toString('base64');
     }
 }

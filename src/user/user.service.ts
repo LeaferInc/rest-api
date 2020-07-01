@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
@@ -89,6 +89,26 @@ export class UserService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return userFound;
+  }
+
+  /**
+   * Returns a user's avatar
+   * @param id the id of the user
+   */
+  async findAvatar(id: number): Promise<string> {
+    const user: UserEntity = await this.userRepository.findOne(id);
+
+    if (!user.pictureId) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    const picture = ImageService.readFile(ImageType.AVATAR, user.pictureId);
+    
+    if (!picture) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    return picture;
   }
 
   /**
