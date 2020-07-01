@@ -66,31 +66,21 @@ export class CreatePlantDto {
   @IsBoolean()
   @IsOptional()
   toxicity: boolean;
-
-  constructor(plant?: CreatePlantDto) {
-  }
-
 }
 
-// export class PlantDto {
-//   @ApiProperty()
-//   id: number;
-//   @ApiProperty()
-//   name: string;
-//   @ApiProperty()
-//   humidity: number;
-//   @ApiProperty()
-//   watering: string;
-//   @ApiProperty()
-//   difficulty: number;
-//   @ApiProperty()
-//   exposure: string;
-//   @ApiProperty()
-//   toxicity: string;
-//   @ApiProperty()
-//   potting: string;
-//   @ApiProperty()
-//   createdAt: Date;
-//   @ApiProperty()
-//   owner: number;
-// }
+export class PlantDto {
+  id: number;
+  name: string;
+  height: number;
+  difficulty: Difficulty;
+  wateringFrequencySpringToSummerNumber: number;
+  wateringFrequencyAutumnToWinterNumber: number;
+  wateringFrequencySpringToSummer: Time;
+  wateringFrequencyAutumnToWinter: Time;
+  exposure: string;
+  humidity: string;
+  potting: string;
+  toxicity: boolean;
+  owner: number;
+  picture: string;
+}

@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
 import { Repository, DeleteResult, Not, getRepository } from 'typeorm';
-import { CreatePlantDto } from 'src/common/dto/plant.dto';
+import { CreatePlantDto, PlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Pagination, ResultData } from 'src/common/dto/query.dto';
@@ -32,16 +32,16 @@ export class PlantService {
    * Return many plant with pagination
    * @param options 
    */
-  async findAllExceptOwner(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+  async findAllExceptOwner(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantDto>> {
     const [items, count] = await this.plantRepository.findAndCount({
       where: { owner: { id: Not(owner.userId) } },
       skip: pagination?.skip,
       take: pagination?.take
     });
-    return {items, count};
+    return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 
-  async findAllMyGarden(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+  async findAllMyGarden(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantDto>> {
     const [items, count] = await getRepository(PlantEntity)
       .createQueryBuilder('plant')
       .innerJoin('plant.users', 'plant_collection')
@@ -50,7 +50,7 @@ export class PlantService {
       .skip(pagination.skip || 0)
       .getManyAndCount();
     
-    return {items, count};
+    return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 
   /**
@@ -77,13 +77,13 @@ export class PlantService {
     return this.plantRepository.find(JSON.parse(criteria));
   }
 
-  async findAllByByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+  async findAllByByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<PlantDto>> {
     const [items, count] = await this.plantRepository.findAndCount({
       where: { owner: { id: user.userId } },
       skip: pagination?.skip,
       take: pagination?.take
     });
-    return {items, count};
+    return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 
   /**

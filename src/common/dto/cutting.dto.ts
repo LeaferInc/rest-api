@@ -2,6 +2,16 @@ import { CuttingEntity } from "../entity/cutting.entity";
 import { IsNumber, IsString, IsOptional } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
+export class CuttingDto {
+  id: number;
+  name: string;
+  description: string;
+  tradeWith: string;
+  viewsCount: number;
+  picture: string;
+  ownerId: number;
+}
+
 export class CreateCuttingDto {
   @ApiProperty()
   @IsString()
