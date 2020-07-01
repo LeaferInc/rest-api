@@ -41,17 +41,17 @@ describe('CuttingService', () => {
   });
 
   beforeEach(() => {
-    cuttingEntity = {
-      id: 0,
-      createdAt: new Date(2020, 1, 1),
-      enabled: true,
-      name: 'name',
-      description: 'description',
-      tradeWith: '',
-      viewsCount: 0,
-      owner: null,
-      ownerId: 1
-    };
+    cuttingEntity = new CuttingEntity();
+    cuttingEntity.id = 0;
+    cuttingEntity.createdAt= new Date(2020, 1, 1);
+    cuttingEntity.enabled= true;
+    cuttingEntity.name= 'name';
+    cuttingEntity.description= 'description';
+    cuttingEntity.tradeWith= '';
+    cuttingEntity.viewsCount= 0;
+    cuttingEntity.owner= null;
+    cuttingEntity.ownerId= 1;
+    cuttingEntity.pictureId= null;
   });
 
   it('should be defined', () => {
