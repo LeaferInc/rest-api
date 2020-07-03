@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum } from "class-validator";
 import { Role } from "../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -52,6 +52,32 @@ export class CreateUserDto {
     this.lastname = this.lastname?.toLowerCase();
     return this;
   }
+}
+
+export class UpdateUserDto {
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  password?: string;
+
+  @IsString()
+  @IsOptional()
+  firstname?: string;
+
+  @IsString()
+  @IsOptional()
+  lastname?: string;
+
+  @IsDateString()
+  @IsOptional()
+  birthdate?: Date;
+
+  @IsString()
+  @IsOptional()
+  biography?: string;
 }
 
 export class UserDto {
