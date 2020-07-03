@@ -37,7 +37,7 @@ describe('Event Controller', () => {
   });
 
   it('should return an array of events', async () => {
-    expect(await controller.getAll()).toBe(EventServiceMock.testEvents);
+    expect(await controller.getAll(0, 12)).toBe(EventServiceMock.testEvents);
   });
 });
 

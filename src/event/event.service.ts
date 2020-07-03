@@ -10,6 +10,7 @@ import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
+import { ResultData, Pagination } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class EventService {
@@ -22,8 +23,12 @@ export class EventService {
     /**
      * Return all the Events
      */
-    findAll(): Promise<EventEntity[]> {
-        return this.eventRepository.find();
+    async findAll(pagination?: Pagination): Promise<ResultData<EventEntity>> {
+        const [items, count] = await this.eventRepository.findAndCount({
+          skip: pagination?.skip,
+          take: pagination?.take
+        });
+        return {items, count};
     }
 
     /**
@@ -67,7 +72,7 @@ export class EventService {
      */
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
-        const events: EventEntity[] = await this.findAll();
+        const events: EventEntity[] = (await this.findAll()).items;
         
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);
@@ -128,5 +133,9 @@ export class EventService {
         event.organizer = user;
 
         return this.eventRepository.save(event);
+    }
+
+    eventCount() {
+      return this.eventRepository.count();
     }
 }

@@ -13,6 +13,7 @@ describe('UserService', () => {
     save: jest.fn(),
     findOne: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     findOneOrFail: jest.fn(),
     delete: jest.fn()
   }
@@ -83,14 +84,14 @@ describe('UserService', () => {
   });
 
   it('should return all users', async () => {
-    repositoryMock.find.mockReset();
-    repositoryMock.find.mockReturnValue([userEntity, userEntity, userEntity]);
+    repositoryMock.findAndCount.mockReset();
+    repositoryMock.findAndCount.mockReturnValue([[userEntity, userEntity, userEntity], 3]);
 
     const users = await service.findAll();
 
-    expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(users).toHaveLength(3);
-    expect(users).toContainEqual(userEntity);
+    expect(repositoryMock.findAndCount).toHaveBeenCalledTimes(1);
+    expect(users.items).toHaveLength(3);
+    expect(users.items).toContainEqual(userEntity);
   });
 
   it('should return one user', async () => {

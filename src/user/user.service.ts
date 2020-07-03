@@ -3,6 +3,7 @@ import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
+import { Pagination, ResultData } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class UserService {
@@ -32,12 +33,14 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  /**
-   * Return many user based on the options
-   * @param options additional option for querying database
-   */
-  findAll(options?: FindManyOptions<UserEntity>): Promise<UserEntity[]> {
-    return this.userRepository.find(options);
+  async findAll(pagination?: Pagination): Promise<ResultData<UserEntity>> {
+    const [items, count] = await this.userRepository.findAndCount({
+      skip: pagination?.skip,
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
+    });
+
+    return {items, count};
   }
 
   getTalkTo(userId: number): Promise<UserEntity[]> {
@@ -108,5 +111,9 @@ export class UserService {
    */
   removeById(id: number | string): Promise<DeleteResult> {
     return this.userRepository.delete(id);
+  }
+
+  userCount() {
+    return this.userRepository.count();
   }
 }

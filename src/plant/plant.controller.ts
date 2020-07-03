@@ -6,6 +6,7 @@ import { DeleteResult } from 'typeorm';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ResultData } from 'src/common/dto/query.dto';
+import { AdminGuard } from 'src/common/guards/admin.guard';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -40,6 +41,12 @@ export class PlantController {
   @Get('my-garden')
   findAllMyGarden(@Request() req: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantEntity>> {
     return this.plantService.findAllMyGarden(req.user, {skip, take});
+  }
+
+  @Get('all')
+  @UseGuards(AdminGuard)
+  findAll(@Query('skip') skip: number, @Query('take') take: number) {
+    return this.plantService.findAll({skip, take});
   }
 
   /**
