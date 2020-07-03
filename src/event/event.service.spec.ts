@@ -11,6 +11,7 @@ import { eventRepositoryMock } from 'src/mocks/repositories/event.repository.moc
 import { UserServiceMock } from 'src/mocks/services/user.service.mock';
 import { CreateEventDto } from 'src/common/dto/event.dto';
 import { NotFoundException } from '@nestjs/common';
+import { ResultData } from 'src/common/dto/query.dto';
 
 describe('EventService', () => {
   let service: EventService;
@@ -42,10 +43,10 @@ describe('EventService', () => {
   });
 
   it('should find all', async () => {
-    const events: EventEntity[] = await service.findAll();
-    expect(events).toHaveLength(2);
-    expect(events[0].name).toBe('Test event');
-    expect(events[1].name).toBe('Another Test event');
+    const events: ResultData<EventEntity> = await service.findAll();
+    expect(events.items).toHaveLength(2);
+    expect(events.items[0].name).toBe('Test event');
+    expect(events.items[1].name).toBe('Another Test event');
   });
 
   it('should find one event for user', async () => {

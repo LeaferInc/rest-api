@@ -54,6 +54,16 @@ export class CuttingService {
     return {items, count};
   }
 
+  async findAll(pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+    const [items, count] = await this.cuttingRepository.findAndCount({
+      relations: ['owner'],
+      skip: pagination?.skip,
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
+    });
+    return {items, count};
+  }
+
   async edit(updateCuttingDto: UpdateCuttingDto) {
     // TODO: edit only if the cutting belongs to the user
     const { id, ...updateCutting } = updateCuttingDto;
@@ -64,6 +74,10 @@ export class CuttingService {
   async delete(id: string | number) {
     // TODO: delete only if the cutting belongs to the user
     return this.cuttingRepository.delete(id);
+  }
+
+  cuttingCount() {
+    return this.cuttingRepository.count();
   }
 
 }
