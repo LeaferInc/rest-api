@@ -34,29 +34,28 @@ describe('UserService', () => {
   });
 
   beforeEach(() => {
-    userEntity = {
-      id: 0,
-      createdAt: new Date(2020, 1, 1),
-      enabled: true,
-      email: 'test@test.com',
-      username: 'test',
-      password: 'test',
-      firstname: 'test',
-      lastname: 'test',
-      birthdate: new Date(2020, 1, 1),
-      biography: 'test',
-      location: 'test',
-      pictureId: null,
-      role: Role.USER,
-      plants: [],
-      cuttings: [],
-      events: [],
-      joinedEvents: [],
-      favoritesCuttings: [],
-      messages: [],
-      participants: [],
-      plantCollection: []
-    };
+    userEntity = new UserEntity();
+    userEntity.id = 0;
+    userEntity.createdAt = new Date(2020, 1, 1);
+    userEntity.enabled = true;
+    userEntity.email = 'test@test.com';
+    userEntity.username = 'test';
+    userEntity.password = 'test';
+    userEntity.firstname = 'test';
+    userEntity.lastname = 'test';
+    userEntity.birthdate = new Date(2020, 1, 1);
+    userEntity.biography = 'test';
+    userEntity.location = 'test';
+    userEntity.pictureId = 'temp';
+    userEntity.role = Role.USER;
+    userEntity.plants = [];
+    userEntity.cuttings = [];
+    userEntity.events = [];
+    userEntity.joinedEvents = [];
+    userEntity.favoritesCuttings = [];
+    userEntity.messages = [];
+    userEntity.participants = [];
+    userEntity.plantCollection = [];
   });
 
   it('should be defined', () => {
@@ -118,7 +117,7 @@ describe('UserService', () => {
     resUser.biography = "New Biography";
     repositoryMock.save.mockReturnValue(resUser);
 
-    const result = await service.update(userEntity.id, changes, null);
+    const result = await service.update(userEntity.id, changes);
 
     expect(repositoryMock.findOne).toHaveBeenCalledTimes(1);
 
