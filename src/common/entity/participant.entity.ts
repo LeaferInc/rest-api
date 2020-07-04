@@ -12,14 +12,16 @@ export class ParticipantEntity {
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(
     () => UserEntity,
-    user => user.participants
+    user => user.participants,
+    { onDelete: 'CASCADE' }
   )
   user: UserEntity;
 
   @ApiProperty({ type: () => RoomEntity })
   @ManyToOne(
     () => RoomEntity,
-    room => room.rooms
+    room => room.rooms,
+    { onDelete: 'CASCADE' }
   )
   room: RoomEntity;
 }

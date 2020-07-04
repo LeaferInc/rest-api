@@ -57,7 +57,7 @@ export class PlantEntity extends CommonEntity {
   toxicity: boolean;
 
   @ApiProperty({ type: () => UserEntity})
-  @ManyToOne(() => UserEntity, user => user.plants)
+  @ManyToOne(() => UserEntity, user => user.plants, { onDelete: 'CASCADE' } )
   owner: UserEntity;
 
   @ApiProperty()

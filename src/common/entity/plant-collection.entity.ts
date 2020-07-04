@@ -14,14 +14,16 @@ export class PlantCollectionEntity extends CommonEntity {
   @ApiProperty()
   @ManyToOne(
     () => UserEntity,
-    user => user.plantCollection
+    user => user.plantCollection,
+    { onDelete: 'CASCADE' }
   )
   user: UserEntity
 
   @ApiProperty()
   @ManyToOne(
     () => PlantEntity,
-    plant => plant.users
+    plant => plant.users,
+    { onDelete: 'CASCADE' }
   )
   plant: PlantEntity
 }
