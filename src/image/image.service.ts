@@ -5,7 +5,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { File } from 'src/common/file';
 
 // Types of images to store
 export enum ImageType {
@@ -77,11 +76,13 @@ export class ImageService {
      * @param filename the file name (without extension)
      * @param file the file to store
      */
-    saveFile(imageType: ImageType, filename: string, file: File): string {
-        const fullname: string = filename + '.' + file.originalname.split('.').pop();
+    static saveFile(imageType: ImageType, filename: string, base64: string): string {
+        const fullname: string = filename + '.png';
 
         const fullPath = ImageService.getPath(imageType, fullname);
-        fs.writeFile(fullPath, file.buffer, () => {
+        const buffer: Buffer = Buffer.from(base64, 'base64');
+
+        fs.writeFile(fullPath, buffer, () => {
             console.log(`Saved File: ${fullPath}`);
         });
 
@@ -96,7 +97,7 @@ export class ImageService {
     static readFile(imageType: ImageType, filename: string): string {
         const fullPath = ImageService.getPath(imageType, filename ? filename : 'placeholder.jpg');
 
-        let file: Buffer;
+        let file: Buffer = null;
         try {
             file = fs.readFileSync(fullPath);
         } catch (_) { }

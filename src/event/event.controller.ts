@@ -2,19 +2,7 @@
  * @author ddaninthe
  */
 
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  BadRequestException,
-  UseGuards,
-  Request,
-  Query,
-  UseInterceptors,
-  UploadedFile,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, BadRequestException, UseGuards, Request, Query } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto, EventDto } from 'src/common/dto/event.dto';
@@ -22,8 +10,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AppTime } from 'src/common/app.time';
 import { EventSearchDto } from 'src/common/dto/eventSearch.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { fileFilter, File } from 'src/common/file';
 
 @ApiBearerAuth()
 @Controller('events')
@@ -45,7 +31,7 @@ export class EventController {
    */
   @Get('incoming')
   async getIncoming(): Promise<EventDto[]> {
-    return (await this.eventService.findAfterDate(AppTime.now)).map((e: EventEntity) => e.toDto());
+    return (await this.eventService.findAfterDate(AppTime.now())).map((e: EventEntity) => e.toDto());
   }
 
   /**
@@ -92,19 +78,15 @@ export class EventController {
 
   /**
    * Creates an Event
+   * @param req The request object
    * @param eventDto the Event to create
    */
   @Post()
-  @UseInterceptors(FileInterceptor('picture', { fileFilter: fileFilter }))
   @UseGuards(JwtAuthGuard)
-  async createEvent(
-    @Request() req: Express.Request,
-    @Body() eventDto: CreateEventDto,
-    @UploadedFile() picture: File,
-  ): Promise<EventDto> {
+  async createEvent(@Request() req: Express.Request, @Body() eventDto: CreateEventDto): Promise<EventDto> {
     if (eventDto.startDate > eventDto.endDate) {
       throw new BadRequestException('`startDate` is greater than `endDate`.');
     }
-    return (await this.eventService.createOne(eventDto, req.user.userId, picture)).toDto();
+    return (await this.eventService.createOne(eventDto, req.user.userId)).toDto();
   }
 }

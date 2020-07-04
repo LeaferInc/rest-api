@@ -73,8 +73,9 @@ describe('EventService', () => {
     dto.maxPeople = 20;
     dto.latitude = 46.7887;
     dto.longitude = 5.1256;
+    dto.picture = '';
 
-    const event: EventEntity = await service.createOne(dto, 1, null);
+    const event: EventEntity = await service.createOne(dto, 1);
     expect(event).toBeTruthy();
     expect(event.organizer.id).toBe(1);
     expect(event.organizer.firstname).toBe('John');

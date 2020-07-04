@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
-import { File } from 'src/common/file';
 
 @Injectable()
 export class UserService {
@@ -116,16 +115,16 @@ export class UserService {
    * @param id the user to update
    * @param changes the fields to change
    */
-  async update(id: number, changes: UpdateUserDto, avatar: File): Promise<UserEntity> {
+  async update(id: number, changes: UpdateUserDto): Promise<UserEntity> {
     const user: UserEntity = await this.userRepository.findOne(id);
     for (const key in changes) {
       user[key] = changes[key];
     }
 
     // Save image
-    if (avatar) {
+    if (changes.picture) {
       if (user.pictureId) this.imageService.deleteFile(ImageType.AVATAR, user.pictureId);
-      user.pictureId = this.imageService.saveFile(ImageType.AVATAR, user.username, avatar);
+      user.pictureId = ImageService.saveFile(ImageType.AVATAR, user.username, changes.picture);
     }
 
     return this.userRepository.save(user);

@@ -5,5 +5,5 @@
 export class AppTime {
     static setNow = (): Date => new Date();
 
-    static now: Date = AppTime.setNow();
+    static now = () => AppTime.setNow();
 }

@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum, IsMultibyte } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum, IsBase64 } from "class-validator";
 import { Role } from "../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -70,6 +70,10 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   biography?: string;
+
+  @IsBase64()
+  @IsOptional()
+  picture?: string;
 }
 
 export class UserDto {
@@ -114,8 +118,8 @@ export class UserDto {
   location: string;
 
   @ApiProperty()
-  @IsNumber()
-  pictureId: number;
+  @IsString()
+  picture: string;
 
   @ApiProperty({ enum: ['USER', 'ADMIN']})
   @IsEnum(Role)
