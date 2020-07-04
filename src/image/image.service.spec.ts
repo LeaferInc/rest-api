@@ -4,6 +4,7 @@ import * as path from 'path';
 
 describe('ImageService', () => {
   let service: ImageService;
+  ImageService.createSubDir = jest.fn();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

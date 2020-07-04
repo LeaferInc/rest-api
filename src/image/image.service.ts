@@ -32,7 +32,7 @@ export class ImageService {
      */
     constructor() {
         for (const key of ImageService.folderMap.keys()) {
-            this.createSubDir(ImageService.folderMap.get(key));
+            ImageService.createSubDir(ImageService.folderMap.get(key));
         }
     }
 
@@ -40,7 +40,7 @@ export class ImageService {
      * Creates a directory
      * @param subdir the name of the directory
      */
-    private createSubDir(subdir: string): void {
+    static createSubDir(subdir: string): void {
         fs.mkdir(path.join(__dirname, ImageService.BASE_DIRECTORY, subdir), { recursive: true }, (err: NodeJS.ErrnoException) => {
             // Ignore "already created folder" error
             if (err && err.code !== 'EEXIST') {

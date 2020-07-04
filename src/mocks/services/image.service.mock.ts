@@ -1,4 +1,4 @@
-import { ImageType, ImageService } from "src/image/image.service";
+import { ImageType, ImageService } from 'src/image/image.service';
 
 export class ImageServiceMock {
     static fs = new Map<string, Buffer>();
