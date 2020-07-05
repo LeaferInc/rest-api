@@ -95,8 +95,9 @@ export class ImageService {
      * @param filename the filename to read
      */
     static readFile(imageType: ImageType, filename: string): string {
-        const fullPath = ImageService.getPath(imageType, filename ? filename : 'placeholder.jpg');
+        if (!filename) return null;
 
+        const fullPath = ImageService.getPath(imageType, filename);
         let file: Buffer = null;
         try {
             file = fs.readFileSync(fullPath);

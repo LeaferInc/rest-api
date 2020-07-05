@@ -8,7 +8,7 @@ import { ResultData } from 'src/common/dto/query.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('plant')
+@Controller('plants')
 export class PlantController {
 
   constructor(private readonly plantService: PlantService) { }

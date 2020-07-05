@@ -5,8 +5,8 @@
 import { EventEntity } from '../entity/event.entity';
 import { IsString, IsNumber, IsDateString, IsBase64 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ImageService, ImageType } from 'src/image/image.service';
 import { AppTime } from '../app.time';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 export class EventDto {
   id: number;
