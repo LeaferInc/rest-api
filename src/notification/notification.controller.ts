@@ -11,10 +11,11 @@ export class NotificationController {
 
   constructor(private readonly notificationService: NotificationService) {}
 
-  @Post()
-  create(@Body() notificationDto: CreateNotificationDto) {
-    return this.notificationService.create(notificationDto);
-  }
+  // TODO: Debug purpose only
+  // @Post()
+  // create(@Body() notificationDto: CreateNotificationDto) {
+  //   return this.notificationService.create(notificationDto);
+  // }
 
   @Get('my')
   getAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
