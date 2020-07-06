@@ -4,6 +4,7 @@ import { NotificationEntity } from 'src/common/entity/notification.entity';
 import { of } from 'rxjs';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
+import { NotificationGateway } from './notification.gateway';
 
 describe('NotificationService', () => {
   let service: NotificationService;
@@ -26,7 +27,11 @@ describe('NotificationService', () => {
         {
           provide: UserService,
           useValue: userServiceMock
-        }
+        },
+        {
+          provide: NotificationGateway,
+          useValue: {},
+        },
       ],
     }).compile();
 
