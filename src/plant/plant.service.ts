@@ -6,6 +6,8 @@ import { CreatePlantDto, PlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Pagination, ResultData } from 'src/common/dto/query.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
+import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class PlantService {
@@ -19,13 +21,18 @@ export class PlantService {
    * Create an plant in the database from the corresponding CreatePlantDto
    * @param plantDto 
    */
-  async create(plantDto: CreatePlantDto, user: Express.User): Promise<PlantEntity> {
+  async create(plantDto: CreatePlantDto, user: Express.User): Promise<PlantDto> {
     const plant = this.plantRepository.create(plantDto);
+
+    // Save picture
+    if (plantDto.picture) {
+      plant.pictureId = ImageService.saveFile(ImageType.PLANT, 'plant_' + AppTime.now().getTime(), plantDto.picture);
+    }
 
     const userEntity: UserEntity = await this.userService.findOneById(user.userId);
     plant.owner = userEntity;
 
-    return this.plantRepository.save(plant);
+    return (await this.plantRepository.save(plant)).toDto();
   }
 
   /**
@@ -95,5 +102,4 @@ export class PlantService {
       ? this.plantRepository.delete(criteria)
       : this.plantRepository.delete({ name: criteria });
   }
-
 }

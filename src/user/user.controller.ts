@@ -54,10 +54,9 @@ export class UserController {
    */
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  //@UseInterceptors(FileInterceptor('avatar', { fileFilter: fileFilter }))
   @Put()
-  update(@Request() req: Express.Request, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
-    return this.userService.update(req.user.userId, updateUserDto);
+  async update(@Request() req: Express.Request, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    return (await this.userService.update(req.user.userId, updateUserDto)).toDto();
   }
 
   /**

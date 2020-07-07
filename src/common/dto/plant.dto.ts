@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean, IsBase64 } from "class-validator";
 
 export enum Difficulty {
   EASY = "easy",
@@ -66,6 +66,10 @@ export class CreatePlantDto {
   @IsBoolean()
   @IsOptional()
   toxicity: boolean;
+
+  @ApiProperty()
+  @IsBase64()
+  picture: string;
 }
 
 export class PlantDto {

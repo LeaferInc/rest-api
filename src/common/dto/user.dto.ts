@@ -71,6 +71,10 @@ export class UpdateUserDto {
   @IsOptional()
   biography?: string;
 
+  @IsString()
+  @IsOptional()
+  location?: string;
+
   @IsBase64()
   @IsOptional()
   picture?: string;

@@ -14,8 +14,8 @@ export class PlantController {
   constructor(private readonly plantService: PlantService) { }
 
   @Post()
-  async create(@Request() request: Express.Request, @Body() createPlantDto: CreatePlantDto): Promise<PlantDto> {
-    return (await this.plantService.create(createPlantDto, request.user)).toDto();
+  create(@Request() request: Express.Request, @Body() createPlantDto: CreatePlantDto): Promise<PlantDto> {
+    return this.plantService.create(createPlantDto, request.user);
   }
 
   /**
@@ -48,5 +48,4 @@ export class PlantController {
   remove(@Request() req: Express.Request, @Param('id') id: string): Promise<DeleteResult> {
     return this.plantService.remove(id);
   }
-
 }
