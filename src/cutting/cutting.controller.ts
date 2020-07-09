@@ -5,6 +5,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ResultData } from 'src/common/dto/query.dto';
 import { DeleteResult } from 'typeorm';
+import { AdminGuard } from 'src/common/guards/admin.guard';
 
 @ApiBearerAuth()
 @Controller('cuttings')
@@ -20,12 +21,18 @@ export class CuttingController {
 
   @Get('my')
   findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<CuttingDto>> {
-    return this.cuttingService.findAllByUser(request.user, {skip, take});
+    return this.cuttingService.findAllByUser(request.user.userId, {skip, take});
   }
 
   @Get('exchange')
   findAllExceptOwner(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<CuttingDto>> {
-    return this.cuttingService.findAllExceptOwner(request.user, {skip, take});
+    return this.cuttingService.findAllExceptOwner(request.user.userId, {skip, take});
+  }
+
+  @Get('all')
+  @UseGuards(AdminGuard)
+  findAll(@Query('skip') skip: number, @Query('take') take: number) {
+    return this.cuttingService.findAll({skip, take});
   }
 
   @Get(':id')

@@ -93,6 +93,16 @@ export class PlantService {
     return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 
+  async findAll(pagination?: Pagination): Promise<ResultData<PlantEntity>> {
+    const [items, count] = await this.plantRepository.findAndCount({
+      relations: ['owner'],
+      skip: pagination?.skip,
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
+    });
+    return {items, count};
+  }
+
   /**
    * Remove one or many plant
    * @param criteria is the plantId or the name
@@ -101,5 +111,9 @@ export class PlantService {
     return typeof criteria == 'number' || Number(criteria)
       ? this.plantRepository.delete(criteria)
       : this.plantRepository.delete({ name: criteria });
+  }
+
+  plantCount() {
+    return this.plantRepository.count();
   }
 }

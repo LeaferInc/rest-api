@@ -41,6 +41,7 @@ export class CuttingEntity extends CommonEntity {
   @ManyToOne(
     () => UserEntity,
     owner => owner.cuttings,
+    { onDelete: 'CASCADE' }
   )
   owner: UserEntity;
 

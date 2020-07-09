@@ -25,6 +25,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { JwtCommonModule } from './jwt-common/jwt-common.module';
 import { PlantCollectionModule } from './plant-collection/plant-collection.module';
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
+import { AdminModule } from './admin/admin.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -82,6 +84,8 @@ import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
     RoomModule,
     JwtCommonModule,
     PlantCollectionModule,
+    AdminModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not, DeleteResult } from 'typeorm';
@@ -15,10 +15,18 @@ export class CuttingService {
     private userService: UserService
   ) {}
 
-  async create(createCuttingDto: CreateCuttingDto, ownerId: number): Promise<CuttingDto> {
+  async create(createCuttingDto: CreateCuttingDto, userId: number): Promise<CuttingDto> {
     const cutting: CuttingEntity = createCuttingDto.toEntity();
 
-    const user: UserEntity = await this.userService.findOneById(ownerId);
+    const user: UserEntity = await this.userService.findOneById(userId);
+
+    if(!user.premium) {
+      const userCuttings = await this.findAllByUser(userId);
+      if(userCuttings.count >= 6) {
+        throw new UnauthorizedException('User is not premium and has a cutting collection with more than 6 cuttings');
+      }
+    }
+
     cutting.owner = user;
 
     return (await this.cuttingRepository.save(cutting)).toDto();
@@ -36,24 +44,34 @@ export class CuttingService {
     return cutting?.toDto();
   }
 
-  async findAllByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
+  async findAllByUser(userId: number, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
     const [items, count] = await this.cuttingRepository.findAndCount({ 
-      where: { owner: { id: user.userId } },
+      where: { owner: { id: userId } },
       skip: pagination?.skip,
       take: pagination?.take
     });
     return {items: items.map((c: CuttingEntity) => c.toDto()), count};
   }
 
-  async findAllExceptOwner(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
+  async findAllExceptOwner(userId: number, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
     const [items, count] = await this.cuttingRepository.findAndCount({
-      where: { owner: { id: Not(user.userId) } },
+      where: { owner: { id: Not(userId) } },
       skip: pagination?.skip,
       take: pagination?.take
     });
     return {items: items.map((c: CuttingEntity) => c.toDto()), count};
   }
 
+  async findAll(pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+    const [items, count] = await this.cuttingRepository.findAndCount({
+      relations: ['owner'],
+      skip: pagination?.skip,
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
+    });
+    return {items, count};
+  }
+  
   async edit(updateCuttingDto: UpdateCuttingDto): Promise<CuttingDto> {
     // TODO: edit only if the cutting belongs to the user
     const { id, ...updateCutting } = updateCuttingDto;
@@ -66,4 +84,7 @@ export class CuttingService {
     return this.cuttingRepository.delete(id);
   }
 
+  cuttingCount() {
+    return this.cuttingRepository.count();
+  }
 }

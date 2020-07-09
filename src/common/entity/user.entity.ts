@@ -70,6 +70,10 @@ export class UserEntity extends CommonEntity {
   @Column({ default: Role.USER })
   role: Role;
 
+  @ApiProperty()
+  @Column({ default: false })
+  premium: boolean;
+
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[]; // Plant ownn by user
