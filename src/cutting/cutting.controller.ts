@@ -19,12 +19,12 @@ export class CuttingController {
 
   @Get('my')
   findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
-    return this.cuttingService.findAllByUser(request.user, {skip, take});
+    return this.cuttingService.findAllByUser(request.user.userId, {skip, take});
   }
 
   @Get('exchange')
   findAllExceptOwner(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
-    return this.cuttingService.findAllExceptOwner(request.user, {skip, take});
+    return this.cuttingService.findAllExceptOwner(request.user.userId, {skip, take});
   }
 
   @Get('all')
