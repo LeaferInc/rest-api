@@ -52,7 +52,7 @@ export class EventEntity extends CommonEntity {
 
     @ApiProperty({ type: () => UserEntity })
     @Exclude()
-    @ManyToOne(() => UserEntity, organizer => organizer.events)
+    @ManyToOne(() => UserEntity, organizer => organizer.events, { onDelete: 'CASCADE' })
     organizer: UserEntity;
 
     @ApiProperty({ type: () => [UserEntity] })
