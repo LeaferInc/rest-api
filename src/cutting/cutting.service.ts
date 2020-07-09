@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
@@ -15,10 +15,18 @@ export class CuttingService {
     private userService: UserService
   ) {}
 
-  async create(createCuttingDto: CreateCuttingDto, ownerId: number): Promise<CuttingEntity> {
+  async create(createCuttingDto: CreateCuttingDto, userId: number): Promise<CuttingEntity> {
     const cutting: CuttingEntity = createCuttingDto.toEntity();
 
-    const user: UserEntity = await this.userService.findOneById(ownerId);
+    const user: UserEntity = await this.userService.findOneById(userId);
+
+    if(!user.premium) {
+      const userCuttings = await this.findAllByUser(userId);
+      if(userCuttings.count >= 6) {
+        throw new UnauthorizedException('User is not premium and has a cutting collection with more than 6 cuttings');
+      }
+    }
+
     cutting.owner = user;
 
     return this.cuttingRepository.save(cutting);
@@ -36,18 +44,18 @@ export class CuttingService {
     return cutting;
   }
 
-  async findAllByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+  async findAllByUser(userId: number, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
     const [items, count] = await this.cuttingRepository.findAndCount({ 
-      where: { owner: { id: user.userId } },
+      where: { owner: { id: userId } },
       skip: pagination?.skip,
       take: pagination?.take
     });
     return {items, count};
   }
 
-  async findAllExceptOwner(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+  async findAllExceptOwner(userId: number, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
     const [items, count] = await this.cuttingRepository.findAndCount({
-      where: { owner: { id: Not(user.userId) } },
+      where: { owner: { id: Not(userId) } },
       skip: pagination?.skip,
       take: pagination?.take
     });

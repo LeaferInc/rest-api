@@ -127,7 +127,11 @@ export class UserDto {
 
   @ApiProperty({ enum: ['USER', 'ADMIN']})
   @IsEnum(Role)
-  role: Role
+  role: Role;
+
+  @ApiProperty()
+  @IsBoolean()
+  premium: boolean;
 
   @ApiProperty({ type: [Number] })
   @IsArray()
