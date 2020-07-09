@@ -38,7 +38,7 @@ describe('Event Controller', () => {
   });
 
   it('should return an array of events', async () => {
-    expect(await controller.getAll()).toStrictEqual(EventServiceMock.testEvents.map(e => e.toDto()));
+    expect(await controller.getAll(0, 12)).toStrictEqual(EventServiceMock.testEvents.map(e => e.toDto()));
   });
 });
 

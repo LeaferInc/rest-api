@@ -11,7 +11,7 @@ import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
 import { ImageService } from 'src/image/image.service';
-import { ResultData, Pagination } from 'src/common/dto/query.dto';
+import { Pagination } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class EventService {
@@ -25,12 +25,12 @@ export class EventService {
     /**
      * Return all the Events
      */
-    async findAll(pagination?: Pagination): Promise<ResultData<EventEntity>> {
-        const [items, count] = await this.eventRepository.findAndCount({
+    async findAll(pagination?: Pagination): Promise<EventEntity[]> {
+        const events = await this.eventRepository.find({
           skip: pagination?.skip,
           take: pagination?.take
         });
-        return {items, count};
+        return events;
     }
 
     /**
@@ -74,7 +74,7 @@ export class EventService {
      */
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
-        const events: EventEntity[] = (await this.findAll()).items;
+        const events: EventEntity[] = (await this.findAll());
 
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);

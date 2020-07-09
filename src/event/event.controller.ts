@@ -10,7 +10,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AppTime } from 'src/common/app.time';
 import { EventSearchDto } from 'src/common/dto/eventSearch.dto';
-import { ResultData } from 'src/common/dto/query.dto';
 
 @ApiBearerAuth()
 @Controller('events')
@@ -23,7 +22,7 @@ export class EventController {
    * @throws NotFoundException if none was present
    */
   @Get()
-  async getAll(@Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<EventDto>> {
+  async getAll(@Query('skip') skip: number, @Query('take') take: number): Promise<EventDto[]> {
     return (await this.eventService.findAll({skip, take})).map((e: EventEntity) => e.toDto());
   }
 
