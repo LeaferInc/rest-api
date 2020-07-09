@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -9,8 +9,12 @@ export class PaymentService {
   ) {}
 
   async webhookUpdateUser(userId: number) {
-    const userEntity = await this.userService.findOneById(userId);
-    userEntity.premium = true;
-    return this.userService.update(userId, userEntity);
+    if(userId && Number(userId)) {
+      const userEntity = await this.userService.findOneById(userId);
+      userEntity.premium = true;
+      return this.userService.update(userId, userEntity);
+    } else {
+      throw new BadRequestException("User is undefined");
+    }
   }
 }
