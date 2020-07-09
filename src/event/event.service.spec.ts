@@ -11,7 +11,8 @@ import { eventRepositoryMock } from 'src/mocks/repositories/event.repository.moc
 import { UserServiceMock } from 'src/mocks/services/user.service.mock';
 import { CreateEventDto } from 'src/common/dto/event.dto';
 import { NotFoundException } from '@nestjs/common';
-import { ResultData } from 'src/common/dto/query.dto';
+import { ImageService } from 'src/image/image.service';
+import { ImageServiceMock } from 'src/mocks/services/image.service.mock';
 
 describe('EventService', () => {
   let service: EventService;
@@ -19,7 +20,10 @@ describe('EventService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EventService, 
+        EventService,
+        {
+          provide: ImageService, useValue: ImageServiceMock.mock
+        },
         {
           provide: UserService,
           useValue: UserServiceMock.mock
@@ -36,6 +40,7 @@ describe('EventService', () => {
 
   beforeEach(() => {
     UserServiceMock.setup();
+    ImageServiceMock.setup();
   });
 
   it('should be defined', () => {
@@ -43,10 +48,10 @@ describe('EventService', () => {
   });
 
   it('should find all', async () => {
-    const events: ResultData<EventEntity> = await service.findAll();
-    expect(events.items).toHaveLength(2);
-    expect(events.items[0].name).toBe('Test event');
-    expect(events.items[1].name).toBe('Another Test event');
+    const events: EventEntity[] = await service.findAll();
+    expect(events).toHaveLength(2);
+    expect(events[0].name).toBe('Test event');
+    expect(events[1].name).toBe('Another Test event');
   });
 
   it('should find one event for user', async () => {
@@ -68,6 +73,7 @@ describe('EventService', () => {
     dto.maxPeople = 20;
     dto.latitude = 46.7887;
     dto.longitude = 5.1256;
+    dto.picture = '';
 
     const event: EventEntity = await service.createOne(dto, 1);
     expect(event).toBeTruthy();
