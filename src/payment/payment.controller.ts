@@ -1,4 +1,4 @@
-import { Controller, OnModuleInit, Get, Post, Body, BadRequestException, Request, Logger, UseGuards, NotImplementedException } from '@nestjs/common';
+import { Controller, OnModuleInit, Post, Body, Request, Logger, UseGuards, NotImplementedException } from '@nestjs/common';
 import { Stripe } from 'stripe';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -41,10 +41,6 @@ export class PaymentController implements OnModuleInit {
 
   @Post('webhook')
   async webhookPayment(@Body() body: any) {
-
-    console.log("body", body);
-    console.log("metadata", body.data.object.metadata);
-
     switch(body.type) {
       case 'charge.succeeded': {
         const userId = body.data.object.metadata.userId;
