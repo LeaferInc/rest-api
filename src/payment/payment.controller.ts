@@ -42,10 +42,10 @@ export class PaymentController implements OnModuleInit {
   @Post('webhook')
   async webhookPayment(@Body() body: any) {
     switch(body.type) {
-      case 'charge.succeeded': {
+      case 'payment_intent.succeeded': {
         const userId = body.data.object.metadata.userId;
         await this.paymentService.webhookUpdateUser(userId);
-        this.logger.log(`User ${userId} charge succeeded`);
+        this.logger.log(`User ${userId} payment_intent succeeded`);
         break;
       }
       default: {
