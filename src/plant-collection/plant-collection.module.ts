@@ -17,4 +17,4 @@ import { ImageService } from 'src/image/image.service';
   providers: [PlantCollectionService, UserService, PlantService, ImageService],
   exports: [PlantCollectionService],
 })
-export class PlantCollectionModule {}
+export class PlantCollectionModule { }

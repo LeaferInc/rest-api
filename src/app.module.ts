@@ -26,6 +26,8 @@ import { JwtCommonModule } from './jwt-common/jwt-common.module';
 import { PlantCollectionModule } from './plant-collection/plant-collection.module';
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
 import { AdminModule } from './admin/admin.module';
+import { SensorModule } from './sensor/sensor.module';
+import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
 
 @Module({
@@ -66,6 +68,7 @@ import { PaymentModule } from './payment/payment.module';
         RoomEntity,
         ParticipantEntity,
         PlantCollectionEntity,
+        SensorEntity
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -85,6 +88,7 @@ import { PaymentModule } from './payment/payment.module';
     JwtCommonModule,
     PlantCollectionModule,
     AdminModule,
+    SensorModule,
     PaymentModule,
   ],
   controllers: [AppController],

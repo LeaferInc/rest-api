@@ -34,16 +34,16 @@ export class PlantCollectionService {
     return plantCollectionEntity;
   }
 
-  async findByPlantAndUser(userId: number, plantId: number): Promise<PlantCollectionEntity | boolean> {
+  async findByPlantAndUser(userId: number, plantId: number): Promise<PlantCollectionEntity> {
     try {
       return await this.plantCollectionRepository.findOneOrFail({
-        relations: [ 'user', 'plant' ],
+        relations: ['user', 'plant'],
         where: {
           user: { id: userId },
           plant: { id: plantId }
         }
       });
-    } catch(err) {
+    } catch (err) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
   }
@@ -57,7 +57,7 @@ export class PlantCollectionService {
   async deleteByPlantId(plantId: number) {
     //TODO: need security
     return this.plantCollectionRepository.delete({
-      plant: { id: plantId },
+      id: plantId,
     });
   }
 }
