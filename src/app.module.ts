@@ -27,6 +27,7 @@ import { PlantCollectionModule } from './plant-collection/plant-collection.modul
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
 import { AdminModule } from './admin/admin.module';
 import { PaymentModule } from './payment/payment.module';
+import { RecognitionModule } from './recognition/recognition.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { PaymentModule } from './payment/payment.module';
     RoomModule,
     JwtCommonModule,
     PlantCollectionModule,
+    RecognitionModule,
     AdminModule,
     PaymentModule,
   ],
