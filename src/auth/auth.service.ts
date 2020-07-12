@@ -28,7 +28,7 @@ export class AuthService {
    * Function that create the jwt token with an username and an userId
    * @param user 
    */
-  login(user: UserDto): string {
+  login(user): string {
     const payload = { username: user.username, sub: user.id };
     return this.jwtService.sign(payload);
   }

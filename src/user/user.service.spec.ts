@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { UserEntity, Role } from 'src/common/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
+import { ImageService } from 'src/image/image.service';
 
 describe('UserService', () => {
   let userEntity: UserEntity;
@@ -22,6 +23,7 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
+        { provide: ImageService, useValue: { saveAvatar: jest.fn() }},
         {
           provide: getRepositoryToken(UserEntity),
           useValue: repositoryMock
@@ -33,29 +35,29 @@ describe('UserService', () => {
   });
 
   beforeEach(() => {
-    userEntity = {
-      id: 0,
-      createdAt: new Date(2020, 1, 1),
-      enabled: true,
-      email: 'test@test.com',
-      username: 'test',
-      password: 'test',
-      firstname: 'test',
-      lastname: 'test',
-      birthdate: new Date(2020, 1, 1),
-      biography: 'test',
-      location: 'test',
-      pictureId: 0,
-      role: Role.USER,
-      plants: [],
-      cuttings: [],
-      events: [],
-      joinedEvents: [],
-      favoritesCuttings: [],
-      messages: [],
-      participants: [],
-      plantCollection: []
-    };
+    userEntity = new UserEntity();
+    userEntity.id = 0;
+    userEntity.createdAt = new Date(2020, 1, 1);
+    userEntity.enabled = true;
+    userEntity.email = 'test@test.com';
+    userEntity.username = 'test';
+    userEntity.password = 'test';
+    userEntity.firstname = 'test';
+    userEntity.lastname = 'test';
+    userEntity.birthdate = new Date(2020, 1, 1);
+    userEntity.biography = 'test';
+    userEntity.location = 'test';
+    userEntity.pictureId = 'temp';
+    userEntity.role = Role.USER;
+    userEntity.plants = [];
+    userEntity.cuttings = [];
+    userEntity.events = [];
+    userEntity.joinedEvents = [];
+    userEntity.favoritesCuttings = [];
+    userEntity.messages = [];
+    userEntity.participants = [];
+    userEntity.plantCollection = [];
+    userEntity.premium = false;
   });
 
   it('should be defined', () => {

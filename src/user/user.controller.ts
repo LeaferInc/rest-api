@@ -1,5 +1,5 @@
-import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
 import { Controller, Post, Body, Get, Delete, Param, Request, UseGuards, Query, Put } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto, UserDto } from 'src/common/dto/user.dto';
 import { UserService } from './user.service';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { DeleteResult } from 'typeorm';
@@ -35,8 +35,8 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  findMe(@Request() req: Express.Request): Promise<UserEntity> {
-    return this.userService.findOneById(req.user.userId);
+  async findMe(@Request() req: Express.Request): Promise<UserDto> {
+    return (await this.userService.findOneById(req.user.userId)).toDto();
   }
 
   /**
@@ -57,8 +57,8 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put()
-  update(@Request() req: Express.Request, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
-    return this.userService.update(req.user.userId, updateUserDto);
+  async update(@Request() req: Express.Request, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+    return (await this.userService.update(req.user.userId, updateUserDto)).toDto();
   }
 
   /**

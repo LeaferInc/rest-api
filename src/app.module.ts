@@ -28,6 +28,7 @@ import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
 import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { SensorEntity } from './common/entity/sensor.entity';
     PlantCollectionModule,
     AdminModule,
     SensorModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

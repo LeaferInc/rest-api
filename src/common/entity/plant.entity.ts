@@ -2,8 +2,9 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId, OneToMan
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Difficulty, Time } from '../dto/plant.dto';
+import { Difficulty, Time, PlantDto } from '../dto/plant.dto';
 import { PlantCollectionEntity } from './plant-collection.entity';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 @Entity({ name: 'plant' })
 export class PlantEntity extends CommonEntity {
@@ -56,8 +57,8 @@ export class PlantEntity extends CommonEntity {
   @Column({ default: false })
   toxicity: boolean;
 
-  @ApiProperty({ type: () => UserEntity })
-  @ManyToOne(() => UserEntity, user => user.plants)
+  @ApiProperty({ type: () => UserEntity})
+  @ManyToOne(() => UserEntity, user => user.plants, { onDelete: 'CASCADE' } )
   owner: UserEntity;
 
   @ApiProperty()
@@ -70,4 +71,27 @@ export class PlantEntity extends CommonEntity {
     plantCollection => plantCollection.plant
   )
   users: PlantCollectionEntity[];
+
+  @ApiProperty()
+  @Column({ nullable: true })
+  pictureId: string;
+
+  toDto(): PlantDto {
+    const dto = new PlantDto();
+    dto.id = this.id;
+    dto.name = this.name;
+    dto.humidity = this.humidity;
+    dto.height = this.height;
+    dto.difficulty = this.difficulty;
+    dto.toxicity = this.toxicity;
+    dto.potting = this.potting;
+    dto.owner = this.ownerId;
+    dto.exposure = this.exposure;
+    dto.wateringFrequencyAutumnToWinter = this.wateringFrequencyAutumnToWinter;
+    dto.wateringFrequencyAutumnToWinterNumber = this.wateringFrequencyAutumnToWinterNumber;
+    dto.wateringFrequencySpringToSummer = this.wateringFrequencySpringToSummer;
+    dto.wateringFrequencySpringToSummerNumber = this.wateringFrequencySpringToSummerNumber;
+    dto.picture = ImageService.readFile(ImageType.PLANT, this.pictureId);
+    return dto;
+  }
 }

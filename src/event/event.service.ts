@@ -2,15 +2,16 @@
  * @author ddaninthe
  */
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, MoreThan, Raw } from 'typeorm';
+import { Repository, FindOneOptions, MoreThan, Raw, DeleteResult } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
-import { ResultData, Pagination } from 'src/common/dto/query.dto';
+import { ImageService } from 'src/image/image.service';
+import { Pagination } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class EventService {
@@ -18,17 +19,18 @@ export class EventService {
     private static readonly MAX_METER_DISTANCE = 1000;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
-        private userService: UserService) { }
+        private userService: UserService,
+        private imageService: ImageService) { }
 
     /**
      * Return all the Events
      */
-    async findAll(pagination?: Pagination): Promise<ResultData<EventEntity>> {
-        const [items, count] = await this.eventRepository.findAndCount({
+    async findAll(pagination?: Pagination): Promise<EventEntity[]> {
+        const events = await this.eventRepository.find({
           skip: pagination?.skip,
           take: pagination?.take
         });
-        return {items, count};
+        return events;
     }
 
     /**
@@ -72,8 +74,8 @@ export class EventService {
      */
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
-        const events: EventEntity[] = (await this.findAll()).items;
-        
+        const events: EventEntity[] = (await this.findAll());
+
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);
             const distance = +from.Distance(eventPosition).toFixed(0);
@@ -123,10 +125,11 @@ export class EventService {
     }
 
     /**
-     * Create an Event in the databe
+     * Create an Event in the database
      * @param eventDto the Event to create
      */
     async createOne(eventDto: CreateEventDto, organizer: number): Promise<EventEntity> {
+        // toEntity() saves the file
         const event: EventEntity = eventDto.toEntity();
 
         const user: UserEntity = await this.userService.findOneById(organizer);
@@ -137,5 +140,26 @@ export class EventService {
 
     eventCount() {
       return this.eventRepository.count();
+    }
+
+    /**
+     * Deletes an event
+     * @param eventId the id of the event
+     * @param userId the id of the user requesting the deletion
+     */
+    async deleteEvent(eventId: number, userId: number): Promise<DeleteResult> {
+        const event = await this.findOne(eventId, { relations: ['organizer']});
+
+        // Not found
+        if (!event) {
+            throw new NotFoundException();
+        }
+
+        // User requesting is not the event organizer
+        if (event.organizer.id !== userId) {
+            throw new UnauthorizedException('Only the organizer can delete his event');
+        }
+
+        return this.eventRepository.delete(eventId);
     }
 }

@@ -10,6 +10,7 @@ import { EventEntity } from 'src/common/entity/event.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { CuttingEntity } from 'src/common/entity/cutting.entity';
+import { ImageService } from 'src/image/image.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CuttingEntity } from 'src/common/entity/cutting.entity';
     PlantService,
     CuttingService,
     EventService,
+    ImageService,
   ],
 })
 export class AdminModule {}

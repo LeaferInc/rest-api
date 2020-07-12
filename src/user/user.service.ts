@@ -1,8 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
 import { Pagination, ResultData } from 'src/common/dto/query.dto';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private imageService: ImageService,
   ) { }
 
   /**
@@ -92,6 +94,26 @@ export class UserService {
   }
 
   /**
+   * Returns a user's avatar
+   * @param id the id of the user
+   */
+  async findAvatar(id: number): Promise<string> {
+    const user: UserEntity = await this.userRepository.findOne(id);
+
+    if (!user.pictureId) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    const picture = ImageService.readFile(ImageType.AVATAR, user.pictureId);
+    
+    if (!picture) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    return picture;
+  }
+
+  /**
    * Update a user
    * @param id the user to update
    * @param changes the fields to change
@@ -100,6 +122,12 @@ export class UserService {
     const user: UserEntity = await this.userRepository.findOne(id);
     for (const key in changes) {
       user[key] = changes[key];
+    }
+
+    // Save image
+    if (changes.picture) {
+      if (user.pictureId) this.imageService.deleteFile(ImageType.AVATAR, user.pictureId);
+      user.pictureId = ImageService.saveFile(ImageType.AVATAR, user.username, changes.picture);
     }
 
     return this.userRepository.save(user);
