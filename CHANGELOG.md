@@ -1,3 +1,23 @@
+# [1.4.0](https://github.com/LeaferInc/rest-api/compare/v1.3.0...v1.4.0) (2020-07-12)
+
+
+### Bug Fixes
+
+* **admin:** fix bug when deleting an object that was link to another via sql constraint ([e7bb904](https://github.com/LeaferInc/rest-api/commit/e7bb9044a5f4e908bfe84b4836418f7a5b16ca5d))
+* **image:** fix app crash ([6c00510](https://github.com/LeaferInc/rest-api/commit/6c0051054daf9752c1c4f8739f0a713cddf84191))
+* **payment:** change event in webhook ([a4dc9ca](https://github.com/LeaferInc/rest-api/commit/a4dc9ca83ca09577ae6fc01150c8d886f1db1573))
+* **payment:** fix bug when using strip cli for simulate event ([3092a0f](https://github.com/LeaferInc/rest-api/commit/3092a0f5cf2c2e9ad523ee49e569cc8f04e69375))
+* **sensor:** fix tests in sensor controller and service ([9ec922d](https://github.com/LeaferInc/rest-api/commit/9ec922d8c001139b75e15cbe81451f543ac22190))
+* **sensor:** fix tests in sensor controller and servicer ([ec0278b](https://github.com/LeaferInc/rest-api/commit/ec0278b0ee068006d6a3aa1b024e941d57bac271))
+
+
+### Features
+
+* **admin:** add admin panel ([ba98af8](https://github.com/LeaferInc/rest-api/commit/ba98af8ef7935724c3b024f4b55a2eba71e6f653))
+* **premium:** add premium page and feature ([296d905](https://github.com/LeaferInc/rest-api/commit/296d9058952234d8f493af423ce4c25e20807973))
+* **search:** add search in cuttings and plants except garden ([4a6fb98](https://github.com/LeaferInc/rest-api/commit/4a6fb985d7624ef18918cb27bdc32a4a1ad8e24f))
+* **sensor:** sensor features for backend ([5d44c54](https://github.com/LeaferInc/rest-api/commit/5d44c5483a3c855b8ed0f326ea2c865b8eadd5ef))
+
 # [1.3.0](https://github.com/LeaferInc/rest-api/compare/v1.2.0...v1.3.0) (2020-06-26)
 
 
