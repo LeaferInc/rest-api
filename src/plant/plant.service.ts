@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlantEntity } from 'src/common/entity/plant.entity';
-import { Repository, DeleteResult, Not, getRepository } from 'typeorm';
+import { Repository, DeleteResult, Not, getRepository, Like, FindManyOptions } from 'typeorm';
 import { CreatePlantDto, PlantDto } from 'src/common/dto/plant.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -39,12 +39,16 @@ export class PlantService {
    * Return many plant with pagination
    * @param options 
    */
-  async findAllExceptOwner(owner: Express.User, pagination?: Pagination): Promise<ResultData<PlantDto>> {
-    const [items, count] = await this.plantRepository.findAndCount({
-      where: { owner: { id: Not(owner.userId) } },
+  async findAllExceptOwner(owner: Express.User, pagination?: Pagination, search?: string): Promise<ResultData<PlantDto>> {
+    const queryOptions: FindManyOptions<PlantEntity> = {
+      where: { 
+        owner: { id: Not(owner.userId) },
+      },
       skip: pagination?.skip,
       take: pagination?.take
-    });
+    };
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.plantRepository.findAndCount(queryOptions);
     return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 
@@ -84,12 +88,14 @@ export class PlantService {
     return this.plantRepository.find(JSON.parse(criteria));
   }
 
-  async findAllByByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<PlantDto>> {
-    const [items, count] = await this.plantRepository.findAndCount({
+  async findAllByByUser(user: Express.User, pagination?: Pagination, search?: string): Promise<ResultData<PlantDto>> {
+    const queryOptions: FindManyOptions<PlantEntity> = {
       where: { owner: { id: user.userId } },
       skip: pagination?.skip,
       take: pagination?.take
-    });
+    }
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.plantRepository.findAndCount(queryOptions);
     return {items: items.map((p: PlantEntity) => p.toDto()), count};
   }
 

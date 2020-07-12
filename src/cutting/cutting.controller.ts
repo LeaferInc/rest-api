@@ -20,13 +20,23 @@ export class CuttingController {
   }
 
   @Get('my')
-  findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<CuttingDto>> {
-    return this.cuttingService.findAllByUser(request.user.userId, {skip, take});
+  findAllByUser(
+    @Request() request: Express.Request,
+    @Query('skip') skip: number,
+    @Query('take') take: number,
+    @Query('search') search: string,
+  ): Promise<ResultData<CuttingDto>> {
+    return this.cuttingService.findAllByUser(request.user.userId, {skip, take}, search);
   }
 
   @Get('exchange')
-  findAllExceptOwner(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<CuttingDto>> {
-    return this.cuttingService.findAllExceptOwner(request.user.userId, {skip, take});
+  findAllExceptOwner(
+    @Request() request: Express.Request,
+    @Query('skip') skip: number,
+    @Query('take') take: number,
+    @Query('search') search: string,
+  ): Promise<ResultData<CuttingDto>> {
+    return this.cuttingService.findAllExceptOwner(request.user.userId, {skip, take}, search);
   }
 
   @Get('all')
