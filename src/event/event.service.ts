@@ -116,7 +116,7 @@ export class EventService {
      * @param userId the user requesting the resource
      */
     async findOneForUser(eventId: number, userId: number): Promise<EventEntity> {
-        const event: EventEntity = await this.findOne(eventId, { relations: ['entrants'] });
+        const event: EventEntity = await this.findOne(eventId, { relations: ['entrants', 'organizer'] });
         if (!event) {
             throw new NotFoundException();
         }
