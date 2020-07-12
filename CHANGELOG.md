@@ -1,3 +1,15 @@
+# [1.5.0](https://github.com/LeaferInc/rest-api/compare/v1.4.0...v1.5.0) (2020-07-12)
+
+
+### Bug Fixes
+
+* **hash:** fix tests ([1e3ee6a](https://github.com/LeaferInc/rest-api/commit/1e3ee6a47dab2d8cf5c3e934a1059e76598f061d))
+
+
+### Features
+
+* **hash:** use bcrypt to hash password ([c32193e](https://github.com/LeaferInc/rest-api/commit/c32193edc61d65762341dd69cbe84627b326a74d))
+
 # [1.4.0](https://github.com/LeaferInc/rest-api/compare/v1.3.0...v1.4.0) (2020-07-12)
 
 
