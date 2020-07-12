@@ -4,6 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserDto } from 'src/common/dto/user.dto';
+import * as bcrypt from 'bcryptjs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -54,7 +55,7 @@ describe('AuthService', () => {
     user.enabled = true;
     user.email = 'test@test.com';
     user.username = 'test';
-    user.password = 'test';
+    user.password = await bcrypt.hash(user.username, 10);
     user.firstname = 'test';
     user.lastname = 'test';
     user.birthdate = new Date(2020, 1, 1);
