@@ -1,14 +1,17 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult, FindManyOptions, ObjectID, FindConditions, FindOneOptions, getManager } from 'typeorm';
-import { CreateUserDto } from 'src/common/dto/user.dto';
+import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
+import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
+import { Pagination, ResultData } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private imageService: ImageService,
   ) { }
 
   /**
@@ -17,7 +20,7 @@ export class UserService {
    */
   async create(userDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepository.create(userDto.toLowerCase());
-    
+
     const usersFound = await this.userRepository.find({
       where: [
         { username: user.username },
@@ -25,23 +28,25 @@ export class UserService {
       ]
     });
 
-    if(usersFound.length) {
+    if (usersFound.length) {
       throw new HttpException('User is already created with this username or email', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.userRepository.save(user);
   }
 
-  /**
-   * Return many user based on the options
-   * @param options additional option for querying database
-   */
-  findAll(options?: FindManyOptions<UserEntity>): Promise<UserEntity[]> {
-    return this.userRepository.find(options);
+  async findAll(pagination?: Pagination): Promise<ResultData<UserEntity>> {
+    const [items, count] = await this.userRepository.findAndCount({
+      skip: pagination?.skip,
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
+    });
+
+    return {items, count};
   }
 
   getTalkTo(userId: number): Promise<UserEntity[]> {
-    // TODO: refactor to typeorm syntax (GL HAVE FUN)
+    // TODO: refactor to typeorm syntax
     return getManager()
       .query(
         "SELECT " +
@@ -67,7 +72,7 @@ export class UserService {
     let userFound: UserEntity;
     try {
       userFound = await this.userRepository.findOneOrFail(id, options);
-    } catch(err) {
+    } catch (err) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return userFound;
@@ -82,10 +87,50 @@ export class UserService {
     let userFound: UserEntity;
     try {
       userFound = await this.userRepository.findOne({ username: username }, options)
-    } catch(err) {
+    } catch (err) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
     return userFound;
+  }
+
+  /**
+   * Returns a user's avatar
+   * @param id the id of the user
+   */
+  async findAvatar(id: number): Promise<string> {
+    const user: UserEntity = await this.userRepository.findOne(id);
+
+    if (!user.pictureId) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    const picture = ImageService.readFile(ImageType.AVATAR, user.pictureId);
+    
+    if (!picture) {
+      throw new NotFoundException('Avatar not found');
+    }
+
+    return picture;
+  }
+
+  /**
+   * Update a user
+   * @param id the user to update
+   * @param changes the fields to change
+   */
+  async update(id: number, changes: UpdateUserDto): Promise<UserEntity> {
+    const user: UserEntity = await this.userRepository.findOne(id);
+    for (const key in changes) {
+      user[key] = changes[key];
+    }
+
+    // Save image
+    if (changes.picture) {
+      if (user.pictureId) this.imageService.deleteFile(ImageType.AVATAR, user.pictureId);
+      user.pictureId = ImageService.saveFile(ImageType.AVATAR, user.username, changes.picture);
+    }
+
+    return this.userRepository.save(user);
   }
 
   /**
@@ -94,5 +139,9 @@ export class UserService {
    */
   removeById(id: number | string): Promise<DeleteResult> {
     return this.userRepository.delete(id);
+  }
+
+  userCount() {
+    return this.userRepository.count();
   }
 }

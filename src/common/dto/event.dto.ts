@@ -3,8 +3,26 @@
  */
 
 import { EventEntity } from '../entity/event.entity';
-import { IsString, IsNumber, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsBase64 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { AppTime } from '../app.time';
+import { ImageService, ImageType } from 'src/image/image.service';
+
+export class EventDto {
+  id: number;
+  name: string;
+  description: string;
+  location: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  maxPeople: number;
+  latitude: number;
+  longitude: number;
+  organizer: number;
+  joined?: boolean;
+  picture: string;  
+}
 
 export class CreateEventDto {
   @ApiProperty()
@@ -43,6 +61,10 @@ export class CreateEventDto {
   @IsNumber()
   longitude: number;
 
+  @ApiProperty()
+  @IsBase64()
+  picture: string;
+
   toEntity(): EventEntity {
     const event: EventEntity = new EventEntity();
     event.name = this.name;
@@ -54,6 +76,7 @@ export class CreateEventDto {
     event.longitude = this.longitude;
     event.price = this.price;
     event.maxPeople = this.maxPeople;
+    event.pictureId = ImageService.saveFile(ImageType.EVENT, 'event_' + AppTime.now().getTime(), this.picture);
     return event;
   }
 }

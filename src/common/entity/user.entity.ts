@@ -15,6 +15,8 @@ import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
+import { UserDto } from '../dto/user.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 export enum Role {
   USER,
@@ -62,11 +64,15 @@ export class UserEntity extends CommonEntity {
 
   @ApiProperty()
   @Column({ nullable: true })
-  pictureId: number;
+  pictureId: string;
 
   @ApiProperty()
   @Column({ default: Role.USER })
   role: Role;
+
+  @ApiProperty()
+  @Column({ default: false })
+  premium: boolean;
 
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
@@ -117,4 +123,18 @@ export class UserEntity extends CommonEntity {
   )
   plantCollection: PlantCollectionEntity[];
 
+  toDto(): UserDto {
+    const dto = new UserDto();
+    dto.id = this.id;
+    dto.email = this.email;
+    dto.username = this.username;
+    dto.firstname = this.firstname;
+    dto.lastname = this.lastname;
+    dto.birthdate = this.birthdate;
+    dto.biography = this.biography;
+    dto.location = this.location;
+    dto.role = this.role;
+    dto.picture = ImageService.readFile(ImageType.AVATAR, this.pictureId);
+    return dto;
+  }
 }

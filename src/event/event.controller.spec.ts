@@ -10,6 +10,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { EventServiceMock } from 'src/mocks/services/event.service.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ImageServiceMock } from 'src/mocks/services/image.service.mock';
 
 describe('Event Controller', () => {
   let controller: EventController;
@@ -37,7 +38,7 @@ describe('Event Controller', () => {
   });
 
   it('should return an array of events', async () => {
-    expect(await controller.getAll()).toBe(EventServiceMock.testEvents);
+    expect(await controller.getAll(0, 12)).toStrictEqual(EventServiceMock.testEvents.map(e => e.toDto()));
   });
 });
 
@@ -64,6 +65,7 @@ describe('Event Controller end-to-end', () => {
 
   beforeEach(() => {
     EventServiceMock.setup();
+    ImageServiceMock.setup();
   });
 
   /*it('/events (GET)', () => {

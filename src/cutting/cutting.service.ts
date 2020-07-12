@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
-import { CreateCuttingDto, UpdateCuttingDto } from 'src/common/dto/cutting.dto';
+import { Repository, Not, DeleteResult, FindManyOptions, Like } from 'typeorm';
+import { CreateCuttingDto, UpdateCuttingDto, CuttingDto } from 'src/common/dto/cutting.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { Pagination, ResultData } from 'src/common/dto/query.dto';
@@ -15,16 +15,24 @@ export class CuttingService {
     private userService: UserService
   ) {}
 
-  async create(createCuttingDto: CreateCuttingDto, ownerId: number): Promise<CuttingEntity> {
+  async create(createCuttingDto: CreateCuttingDto, userId: number): Promise<CuttingDto> {
     const cutting: CuttingEntity = createCuttingDto.toEntity();
 
-    const user: UserEntity = await this.userService.findOneById(ownerId);
+    const user: UserEntity = await this.userService.findOneById(userId);
+
+    if(!user.premium) {
+      const userCuttings = await this.findAllByUser(userId);
+      if(userCuttings.count >= 6) {
+        throw new UnauthorizedException('User is not premium and has a cutting collection with more than 6 cuttings');
+      }
+    }
+
     cutting.owner = user;
 
-    return this.cuttingRepository.save(cutting);
+    return (await this.cuttingRepository.save(cutting)).toDto();
   }
 
-  async findOne(id: string | number): Promise<any> {
+  async findOne(id: string | number): Promise<CuttingDto> {
     let cutting: CuttingEntity; 
     
     try {
@@ -33,37 +41,54 @@ export class CuttingService {
       throw new HttpException('No cutting found', HttpStatus.NOT_FOUND);
     }
 
-    return cutting;
+    return cutting?.toDto();
   }
 
-  async findAllByUser(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
-    const [items, count] = await this.cuttingRepository.findAndCount({ 
-      where: { owner: { id: user.userId } },
+  async findAllByUser(userId: number, pagination?: Pagination, search?: string): Promise<ResultData<CuttingDto>> {
+    const queryOptions: FindManyOptions<CuttingEntity> = { 
+      where: { owner: { id: userId } },
       skip: pagination?.skip,
       take: pagination?.take
-    });
-    return {items, count};
+    }
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.cuttingRepository.findAndCount(queryOptions);
+    return {items: items.map((c: CuttingEntity) => c.toDto()), count};
   }
 
-  async findAllExceptOwner(user: Express.User, pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
+  async findAllExceptOwner(userId: number, pagination?: Pagination, search?: string): Promise<ResultData<CuttingDto>> {
+    const queryOptions: FindManyOptions<CuttingEntity> = {
+      where: { owner: { id: Not(userId) } },
+      skip: pagination?.skip,
+      take: pagination?.take
+    }
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.cuttingRepository.findAndCount(queryOptions);
+    return {items: items.map((c: CuttingEntity) => c.toDto()), count};
+  }
+
+  async findAll(pagination?: Pagination): Promise<ResultData<CuttingEntity>> {
     const [items, count] = await this.cuttingRepository.findAndCount({
-      where: { owner: { id: Not(user.userId) } },
+      relations: ['owner'],
       skip: pagination?.skip,
-      take: pagination?.take
+      take: pagination?.take,
+      order: { createdAt: 'DESC' }
     });
     return {items, count};
   }
-
-  async edit(updateCuttingDto: UpdateCuttingDto) {
+  
+  async edit(updateCuttingDto: UpdateCuttingDto): Promise<CuttingDto> {
     // TODO: edit only if the cutting belongs to the user
     const { id, ...updateCutting } = updateCuttingDto;
     await this.cuttingRepository.update(id, updateCutting);
-    return this.cuttingRepository.findOne(id);
+    return (await this.cuttingRepository.findOne(id)).toDto();
   }
 
-  async delete(id: string | number) {
+  async delete(id: string | number): Promise<DeleteResult> {
     // TODO: delete only if the cutting belongs to the user
     return this.cuttingRepository.delete(id);
   }
 
+  cuttingCount() {
+    return this.cuttingRepository.count();
+  }
 }

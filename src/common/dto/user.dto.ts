@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsDateString, IsDate, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum, IsBase64 } from "class-validator";
 import { Role } from "../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -54,6 +54,32 @@ export class CreateUserDto {
   }
 }
 
+export class UpdateUserDto {
+  @IsString()
+  @IsOptional()
+  firstname?: string;
+
+  @IsString()
+  @IsOptional()
+  lastname?: string;
+
+  @IsDateString()
+  @IsOptional()
+  birthdate?: Date;
+
+  @IsString()
+  @IsOptional()
+  biography?: string;
+
+  @IsString()
+  @IsOptional()
+  location?: string;
+
+  @IsBase64()
+  @IsOptional()
+  picture?: string;
+}
+
 export class UserDto {
   @ApiProperty()
   @IsNumber()
@@ -96,12 +122,16 @@ export class UserDto {
   location: string;
 
   @ApiProperty()
-  @IsNumber()
-  pictureId: number;
+  @IsString()
+  picture: string;
 
   @ApiProperty({ enum: ['USER', 'ADMIN']})
   @IsEnum(Role)
-  role: Role
+  role: Role;
+
+  @ApiProperty()
+  @IsBoolean()
+  premium: boolean;
 
   @ApiProperty({ type: [Number] })
   @IsArray()

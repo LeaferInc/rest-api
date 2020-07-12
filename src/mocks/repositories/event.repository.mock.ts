@@ -1,5 +1,6 @@
 import { UserEntity } from "src/common/entity/user.entity";
 import { EventEntity } from "src/common/entity/event.entity";
+import { ResultData } from "src/common/dto/query.dto";
 
 
 const testUser = new UserEntity();
@@ -39,4 +40,5 @@ export const eventRepositoryMock = {
     find: jest.fn(() => [testEvent1, testEvent2]),
     findOne: jest.fn((id) => id === 1 ? testEvent1 : id === 2 ? testEvent2 : null),
     save: jest.fn((event: EventEntity) => event),
+    findAndCount: jest.fn(() => [[testEvent1, testEvent2], 2]),
 }

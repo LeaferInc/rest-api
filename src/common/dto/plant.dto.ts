@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean } from "class-validator";
+import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean, IsBase64 } from "class-validator";
 
 export enum Difficulty {
   EASY = "easy",
@@ -67,30 +67,24 @@ export class CreatePlantDto {
   @IsOptional()
   toxicity: boolean;
 
-  constructor(plant?: CreatePlantDto) {
-  }
-
+  @ApiProperty()
+  @IsBase64()
+  picture: string;
 }
 
-// export class PlantDto {
-//   @ApiProperty()
-//   id: number;
-//   @ApiProperty()
-//   name: string;
-//   @ApiProperty()
-//   humidity: number;
-//   @ApiProperty()
-//   watering: string;
-//   @ApiProperty()
-//   difficulty: number;
-//   @ApiProperty()
-//   exposure: string;
-//   @ApiProperty()
-//   toxicity: string;
-//   @ApiProperty()
-//   potting: string;
-//   @ApiProperty()
-//   createdAt: Date;
-//   @ApiProperty()
-//   owner: number;
-// }
+export class PlantDto {
+  id: number;
+  name: string;
+  height: number;
+  difficulty: Difficulty;
+  wateringFrequencySpringToSummerNumber: number;
+  wateringFrequencyAutumnToWinterNumber: number;
+  wateringFrequencySpringToSummer: Time;
+  wateringFrequencyAutumnToWinter: Time;
+  exposure: string;
+  humidity: string;
+  potting: string;
+  toxicity: boolean;
+  owner: number;
+  picture: string;
+}
