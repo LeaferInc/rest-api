@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SensorController } from './sensor.controller';
+import { SensorService } from './sensor.service';
 
 describe('Sensor Controller', () => {
   let controller: SensorController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        { provide: SensorService, useValue: {} }
+      ],
       controllers: [SensorController],
     }).compile();
 
