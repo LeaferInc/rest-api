@@ -2,9 +2,9 @@
  * @author ddaninthe
  */
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, MoreThan, Raw } from 'typeorm';
+import { Repository, FindOneOptions, MoreThan, Raw, DeleteResult } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
@@ -140,5 +140,26 @@ export class EventService {
 
     eventCount() {
       return this.eventRepository.count();
+    }
+
+    /**
+     * Deletes an event
+     * @param eventId the id of the event
+     * @param userId the id of the user requesting the deletion
+     */
+    async deleteEvent(eventId: number, userId: number): Promise<DeleteResult> {
+        const event = await this.findOne(eventId, { relations: ['organizer']});
+
+        // Not found
+        if (!event) {
+            throw new NotFoundException();
+        }
+
+        // User requesting is not the event organizer
+        if (event.organizer.id !== userId) {
+            throw new UnauthorizedException('Only the organizer can delete his event');
+        }
+
+        return this.eventRepository.delete(eventId);
     }
 }
