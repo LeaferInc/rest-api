@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { CuttingEntity } from 'src/common/entity/cutting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not, DeleteResult } from 'typeorm';
+import { Repository, Not, DeleteResult, FindManyOptions, Like } from 'typeorm';
 import { CreateCuttingDto, UpdateCuttingDto, CuttingDto } from 'src/common/dto/cutting.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
@@ -44,21 +44,25 @@ export class CuttingService {
     return cutting?.toDto();
   }
 
-  async findAllByUser(userId: number, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
-    const [items, count] = await this.cuttingRepository.findAndCount({ 
+  async findAllByUser(userId: number, pagination?: Pagination, search?: string): Promise<ResultData<CuttingDto>> {
+    const queryOptions: FindManyOptions<CuttingEntity> = { 
       where: { owner: { id: userId } },
       skip: pagination?.skip,
       take: pagination?.take
-    });
+    }
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.cuttingRepository.findAndCount(queryOptions);
     return {items: items.map((c: CuttingEntity) => c.toDto()), count};
   }
 
-  async findAllExceptOwner(userId: number, pagination?: Pagination): Promise<ResultData<CuttingDto>> {
-    const [items, count] = await this.cuttingRepository.findAndCount({
+  async findAllExceptOwner(userId: number, pagination?: Pagination, search?: string): Promise<ResultData<CuttingDto>> {
+    const queryOptions: FindManyOptions<CuttingEntity> = {
       where: { owner: { id: Not(userId) } },
       skip: pagination?.skip,
       take: pagination?.take
-    });
+    }
+    if(search) Object.assign(queryOptions.where, { name: Like(`%${search}%`) });
+    const [items, count] = await this.cuttingRepository.findAndCount(queryOptions);
     return {items: items.map((c: CuttingEntity) => c.toDto()), count};
   }
 

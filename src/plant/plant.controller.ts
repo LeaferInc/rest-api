@@ -28,13 +28,23 @@ export class PlantController {
   }
 
   @Get('my')
-  findAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantDto>> {
-    return this.plantService.findAllByByUser(request.user, {skip, take});
+  findAllByUser(
+    @Request() request: Express.Request,
+    @Query('skip') skip: number,
+    @Query('take') take: number,
+    @Query('search') search: string,
+  ): Promise<ResultData<PlantDto>> {
+    return this.plantService.findAllByByUser(request.user, {skip, take}, search);
   }
 
   @Get('findAllExceptOwner')
-  findAllExceptOwner(@Request() req: Express.Request, @Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<PlantDto>> {
-    return this.plantService.findAllExceptOwner(req.user, {skip, take});
+  findAllExceptOwner(
+    @Request() req: Express.Request,
+    @Query('skip') skip: number,
+    @Query('take') take: number,
+    @Query('search') search: string,
+  ): Promise<ResultData<PlantDto>> {
+    return this.plantService.findAllExceptOwner(req.user, {skip, take}, search);
   }
 
   @Get('my-garden')
