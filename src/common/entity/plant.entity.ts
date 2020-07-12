@@ -19,7 +19,7 @@ export class PlantEntity extends CommonEntity {
   @ApiProperty()
   @Column()
   height: number;
-  
+
   @ApiProperty()
   @Column({ default: Difficulty.EASY })
   difficulty: Difficulty;
@@ -56,7 +56,7 @@ export class PlantEntity extends CommonEntity {
   @Column({ default: false })
   toxicity: boolean;
 
-  @ApiProperty({ type: () => UserEntity})
+  @ApiProperty({ type: () => UserEntity })
   @ManyToOne(() => UserEntity, user => user.plants)
   owner: UserEntity;
 
