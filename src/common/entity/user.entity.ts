@@ -4,7 +4,8 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  BeforeInsert
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
@@ -17,6 +18,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
 import { UserDto } from '../dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
+import * as bcrypt from 'bcryptjs';
 
 export enum Role {
   USER,
@@ -41,6 +43,11 @@ export class UserEntity extends CommonEntity {
   @Exclude()
   @Column()
   password: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 
   @ApiProperty()
   @Column({ nullable: true })
