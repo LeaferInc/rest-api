@@ -19,10 +19,10 @@ export class PlantCollectionService {
     const plantEntity = await this.plantService.findOne(String(plantId));
     const userEntity = await this.userService.findOneById(userId);
 
-    if(!userEntity.premium) {
+    if (!userEntity.premium) {
       const [userGarden, count] = await this.findByUserAndCount(userId);
-      
-      if(count >= 3) {
+
+      if (count >= 3) {
         throw new UnauthorizedException('User is not premium and has a garden with more than 3 plants');
       }
     }
@@ -32,6 +32,14 @@ export class PlantCollectionService {
     plantCollectionEntity.user = userEntity;
     this.plantCollectionRepository.save(plantCollectionEntity);
     return plantCollectionEntity;
+  }
+
+  async findById(plantCollectionId: number): Promise<PlantCollectionEntity> {
+    return this.plantCollectionRepository.findOne({
+      where: {
+        id: plantCollectionId
+      }
+    });
   }
 
   async findByPlantAndUser(userId: number, plantId: number): Promise<PlantCollectionEntity> {

@@ -27,7 +27,7 @@ export class SensorService {
       return sensor;
     }
     sensor = new SensorEntity();
-    const plantCollectionEntity: PlantCollectionEntity = await this.plantCollectionService.findByPlantAndUser(user.userId, sensorDto.plantCollectionId);
+    const plantCollectionEntity: PlantCollectionEntity = await this.plantCollectionService.findById(sensorDto.plantCollectionId);
     sensor.plantCollection = plantCollectionEntity;
     sensor.humidity = 0;
     return this.sensorRepository.save(sensor);
