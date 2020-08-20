@@ -54,6 +54,13 @@ export class CreateUserDto {
   }
 }
 
+export class EntrantDto {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+}
+
 export class UpdateUserDto {
   @IsString()
   @IsOptional()

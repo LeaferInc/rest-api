@@ -7,6 +7,7 @@ import { IsString, IsNumber, IsDateString, IsBase64 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AppTime } from '../app.time';
 import { ImageService, ImageType } from 'src/image/image.service';
+import { EntrantDto } from './user.dto';
 
 export class EventDto {
   id: number;
@@ -21,7 +22,8 @@ export class EventDto {
   longitude: number;
   organizer: number;
   joined?: boolean;
-  picture: string;  
+  picture: string;
+  entrants: EntrantDto[];
 }
 
 export class CreateEventDto {
