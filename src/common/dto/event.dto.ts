@@ -3,7 +3,7 @@
  */
 
 import { EventEntity } from '../entity/event.entity';
-import { IsString, IsNumber, IsDateString, IsBase64 } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsBase64, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AppTime } from '../app.time';
 import { ImageService, ImageType } from 'src/image/image.service';
@@ -49,10 +49,12 @@ export class CreateEventDto {
 
   @ApiProperty()
   @IsNumber()
+  @Min(0)
   price: number;
 
   @ApiProperty()
   @IsNumber()
+  @Min(1)
   maxPeople: number;
 
   @ApiProperty()
