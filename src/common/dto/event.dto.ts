@@ -3,7 +3,7 @@
  */
 
 import { EventEntity } from '../entity/event.entity';
-import { IsString, IsNumber, IsDateString, IsBase64, Min } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsBase64, Min, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AppTime } from '../app.time';
 import { ImageService, ImageType } from 'src/image/image.service';
@@ -29,22 +29,27 @@ export class EventDto {
 export class CreateEventDto {
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   location: string;
 
   @ApiProperty()
   @IsDateString()
+  @IsNotEmpty()
   startDate: Date;
 
   @ApiProperty()
   @IsDateString()
+  @IsNotEmpty()
   endDate: Date;
 
   @ApiProperty()
@@ -67,6 +72,7 @@ export class CreateEventDto {
 
   @ApiProperty()
   @IsBase64()
+  @IsNotEmpty()
   picture: string;
 
   toEntity(): EventEntity {
