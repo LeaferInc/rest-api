@@ -8,6 +8,8 @@ import {
 import { CommonEntity } from '../common.entity';
 import { UserEntity } from './user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { CuttingDto } from '../dto/cutting.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 @Entity({ name: 'cutting' })
 export class CuttingEntity extends CommonEntity {
@@ -31,14 +33,31 @@ export class CuttingEntity extends CommonEntity {
   @Column({ default: 0 })
   viewsCount: number;
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  pictureId: string;
+
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(
     () => UserEntity,
     owner => owner.cuttings,
+    { onDelete: 'CASCADE' }
   )
   owner: UserEntity;
 
   @ApiProperty()
   @RelationId((cutting: CuttingEntity) => cutting.owner)
   ownerId: number;
+
+  toDto(): CuttingDto {
+    const dto = new CuttingDto();
+    dto.id = this.id;
+    dto.name = this.name;
+    dto.description = this.description;
+    dto.tradeWith = this.tradeWith;
+    dto.viewsCount = this.viewsCount;
+    dto.ownerId = this.ownerId;
+    dto.picture = ImageService.readFile(ImageType.CUTTING, this.pictureId);
+    return dto;
+  }
 }

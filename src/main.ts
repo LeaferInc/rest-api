@@ -3,9 +3,9 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import "reflect-metadata";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
-  
   const app = await NestFactory.create(AppModule);
 
   /**
@@ -42,6 +42,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector))
   );
+
+  app.use(bodyParser.json({limit: '20mb'}));
 
   app.enableCors();
   await app.listen(port);

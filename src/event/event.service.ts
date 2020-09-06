@@ -2,14 +2,17 @@
  * @author ddaninthe
  */
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOneOptions, MoreThan, Raw } from 'typeorm';
+import { Repository, FindOneOptions, MoreThan, Raw, DeleteResult } from 'typeorm';
 import { EventEntity } from '../common/entity/event.entity';
 import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
+import { ImageService } from 'src/image/image.service';
+import { Pagination } from 'src/common/dto/query.dto';
+import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class EventService {
@@ -17,13 +20,18 @@ export class EventService {
     private static readonly MAX_METER_DISTANCE = 1000;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
-        private userService: UserService) { }
+        private userService: UserService,
+        private imageService: ImageService) { }
 
     /**
      * Return all the Events
      */
-    findAll(): Promise<EventEntity[]> {
-        return this.eventRepository.find();
+    async findAll(pagination?: Pagination): Promise<EventEntity[]> {
+        const events = await this.eventRepository.find({
+            skip: pagination?.skip,
+            take: pagination?.take
+        });
+        return events;
     }
 
     /**
@@ -61,14 +69,16 @@ export class EventService {
     }
 
     /**
-     * Find closest events to the given coordinates
+     * Finds closest events to the given coordinates
      * @param latitude latitude coordinate to compare
      * @param longitude longitude coordinate to compare
      */
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
-        const events: EventEntity[] = await this.findAll();
-        
+
+        // Only future events
+        const events: EventEntity[] = (await this.findAfterDate(AppTime.now()));
+
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);
             const distance = +from.Distance(eventPosition).toFixed(0);
@@ -86,11 +96,27 @@ export class EventService {
         if (!user) {
             throw new NotFoundException();
         }
-        // Indicate that events have been join
-        user.joinedEvents.map((event) => {
-            event.joined = true;
-        });
+        user.joinedEvents.filter(event => event.startDate > AppTime.now())
+            .sort((a,b) => b.startDate.getTime() - a.startDate.getTime())
+            .map((event) => {
+                event.joined = true; // Indicate that event has been joined
+            });
         return user.joinedEvents;
+    }
+
+    /**
+     * Returns all events organized by the given user
+     * @param userId the organizer's id
+     */
+    findOrganized(userId: number): Promise<EventEntity[]> {
+        return this.eventRepository.find({
+            where: [
+                { organizer: userId },
+            ],
+            order: {
+                startDate: 'DESC',
+            },
+        });
     }
 
     /**
@@ -109,7 +135,7 @@ export class EventService {
      * @param userId the user requesting the resource
      */
     async findOneForUser(eventId: number, userId: number): Promise<EventEntity> {
-        const event: EventEntity = await this.findOne(eventId, { relations: ['entrants'] });
+        const event: EventEntity = await this.findOne(eventId, { relations: ['entrants', 'organizer'] });
         if (!event) {
             throw new NotFoundException();
         }
@@ -118,15 +144,41 @@ export class EventService {
     }
 
     /**
-     * Create an Event in the databe
+     * Create an Event in the database
      * @param eventDto the Event to create
      */
     async createOne(eventDto: CreateEventDto, organizer: number): Promise<EventEntity> {
+        // toEntity() saves the file
         const event: EventEntity = eventDto.toEntity();
 
         const user: UserEntity = await this.userService.findOneById(organizer);
         event.organizer = user;
 
         return this.eventRepository.save(event);
+    }
+
+    eventCount() {
+        return this.eventRepository.count();
+    }
+
+    /**
+     * Deletes an event
+     * @param eventId the id of the event
+     * @param userId the id of the user requesting the deletion
+     */
+    async deleteEvent(eventId: number, userId: number): Promise<DeleteResult> {
+        const event = await this.findOne(eventId, { relations: ['organizer'] });
+
+        // Not found
+        if (!event) {
+            throw new NotFoundException();
+        }
+
+        // User requesting is not the event organizer
+        if (event.organizer.id !== userId) {
+            throw new UnauthorizedException('Only the organizer can delete his event');
+        }
+
+        return this.eventRepository.delete(eventId);
     }
 }

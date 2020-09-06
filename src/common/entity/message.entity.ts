@@ -29,14 +29,16 @@ export class MessageEntity extends CommonEntity {
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(
     () => UserEntity,
-    user => user.messages
+    user => user.messages,
+    { onDelete: 'CASCADE' }
   )
   user: UserEntity;
 
   @ApiProperty({ type: () => RoomEntity })
   @ManyToOne(
     () => RoomEntity,
-    room => room.rooms
+    room => room.rooms,
+    { onDelete: 'CASCADE' }
   )
   room: RoomEntity;
 }

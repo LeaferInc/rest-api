@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { UserDto } from 'src/common/dto/user.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +17,16 @@ export class AuthService {
    */
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userService.findOneByUsername(username.toLowerCase());
-    if(user && user.password === password) {
+    let isPasswordMatching = false;
+
+    if(user && Object.keys(user).length !== 0) {
+      isPasswordMatching = await bcrypt.compare(
+        password,
+        user.password
+      );
+    }
+
+    if(user && isPasswordMatching) {
       const { password, ...result } = user;
       return result;
     }
@@ -28,7 +37,7 @@ export class AuthService {
    * Function that create the jwt token with an username and an userId
    * @param user 
    */
-  login(user: UserDto): string {
+  login(user): string {
     const payload = { username: user.username, sub: user.id };
     return this.jwtService.sign(payload);
   }

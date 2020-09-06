@@ -4,7 +4,8 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  BeforeInsert
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
@@ -16,6 +17,9 @@ import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
 import { NotificationEntity } from './notification.entity';
+import { UserDto, EntrantDto } from '../dto/user.dto';
+import { ImageService, ImageType } from 'src/image/image.service';
+import * as bcrypt from 'bcryptjs';
 
 export enum Role {
   USER,
@@ -41,6 +45,11 @@ export class UserEntity extends CommonEntity {
   @Column()
   password: string;
 
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
   @ApiProperty()
   @Column({ nullable: true })
   firstname: string;
@@ -63,11 +72,15 @@ export class UserEntity extends CommonEntity {
 
   @ApiProperty()
   @Column({ nullable: true })
-  pictureId: number;
+  pictureId: string;
 
   @ApiProperty()
   @Column({ default: Role.USER })
   role: Role;
+
+  @ApiProperty()
+  @Column({ default: false })
+  premium: boolean;
 
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
@@ -124,4 +137,28 @@ export class UserEntity extends CommonEntity {
     notification => notification.notifier
   )
   notifications: NotificationEntity[];
+  
+  toDto(): UserDto {
+    const dto = new UserDto();
+    dto.id = this.id;
+    dto.email = this.email;
+    dto.username = this.username;
+    dto.firstname = this.firstname;
+    dto.lastname = this.lastname;
+    dto.birthdate = this.birthdate;
+    dto.biography = this.biography;
+    dto.location = this.location;
+    dto.role = this.role;
+    dto.picture = ImageService.readFile(ImageType.AVATAR, this.pictureId);
+    return dto;
+  }
+
+  toEntrantDto(): EntrantDto {
+    const dto = new EntrantDto();
+    dto.id = this.id;
+    dto.username = this.username;
+    dto.firstname = this.firstname;
+    dto.lastname = this.lastname;
+    return dto;
+  }
 }

@@ -12,11 +12,12 @@ import { UserModule } from 'src/user/user.module';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { EntryService } from '../entry/entry.service';
 import { EntryController } from '../entry/entry.controller';
+import { ImageService } from 'src/image/image.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EventEntity, UserEntity]), UserModule],
   controllers: [EventController, EntryController],
-  providers: [EventService, UserService, EntryService],
+  providers: [EventService, UserService, EntryService, ImageService],
   exports: [EventService]
 })
 export class EventModule { }
