@@ -29,6 +29,7 @@ import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
+import { RecognitionModule } from './recognition/recognition.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { PaymentModule } from './payment/payment.module';
     JwtCommonModule,
     PlantCollectionModule,
     AdminModule,
+    RecognitionModule,
     SensorModule,
     PaymentModule,
   ],
