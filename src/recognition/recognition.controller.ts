@@ -3,6 +3,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import * as FormData from 'form-data';
 import { catchError, map } from 'rxjs/operators';
+import { RecognitionDto } from 'src/common/dto/recognition.dto';
+import { Observable } from 'rxjs';
 
 enum Organ {
   LEAF = 'leaf',
@@ -23,7 +25,7 @@ export class RecognitionController {
    */
   @Post()
   @HttpCode(200)
-  recognize(@Body('image') image: string, @Body('organ') organ: Organ) {
+  recognize(@Body('image') image: string, @Body('organ') organ: Organ): Observable<RecognitionDto> {
     const form = new FormData();
     form.append('organs', organ);
     form.append('images', Buffer.from(image, 'base64'), { filename: 'plant.jpg' });
@@ -32,9 +34,13 @@ export class RecognitionController {
       form, { headers: form.getHeaders() })
       .pipe(
         map(res => {
-          return res.data.results[0].species.scientificNameWithoutAuthor; // Guessed Name of the recognized plant picture
+          return {
+            score: res.data.results[0].score, // Score of the recognition
+            name: res.data.results[0].species.scientificNameWithoutAuthor,  // Guessed Name of the recognized plant picture
+          };
         }),
         catchError((e) => {
+          console.log(e);
           throw new HttpException(e.response.data, e.response.status);
         })
       );
