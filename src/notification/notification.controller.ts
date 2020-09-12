@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Request, UseGuards, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards, Post, Body, Param } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -12,13 +12,18 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   // TODO: Debug purpose only
-  // @Post()
-  // create(@Body() notificationDto: CreateNotificationDto) {
-  //   return this.notificationService.create(notificationDto);
-  // }
+  @Post()
+  create(@Body() notificationDto: CreateNotificationDto) {
+    return this.notificationService.create(notificationDto);
+  }
 
   @Get('my')
   getAllByUser(@Request() request: Express.Request, @Query('skip') skip: number, @Query('take') take: number) {
     return this.notificationService.findAllByUser(request.user, {skip, take});
+  }
+
+  @Post('readNotifications')
+  readNotifications(@Request() request: Express.Request, @Body() notificationsId: number[]) {
+    return this.notificationService.readNotifications(notificationsId);
   }
 }

@@ -20,4 +20,8 @@ export class NotificationEntity extends CommonEntity {
     notifier => notifier.notifications
   )
   notifier: UserEntity
+
+  @ApiProperty()
+  @Column({default: false})
+  read: boolean;
 }
