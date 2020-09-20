@@ -82,6 +82,10 @@ export class UserEntity extends CommonEntity {
   @Column({ default: false })
   premium: boolean;
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  fcmToken: string;
+
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[]; // Plant ownn by user
