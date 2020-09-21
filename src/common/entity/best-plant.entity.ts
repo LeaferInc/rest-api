@@ -76,6 +76,7 @@ export class BestPlantEntity extends CommonEntity {
     dto.height = this.height;
     dto.price = this.price;
     dto.potting = this.potting;
+    dto.careTime = this.careTime;
     dto.luminosity = this.luminosity;
     dto.toxicity = this.toxicity;
     dto.picture = ImageService.readFile(ImageType.BEST_PLANT, this.pictureId);

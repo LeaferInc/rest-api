@@ -103,7 +103,9 @@ export class ImageService {
     let file: Buffer = null;
     try {
       file = fs.readFileSync(fullPath);
-    } catch (_) { }
+    } catch (_) { 
+      console.log(_);
+    }
 
     if (!file) return null;
 

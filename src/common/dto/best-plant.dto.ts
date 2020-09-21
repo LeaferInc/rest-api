@@ -20,7 +20,7 @@ export class BestPlantDto {
     price: number;
 
     @ApiProperty()
-    @IsNumber()
+    @IsEnum(PlantCareTime)
     careTime: PlantCareTime;
 
     @ApiProperty()
