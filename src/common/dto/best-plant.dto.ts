@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsBase64, IsNumber, IsNotEmpty, IsEnum } from "class-validator";
-import { PlantHeight, PlantLuminosity } from "../entity/best-plant.entity";
+import { PlantHeight, PlantLuminosity, PlantCareTime } from "../entity/best-plant.entity";
 
 export class BestPlantDto {
     @ApiProperty()
@@ -18,6 +18,10 @@ export class BestPlantDto {
     @ApiProperty()
     @IsNumber()
     price: number;
+
+    @ApiProperty()
+    @IsNumber()
+    careTime: PlantCareTime;
 
     @ApiProperty()
     @IsNumber()
