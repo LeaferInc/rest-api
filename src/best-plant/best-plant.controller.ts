@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Post, Body } from "@nestjs/common";
+import { UseGuards, Controller, Post, Body, HttpCode } from "@nestjs/common";
 import { BestPlantService } from "./best-plant.service";
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -16,6 +16,7 @@ export class BestPlantController {
    * @param criteria the form the user filled
    */
   @Post()
+  @HttpCode(200)
   determineBestPlant(@Body() criteria: FindBestPlantDto): Promise<BestPlantDto> {
     return this.bestPlantService.findBestPlant(criteria);
   }
