@@ -16,7 +16,7 @@ import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
-import { UserDto } from '../dto/user.dto';
+import { UserDto, EntrantDto } from '../dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
 import * as bcrypt from 'bcryptjs';
 
@@ -142,6 +142,15 @@ export class UserEntity extends CommonEntity {
     dto.location = this.location;
     dto.role = this.role;
     dto.picture = ImageService.readFile(ImageType.AVATAR, this.pictureId);
+    return dto;
+  }
+
+  toEntrantDto(): EntrantDto {
+    const dto = new EntrantDto();
+    dto.id = this.id;
+    dto.username = this.username;
+    dto.firstname = this.firstname;
+    dto.lastname = this.lastname;
     return dto;
   }
 }

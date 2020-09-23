@@ -29,6 +29,9 @@ import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
+import { RecognitionModule } from './recognition/recognition.module';
+import { BestPlantModule } from './best-plant/best-plant.module';
+import { BestPlantEntity } from './common/entity/best-plant.entity';
 
 @Module({
   imports: [
@@ -68,7 +71,8 @@ import { PaymentModule } from './payment/payment.module';
         RoomEntity,
         ParticipantEntity,
         PlantCollectionEntity,
-        SensorEntity
+        SensorEntity,
+        BestPlantEntity,
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -88,8 +92,10 @@ import { PaymentModule } from './payment/payment.module';
     JwtCommonModule,
     PlantCollectionModule,
     AdminModule,
+    RecognitionModule,
     SensorModule,
     PaymentModule,
+    BestPlantModule,
   ],
   controllers: [AppController],
   providers: [AppService],

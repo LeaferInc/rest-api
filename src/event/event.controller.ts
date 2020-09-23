@@ -58,11 +58,22 @@ export class EventController {
 
   /**
    * Returns the list of all joined events of a user
+   * @param req the request object
    */
   @Get('joined')
   @UseGuards(JwtAuthGuard)
   async getJoined(@Request() req: Express.Request): Promise<EventDto[]> {
     return (await this.eventService.findJoined(req.user.userId)).map((e: EventEntity) => e.toDto());
+  }
+
+  /**
+   * Returns all organized events
+   * @param req the request object
+   */
+  @Get('organized')
+  @UseGuards(JwtAuthGuard)
+  async getOrganized(@Request() req: Express.Request): Promise<EventDto[]> {
+    return (await this.eventService.findOrganized(req.user.userId)).map((e: EventEntity) => e.toDto());
   }
 
   /**
@@ -85,9 +96,13 @@ export class EventController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async createEvent(@Request() req: Express.Request, @Body() eventDto: CreateEventDto): Promise<EventDto> {
-    if (eventDto.startDate > eventDto.endDate) {
-      throw new BadRequestException('`startDate` is greater than `endDate`.');
+    if (new Date(eventDto.startDate) > new Date(eventDto.endDate)) {
+      throw new BadRequestException('`startDate` is greater than `endDate`');
     }
+    if (new Date(eventDto.startDate) < AppTime.now()) {
+      throw new BadRequestException('`startDate` cannot be in the past');
+    }
+
     return (await this.eventService.createOne(eventDto, req.user.userId)).toDto();
   }
 

@@ -83,6 +83,7 @@ export class EventEntity extends CommonEntity {
         dto.longitude = this.longitude;
         if (this.organizer) dto.organizer = this.organizer.id;
         if (this.joined != null) dto.joined = this.joined;
+        if (this.entrants != null) dto.entrants = this.entrants.map((user: UserEntity) => user.toEntrantDto());
         dto.picture = ImageService.readFile(ImageType.EVENT, this.pictureId);
         return dto;
     }
