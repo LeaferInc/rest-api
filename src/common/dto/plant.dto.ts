@@ -2,16 +2,16 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean, IsBase64 } from "class-validator";
 
 export enum Difficulty {
-  EASY = "facile",
-  MEDIUM = "moyen",
-  HARD = "difficile",
+  EASY = "easy",
+  MEDIUM = "medium",
+  HARD = "hard",
 }
 
 export enum Time {
-  HOUR = "heure",
-  DAY = "jour",
-  WEEK = "semaine",
-  MONTH = "mois",
+  HOUR = "hour",
+  DAY = "day",
+  WEEK = "week",
+  MONTH = "month",
 }
 
 export class CreatePlantDto {

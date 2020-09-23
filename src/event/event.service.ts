@@ -12,7 +12,6 @@ import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
 import { ImageService } from 'src/image/image.service';
 import { Pagination } from 'src/common/dto/query.dto';
-import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class EventService {
@@ -28,8 +27,8 @@ export class EventService {
      */
     async findAll(pagination?: Pagination): Promise<EventEntity[]> {
         const events = await this.eventRepository.find({
-            skip: pagination?.skip,
-            take: pagination?.take
+          skip: pagination?.skip,
+          take: pagination?.take
         });
         return events;
     }
@@ -69,15 +68,13 @@ export class EventService {
     }
 
     /**
-     * Finds closest events to the given coordinates
+     * Find closest events to the given coordinates
      * @param latitude latitude coordinate to compare
      * @param longitude longitude coordinate to compare
      */
     async findClosest(latitude: number, longitude: number): Promise<EventEntity[]> {
         const from = new GeoPosition(latitude, longitude);
-
-        // Only future events
-        const events: EventEntity[] = (await this.findAfterDate(AppTime.now()));
+        const events: EventEntity[] = (await this.findAll());
 
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);
@@ -96,27 +93,11 @@ export class EventService {
         if (!user) {
             throw new NotFoundException();
         }
-        user.joinedEvents.filter(event => event.startDate > AppTime.now())
-            .sort((a,b) => b.startDate.getTime() - a.startDate.getTime())
-            .map((event) => {
-                event.joined = true; // Indicate that event has been joined
-            });
-        return user.joinedEvents;
-    }
-
-    /**
-     * Returns all events organized by the given user
-     * @param userId the organizer's id
-     */
-    findOrganized(userId: number): Promise<EventEntity[]> {
-        return this.eventRepository.find({
-            where: [
-                { organizer: userId },
-            ],
-            order: {
-                startDate: 'DESC',
-            },
+        // Indicate that events have been join
+        user.joinedEvents.map((event) => {
+            event.joined = true;
         });
+        return user.joinedEvents;
     }
 
     /**
@@ -158,7 +139,7 @@ export class EventService {
     }
 
     eventCount() {
-        return this.eventRepository.count();
+      return this.eventRepository.count();
     }
 
     /**
@@ -167,7 +148,7 @@ export class EventService {
      * @param userId the id of the user requesting the deletion
      */
     async deleteEvent(eventId: number, userId: number): Promise<DeleteResult> {
-        const event = await this.findOne(eventId, { relations: ['organizer'] });
+        const event = await this.findOne(eventId, { relations: ['organizer']});
 
         // Not found
         if (!event) {
