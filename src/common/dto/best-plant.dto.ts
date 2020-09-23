@@ -1,3 +1,7 @@
+/**
+ * @author ddaninthe
+ */
+
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsBase64, IsNumber, IsNotEmpty, IsEnum } from "class-validator";
 import { PlantHeight, PlantLuminosity, PlantCareTime } from "../entity/best-plant.entity";
