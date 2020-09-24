@@ -16,6 +16,7 @@ import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
+import { NotificationEntity } from './notification.entity';
 import { UserDto, EntrantDto } from '../dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
 import * as bcrypt from 'bcryptjs';
@@ -81,6 +82,10 @@ export class UserEntity extends CommonEntity {
   @Column({ default: false })
   premium: boolean;
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  fcmToken: string;
+
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[]; // Plant ownn by user
@@ -130,6 +135,13 @@ export class UserEntity extends CommonEntity {
   )
   plantCollection: PlantCollectionEntity[];
 
+  @ApiProperty()
+  @OneToMany(
+    () => NotificationEntity,
+    notification => notification.notifier
+  )
+  notifications: NotificationEntity[];
+  
   toDto(): UserDto {
     const dto = new UserDto();
     dto.id = this.id;

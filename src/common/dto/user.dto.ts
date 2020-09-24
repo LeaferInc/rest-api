@@ -88,6 +88,10 @@ export class UpdateUserDto {
   @IsBase64()
   @IsOptional()
   picture?: string;
+
+  @IsString()
+  @IsOptional()
+  fcmToken?: string;
 }
 
 export class UserDto {

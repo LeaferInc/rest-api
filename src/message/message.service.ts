@@ -11,6 +11,8 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { MessageGateway } from 'src/message/message.gateway';
 import { ParticipantEntity } from 'src/common/entity/participant.entity';
 import { v4 as uuid } from 'uuid';
+import { NotificationService } from 'src/notification/notification.service';
+import { TypeNotification } from 'src/common/entity/notification.entity';
 
 @Injectable()
 export class MessageService {
@@ -22,6 +24,7 @@ export class MessageService {
     private roomService: RoomService,
     private participantService: ParticipantService,
     private messageGateway: MessageGateway,
+    private notificationService: NotificationService,
   ) {}
 
   async create(createMessageDto: CreateMessageDto, userId: number): Promise<MessageEntity> {
@@ -73,6 +76,15 @@ export class MessageService {
     message.user = await this.userService.findOneById(userId);
     // Send message to socket
     this.messageGateway.addMessageExternal(message);
+
+    // Notification
+    this.notificationService.create({
+      type: TypeNotification.NEW_CONVERSATION,
+      title: 'Nouveau message',
+      content: `${message.user.username} vous a contacté`,
+      href: `/chat/${message.room.id}`,
+      notifier_id: createDiscussionMessageDto.receiverId
+    });
 
     return this.messageRepository.save(message);
   }

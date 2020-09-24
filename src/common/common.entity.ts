@@ -5,7 +5,7 @@
 import { Column } from "typeorm";
 
 export abstract class CommonEntity {
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @Column('timestamp without time zone', { default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
     
     @Column({ default: true })
