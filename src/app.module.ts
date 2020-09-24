@@ -29,6 +29,10 @@ import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
+import { SensorDataController } from './sensor-data/sensor-data.controller';
+import { SensorDataService } from './sensor-data/sensor-data.service';
+import { SensorDataModule } from './sensor-data/sensor-data.module';
+import { SensorDataEntity } from './common/entity/sensor-data.entity';
 
 @Module({
   imports: [
@@ -68,7 +72,8 @@ import { PaymentModule } from './payment/payment.module';
         RoomEntity,
         ParticipantEntity,
         PlantCollectionEntity,
-        SensorEntity
+        SensorEntity,
+        SensorDataEntity
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -89,6 +94,7 @@ import { PaymentModule } from './payment/payment.module';
     PlantCollectionModule,
     AdminModule,
     SensorModule,
+    SensorDataModule,
     PaymentModule,
   ],
   controllers: [AppController],

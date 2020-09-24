@@ -11,7 +11,7 @@ export class SensorService {
   constructor(
     @InjectRepository(SensorEntity)
     private sensorRepository: Repository<SensorEntity>,
-    private plantCollectionService: PlantCollectionService
+    private plantCollectionService: PlantCollectionService,
   ) { }
 
   async create(sensorDto: CreateSensorDto, user: Express.User): Promise<SensorEntity> {
@@ -29,26 +29,33 @@ export class SensorService {
     sensor = new SensorEntity();
     const plantCollectionEntity: PlantCollectionEntity = await this.plantCollectionService.findById(sensorDto.plantCollectionId);
     sensor.plantCollection = plantCollectionEntity;
-    sensor.humidity = 0;
     return this.sensorRepository.save(sensor);
   }
 
-  async update(updateSensorDto: UpdateSensorDto, user: Express.User): Promise<SensorEntity> {
-    const sensorEntity = await this.sensorRepository.findOne({
-      where: {
-        plantCollection: {
-          id: updateSensorDto.plantCollectionId
-        }
-      }
-    });
-    await this.sensorRepository.update(sensorEntity.id, { humidity: updateSensorDto.humidity });
-    return this.sensorRepository.findOne(sensorEntity.id);
-  }
+  // async update(updateSensorDto: UpdateSensorDto, user: Express.User): Promise<SensorEntity> {
+  //   const sensorEntity = await this.sensorRepository.findOne({
+  //     where: {
+  //       plantCollection: {
+  //         id: updateSensorDto.plantCollectionId
+  //       }
+  //     }
+  //   });
+  //   await this.sensorRepository.update(sensorEntity.id, { humidity: updateSensorDto.humidity });
+  //   return this.sensorRepository.findOne(sensorEntity.id);
+  // }
 
   async getSensorByPlantCollectionId(userId: number, plantCollectionId: number): Promise<SensorEntity> {
     return this.sensorRepository.findOne({
       where: {
         plantCollection: { id: plantCollectionId }
+      }
+    });
+  }
+
+  async findById(sensorId: number): Promise<SensorEntity> {
+    return this.sensorRepository.findOne({
+      where: {
+        id: sensorId
       }
     });
   }

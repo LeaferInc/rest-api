@@ -16,10 +16,10 @@ export class SensorController {
     return this.sensorService.create(sensorDto, request.user);
   }
 
-  @Put()
-  update(@Request() request: Express.Request, @Body() sensorDto: UpdateSensorDto) {
-    return this.sensorService.update(sensorDto, request.user);
-  }
+  // @Put()
+  // update(@Request() request: Express.Request, @Body() sensorDto: UpdateSensorDto) {
+  //   return this.sensorService.update(sensorDto, request.user);
+  // }
 
   @Get('findByCollectionId')
   findByPlantCollection(@Request() request: Express.Request, @Query('plantCollectionId') plantCollectionId: number) {
