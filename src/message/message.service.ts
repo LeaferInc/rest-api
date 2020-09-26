@@ -78,7 +78,8 @@ export class MessageService {
     // this.messageGateway.addMessageExternal(message);
     this.messageGateway.newDiscussion(
       message.user,
-      await this.userService.findOneById(createDiscussionMessageDto.receiverId)
+      await this.userService.findOneById(createDiscussionMessageDto.receiverId),
+      room.id
     );
 
     // Notification

@@ -140,8 +140,8 @@ export class MessageGateway
     this.server.to(String(message.room.id)).emit('messageServerToClient', message);
   }
 
-  async newDiscussion(sender: UserEntity, receiver: UserEntity) {
+  async newDiscussion(sender: UserEntity, receiver: UserEntity, roomId: number) {
     this.logger.log(`New discussion created by ${sender.username} with ${receiver.username}`);
-    this.server.to(String(this.userStore[receiver.id].clientId)).emit('newDiscussion', sender);
+    this.server.to(String(this.userStore[receiver.id].clientId)).emit('newDiscussion', Object.assign(sender, { roomId: roomId }));
   }
 }
