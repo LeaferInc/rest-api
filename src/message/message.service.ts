@@ -75,7 +75,11 @@ export class MessageService {
     message.room = room;
     message.user = await this.userService.findOneById(userId);
     // Send message to socket
-    this.messageGateway.addMessageExternal(message);
+    // this.messageGateway.addMessageExternal(message);
+    this.messageGateway.newDiscussion(
+      message.user,
+      await this.userService.findOneById(createDiscussionMessageDto.receiverId)
+    );
 
     // Notification
     this.notificationService.create({
