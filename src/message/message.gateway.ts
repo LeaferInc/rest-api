@@ -16,6 +16,7 @@ import { MessageEntity } from 'src/common/entity/message.entity';
 import { WsExceptionFilterExtended } from './gateway.filter';
 import { JwtService } from '@nestjs/jwt';
 import { WsJwtGuard } from './ws-jwt-guard.guard';
+import { UserEntity } from 'src/common/entity/user.entity';
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -137,5 +138,10 @@ export class MessageGateway
     // Message
     this.logger.log(`Client ${message.user.username} make a message with content '${message.messageContent}' in room ${message.room.id}`);
     this.server.to(String(message.room.id)).emit('messageServerToClient', message);
+  }
+
+  async newDiscussion(sender: UserEntity, receiver: UserEntity, roomId: number) {
+    this.logger.log(`New discussion created by ${sender.username} with ${receiver.username}`);
+    this.server.to(String(this.userStore[receiver.id].clientId)).emit('newDiscussion', Object.assign(sender, { roomId: roomId }));
   }
 }

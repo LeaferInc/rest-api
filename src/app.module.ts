@@ -25,6 +25,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { JwtCommonModule } from './jwt-common/jwt-common.module';
 import { PlantCollectionModule } from './plant-collection/plant-collection.module';
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
+import { NotificationModule } from './notification/notification.module';
+import { NotificationEntity } from './common/entity/notification.entity';
 import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
@@ -33,6 +35,9 @@ import { SensorDataController } from './sensor-data/sensor-data.controller';
 import { SensorDataService } from './sensor-data/sensor-data.service';
 import { SensorDataModule } from './sensor-data/sensor-data.module';
 import { SensorDataEntity } from './common/entity/sensor-data.entity';
+import { RecognitionModule } from './recognition/recognition.module';
+import { BestPlantModule } from './best-plant/best-plant.module';
+import { BestPlantEntity } from './common/entity/best-plant.entity';
 
 @Module({
   imports: [
@@ -74,6 +79,8 @@ import { SensorDataEntity } from './common/entity/sensor-data.entity';
         PlantCollectionEntity,
         SensorEntity,
         SensorDataEntity
+        BestPlantEntity,
+        NotificationEntity,
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -92,10 +99,13 @@ import { SensorDataEntity } from './common/entity/sensor-data.entity';
     RoomModule,
     JwtCommonModule,
     PlantCollectionModule,
+    NotificationModule,
     AdminModule,
+    RecognitionModule,
     SensorModule,
     SensorDataModule,
     PaymentModule,
+    BestPlantModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,6 +11,7 @@ import { ParticipantService } from 'src/participant/participant.service';
 import { MessageGateway } from './message.gateway';
 import { CreateMessageDto } from 'src/common/dto/message.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
+import { NotificationService } from 'src/notification/notification.service';
 
 describe('MessageService', () => {
   let messageService: MessageService;
@@ -65,6 +66,10 @@ describe('MessageService', () => {
           provide: MessageGateway,
           useValue: messageGatewayMock,
         },
+        {
+          provide: NotificationService,
+          useValue: {},
+        }
       ],
     }).compile();
 

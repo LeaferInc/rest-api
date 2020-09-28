@@ -72,6 +72,9 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Request() req: Express.Request, @Param('id') id: string): Promise<DeleteResult> {
+    if(req.user.userId === Number(id)) {
+      throw new BadRequestException("Vous ne pouvez pas vous supprimer vous même");
+    }
     return this.userService.removeById(id);
   }
 }
