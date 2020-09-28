@@ -31,8 +31,6 @@ import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
-import { SensorDataController } from './sensor-data/sensor-data.controller';
-import { SensorDataService } from './sensor-data/sensor-data.service';
 import { SensorDataModule } from './sensor-data/sensor-data.module';
 import { SensorDataEntity } from './common/entity/sensor-data.entity';
 import { RecognitionModule } from './recognition/recognition.module';
@@ -78,7 +76,7 @@ import { BestPlantEntity } from './common/entity/best-plant.entity';
         ParticipantEntity,
         PlantCollectionEntity,
         SensorEntity,
-        SensorDataEntity
+        SensorDataEntity,
         BestPlantEntity,
         NotificationEntity,
       ],
