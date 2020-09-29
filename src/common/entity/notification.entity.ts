@@ -16,7 +16,7 @@ export class NotificationEntity extends CommonEntity {
 
   @ApiProperty()
   @Column()
-  type: TypeNotification
+  type: TypeNotification; 
 
   @ApiProperty()
   @Column()
@@ -35,7 +35,7 @@ export class NotificationEntity extends CommonEntity {
     () => UserEntity,
     notifier => notifier.notifications
   )
-  notifier: UserEntity
+  notifier: UserEntity;
 
   @ApiProperty()
   @Column({default: false})

@@ -20,13 +20,23 @@ export class SensorDataEntity extends CommonEntity {
 
     @ApiProperty()
     @Column()
-    humidity: number;
+    groundHumidity: number;
+
+    @ApiProperty()
+    @Column()
+    airHumidity: number;
+
+    @ApiProperty()
+    @Column()
+    temperature: number;
 
     toDto(): SensorDataDto {
         const dto = new SensorDataDto();
         dto.id = this.id;
         dto.createAt = this.createdAt;
-        dto.humidity = this.humidity;
+        dto.groundHumidity = this.groundHumidity;
+        dto.airHumidity = this.airHumidity;
+        dto.temperature = this.temperature;
         dto.sensorId = this.sensorId;
         return dto;
     }

@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SensorEntity } from 'src/common/entity/sensor.entity';
 import { Repository } from 'typeorm';
-import { CreateSensorDto, UpdateSensorDto } from 'src/common/dto/sensor.dto';
+import { CreateSensorDto, SensorDto } from 'src/common/dto/sensor.dto';
 import { PlantCollectionEntity } from 'src/common/entity/plant-collection.entity';
 import { PlantCollectionService } from 'src/plant-collection/plant-collection.service';
+import { ResultData } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class SensorService {
@@ -58,5 +59,14 @@ export class SensorService {
         id: sensorId
       }
     });
+  }
+
+  async findAll(): Promise<ResultData<SensorDto>> {
+    const[items, count] = await this.sensorRepository.findAndCount({
+      where: {
+        enabled: true
+      }
+    });
+    return {items: items.map((s: SensorEntity) => s.toDto()), count}
   }
 }

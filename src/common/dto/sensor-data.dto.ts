@@ -8,12 +8,22 @@ export class CreateSensorDataDto{
 
     @ApiProperty()
     @IsNumber()
-    humidity: number;
+    groundHumidity: number;
+
+    @ApiProperty()
+    @IsNumber()
+    airHumidity: number;
+
+    @ApiProperty()
+    @IsNumber()
+    temperature: number;
 }
 
 export class SensorDataDto{
     createAt: Date;
     id: number;
-    humidity: number;
+    groundHumidity: number;
+    airHumidity: number;
+    temperature: number;
     sensorId: number;
 }

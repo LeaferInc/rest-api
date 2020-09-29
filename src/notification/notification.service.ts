@@ -9,6 +9,10 @@ import { Pagination } from 'src/common/dto/query.dto';
 import { NotificationGateway } from './notification.gateway';
 import { CronExpression, Cron } from '@nestjs/schedule';
 import * as firebase from 'firebase-admin';
+import { bool } from '@hapi/joi';
+import { SensorDataService } from 'src/sensor-data/sensor-data.service';
+import { PlantCollectionService } from 'src/plant-collection/plant-collection.service';
+import { SensorService } from 'src/sensor/sensor.service';
 
 @Injectable()
 export class NotificationService implements OnModuleInit {
@@ -18,6 +22,7 @@ export class NotificationService implements OnModuleInit {
   constructor(
     @InjectRepository(NotificationEntity) private readonly notificationRepository: Repository<NotificationEntity>, 
     private userService: UserService,
+    private sensorService: SensorService,
     private notificationGateway: NotificationGateway,
   ) { 
     // this.create({ content: 'Test Socket', notifier_id: 1 });
@@ -87,8 +92,11 @@ export class NotificationService implements OnModuleInit {
   }
 
   @Cron(CronExpression.EVERY_10_MINUTES)
-  triggerNotifications() {
-
+  async triggerNotifications() {
+    const sensorList = await this.sensorService.findAll();
+    sensorList.items.forEach(sensor => {
+      
+    });
   }
 
 }
