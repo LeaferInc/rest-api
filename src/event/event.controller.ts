@@ -40,7 +40,7 @@ export class EventController {
    * @param params a dto which can have several properties depending on the search
    */
   @Get('search')
-  async searchEventsByDate(@Query() params: EventSearchDto): Promise<EventDto[]> {
+  async searchEvents(@Query() params: EventSearchDto): Promise<EventDto[]> {
     let res: EventEntity[];
     if (params.keywords) {
       res = await this.eventService.findByKeywords(params.keywords);

@@ -10,18 +10,16 @@ import { CreateEventDto } from '../common/dto/event.dto';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GeoPosition } from 'geo-position.ts';
-import { ImageService } from 'src/image/image.service';
 import { Pagination } from 'src/common/dto/query.dto';
 import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class EventService {
     private static readonly LIMIT = 30;
-    private static readonly MAX_METER_DISTANCE = 1000;
+    private static readonly MAX_METER_DISTANCE = 10000;
 
     constructor(@InjectRepository(EventEntity) private readonly eventRepository: Repository<EventEntity>,
-        private userService: UserService,
-        private imageService: ImageService) { }
+        private userService: UserService,) { }
 
     /**
      * Return all the Events
@@ -77,7 +75,7 @@ export class EventService {
         const from = new GeoPosition(latitude, longitude);
 
         // Only future events
-        const events: EventEntity[] = (await this.findAfterDate(AppTime.now()));
+        const events: EventEntity[] = await this.findAfterDate(AppTime.now());
 
         return events.filter((event => {
             const eventPosition = new GeoPosition(event.latitude, event.longitude);

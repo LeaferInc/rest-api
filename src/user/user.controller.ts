@@ -8,6 +8,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { ResultData } from 'src/common/dto/query.dto';
 import { AppTime } from 'src/common/app.time';
+import { ImageService, ImageType } from 'src/image/image.service';
 
 @Controller('user')
 export class UserController {
@@ -23,14 +24,18 @@ export class UserController {
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('all')
   findAll(@Query('skip') skip: number, @Query('take') take: number): Promise<ResultData<UserEntity>> {
-    return this.userService.findAll({skip, take});
+    return this.userService.findAll({ skip, take });
   }
 
   @ApiBearerAuth()
   @Get('talkto')
   @UseGuards(JwtAuthGuard)
-  getTalkTo(@Request() req: Express.Request): Promise<UserEntity[]> {
-    return this.userService.getTalkTo(req.user.userId);
+  async getTalkTo(@Request() req: Express.Request): Promise<any> {
+    return (await this.userService.getTalkTo(req.user.userId))
+      .map((user: any) => {
+        user.picture = ImageService.readFile(ImageType.AVATAR, user.pictureId);
+        return user;
+      });
   }
 
   @ApiBearerAuth()
@@ -72,7 +77,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Request() req: Express.Request, @Param('id') id: string): Promise<DeleteResult> {
-    if(req.user.userId === Number(id)) {
+    if (req.user.userId === Number(id)) {
       throw new BadRequestException("Vous ne pouvez pas vous supprimer vous même");
     }
     return this.userService.removeById(id);

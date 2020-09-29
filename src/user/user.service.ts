@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { UserEntity } from 'src/common/entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult, FindManyOptions, FindOneOptions, getManager } from 'typeorm';
+import { Repository, DeleteResult, FindOneOptions, getManager } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from 'src/common/dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
 import { Pagination, ResultData } from 'src/common/dto/query.dto';
