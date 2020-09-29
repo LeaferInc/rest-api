@@ -53,9 +53,14 @@ export class CreatePlantDto {
   exposure: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  humidity: string;
+  humidityMin: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  humidityMax: number;
 
   @ApiProperty()
   @IsString()
@@ -82,7 +87,8 @@ export class PlantDto {
   wateringFrequencySpringToSummer: Time;
   wateringFrequencyAutumnToWinter: Time;
   exposure: string;
-  humidity: string;
+  humidityMin: number;
+  humidityMax: number;
   potting: string;
   toxicity: boolean;
   owner: number;
