@@ -38,8 +38,8 @@ export class PlantCollectionEntity extends CommonEntity {
   plantId: number;
 
   @ApiProperty()
-  @OneToOne(() => SensorEntity)
-  sensor: SensorEntity
+  @OneToOne(() => SensorEntity, sensor => sensor.plantCollection)
+  sensor: SensorEntity;
 
   toDto(): PlantCollectionDto{
     const dto = new PlantCollectionDto();

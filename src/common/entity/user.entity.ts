@@ -5,7 +5,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-  BeforeInsert
+  BeforeInsert, OneToOne
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
@@ -20,6 +20,7 @@ import { NotificationEntity } from './notification.entity';
 import { UserDto, EntrantDto } from '../dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
 import * as bcrypt from 'bcryptjs';
+import { NotificationMessageEntity } from './notification-message.entity';
 
 export enum Role {
   USER,
@@ -141,6 +142,9 @@ export class UserEntity extends CommonEntity {
     notification => notification.notifier
   )
   notifications: NotificationEntity[];
+
+  @OneToOne(() => NotificationMessageEntity)
+  notificationMessage: NotificationMessageEntity;
   
   toDto(): UserDto {
     const dto = new UserDto();
