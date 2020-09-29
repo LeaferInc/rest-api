@@ -47,7 +47,11 @@ export class PlantEntity extends CommonEntity {
 
   @ApiProperty()
   @Column({ nullable: true })
-  humidity: string;
+  humidityMin: number;
+
+  @ApiProperty()
+  @Column({ nullable: true })
+  humidityMax: number;
 
   @ApiProperty()
   @Column({ nullable: true })
@@ -80,7 +84,8 @@ export class PlantEntity extends CommonEntity {
     const dto = new PlantDto();
     dto.id = this.id;
     dto.name = this.name;
-    dto.humidity = this.humidity;
+    dto.humidityMin = this.humidityMin;
+    dto.humidityMax = this.humidityMax;
     dto.height = this.height;
     dto.difficulty = this.difficulty;
     dto.toxicity = this.toxicity;

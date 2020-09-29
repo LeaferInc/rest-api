@@ -10,3 +10,10 @@ export class CreateSensorDataDto{
     @IsNumber()
     humidity: number;
 }
+
+export class SensorDataDto{
+    createAt: Date;
+    id: number;
+    humidity: number;
+    sensorId: number;
+}
