@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { PlantService } from 'src/plant/plant.service';
 import { ResultData } from 'src/common/dto/query.dto';
+import { PlantCollectionDto } from 'src/common/dto/plant-collection.dto';
 
 @Injectable()
 export class PlantCollectionService {
@@ -60,6 +61,11 @@ export class PlantCollectionService {
     return this.plantCollectionRepository.findAndCount({
       where: { user: { id: userId } }
     });
+  }
+
+  async findAll(): Promise<ResultData<PlantCollectionDto>> {
+    const[items, count] = await this.plantCollectionRepository.findAndCount();
+    return {items: items.map((p: PlantCollectionEntity) => p.toDto()), count}
   }
 
   async deleteByPlantId(plantId: number) {

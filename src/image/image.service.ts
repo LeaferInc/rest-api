@@ -104,7 +104,6 @@ export class ImageService {
     try {
       file = fs.readFileSync(fullPath);
     } catch (_) { 
-      console.log(_);
     }
 
     if (!file) return null;

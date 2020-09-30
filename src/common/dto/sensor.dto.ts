@@ -7,12 +7,7 @@ export class CreateSensorDto {
   plantCollectionId: number;
 }
 
-export class UpdateSensorDto {
-  @ApiProperty()
-  @IsNumber()
+export class SensorDto {
+  id: number;
   plantCollectionId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  humidity: number;
 }

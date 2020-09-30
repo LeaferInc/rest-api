@@ -2,7 +2,7 @@ import { Controller, UseGuards, Post, Body, Request, Put, Get, Query } from '@ne
 import { SensorService } from './sensor.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CreateSensorDto, UpdateSensorDto } from 'src/common/dto/sensor.dto';
+import { CreateSensorDto } from 'src/common/dto/sensor.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
