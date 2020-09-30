@@ -143,7 +143,7 @@ export class NotificationService implements OnModuleInit {
         const newNotif = new CreateNotificationDto();
         newNotif.title = "Alerte Plante";
         newNotif.content = notifContent;
-        newNotif.href = "#";
+        newNotif.href = "/plant/garden";
         newNotif.notifier_id = res[index]["userId"];
         newNotif.type = TypeNotification.PLANT_ALERT;
         console.log(newNotif);
