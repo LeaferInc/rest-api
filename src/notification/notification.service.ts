@@ -136,8 +136,6 @@ export class NotificationService implements OnModuleInit {
       const lastNotifDate = new Date(res[index]["last_notif_date"]);
       const maxDate = AppTime.now();
       maxDate.setMinutes(maxDate.getMinutes() - 5);
-      console.log("maxDate : " + maxDate.toLocaleString());
-      console.log("lastNotifDate : " + lastNotifDate.toLocaleString());
       if(lastNotifDate == null || lastNotifDate < maxDate){
         const notifContent = res[index]["plant_name"] + " a besoin d'attention !";
         const newNotif = new CreateNotificationDto();
@@ -146,7 +144,6 @@ export class NotificationService implements OnModuleInit {
         newNotif.href = "/plant/garden";
         newNotif.notifier_id = res[index]["userId"];
         newNotif.type = TypeNotification.PLANT_ALERT;
-        console.log(newNotif);
         this.create(newNotif);
       }
     });
