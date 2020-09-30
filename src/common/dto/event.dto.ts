@@ -3,10 +3,11 @@
  */
 
 import { EventEntity } from '../entity/event.entity';
-import { IsString, IsNumber, IsDateString, IsBase64 } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsBase64, Min, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AppTime } from '../app.time';
 import { ImageService, ImageType } from 'src/image/image.service';
+import { EntrantDto } from './user.dto';
 
 export class EventDto {
   id: number;
@@ -21,36 +22,44 @@ export class EventDto {
   longitude: number;
   organizer: number;
   joined?: boolean;
-  picture: string;  
+  picture: string;
+  entrants: EntrantDto[];
 }
 
 export class CreateEventDto {
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
   location: string;
 
   @ApiProperty()
   @IsDateString()
+  @IsNotEmpty()
   startDate: Date;
 
   @ApiProperty()
   @IsDateString()
+  @IsNotEmpty()
   endDate: Date;
 
   @ApiProperty()
   @IsNumber()
+  @Min(0)
   price: number;
 
   @ApiProperty()
   @IsNumber()
+  @Min(1)
   maxPeople: number;
 
   @ApiProperty()
@@ -63,6 +72,7 @@ export class CreateEventDto {
 
   @ApiProperty()
   @IsBase64()
+  @IsNotEmpty()
   picture: string;
 
   toEntity(): EventEntity {

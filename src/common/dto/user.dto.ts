@@ -1,24 +1,27 @@
-import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum, IsBase64 } from "class-validator";
+import { IsEmail, IsString, IsDateString, IsNumber, IsArray, IsBoolean, IsOptional, IsEnum, IsBase64, IsNotEmpty } from "class-validator";
 import { Role } from "../entity/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   username: string;
 
   @IsString()
+  @IsNotEmpty()
   password: string;
 
-  @IsOptional()
   @IsString()
-  firstname?: string;
+  @IsNotEmpty()
+  firstname: string;
 
-  @IsOptional()
   @IsString()
-  lastname?: string;
+  @IsNotEmpty()
+  lastname: string;
 
   @IsOptional()
   @IsDateString()
@@ -54,6 +57,13 @@ export class CreateUserDto {
   }
 }
 
+export class EntrantDto {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+}
+
 export class UpdateUserDto {
   @IsString()
   @IsOptional()
@@ -78,6 +88,10 @@ export class UpdateUserDto {
   @IsBase64()
   @IsOptional()
   picture?: string;
+
+  @IsString()
+  @IsOptional()
+  fcmToken?: string;
 }
 
 export class UserDto {

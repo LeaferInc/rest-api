@@ -12,6 +12,7 @@ import { RoomModule } from 'src/room/room.module';
 import { MessageGateway } from './message.gateway';
 import { JwtCommonModule } from 'src/jwt-common/jwt-common.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from 'src/auth/auth.module';
     ParticipantModule,
     RoomModule,
     JwtCommonModule,
+    NotificationModule,
   ],
   providers: [MessageService, MessageGateway],
   controllers: [MessageController],

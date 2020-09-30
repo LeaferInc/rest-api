@@ -1,9 +1,10 @@
 import { CommonEntity } from "../common.entity";
-import { ManyToOne, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { ManyToOne, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, RelationId } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { UserEntity } from "./user.entity";
 import { PlantEntity } from "./plant.entity";
 import { SensorEntity } from "./sensor.entity";
+import { PlantCollectionDto } from "../dto/plant-collection.dto";
 
 @Entity({ name: 'plant_collection' })
 export class PlantCollectionEntity extends CommonEntity {
@@ -21,6 +22,10 @@ export class PlantCollectionEntity extends CommonEntity {
   user: UserEntity
 
   @ApiProperty()
+  @RelationId((plantCollection: PlantCollectionEntity) => plantCollection.user)
+  userId: number;
+
+  @ApiProperty()
   @ManyToOne(
     () => PlantEntity,
     plant => plant.users,
@@ -29,6 +34,18 @@ export class PlantCollectionEntity extends CommonEntity {
   plant: PlantEntity
 
   @ApiProperty()
-  @OneToOne(() => SensorEntity)
-  sensor: SensorEntity
+  @RelationId((plantCollection: PlantCollectionEntity) => plantCollection.plant)
+  plantId: number;
+
+  @ApiProperty()
+  @OneToOne(() => SensorEntity, sensor => sensor.plantCollection)
+  sensor: SensorEntity;
+
+  toDto(): PlantCollectionDto{
+    const dto = new PlantCollectionDto();
+    dto.id = this.id;
+    dto.plantId = this.plantId;
+    dto.userId = this.plantId;
+    return dto;
+  }
 }

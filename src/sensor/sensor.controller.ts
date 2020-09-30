@@ -2,7 +2,7 @@ import { Controller, UseGuards, Post, Body, Request, Put, Get, Query } from '@ne
 import { SensorService } from './sensor.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CreateSensorDto, UpdateSensorDto } from 'src/common/dto/sensor.dto';
+import { CreateSensorDto } from 'src/common/dto/sensor.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -16,10 +16,10 @@ export class SensorController {
     return this.sensorService.create(sensorDto, request.user);
   }
 
-  @Put()
-  update(@Request() request: Express.Request, @Body() sensorDto: UpdateSensorDto) {
-    return this.sensorService.update(sensorDto, request.user);
-  }
+  // @Put()
+  // update(@Request() request: Express.Request, @Body() sensorDto: UpdateSensorDto) {
+  //   return this.sensorService.update(sensorDto, request.user);
+  // }
 
   @Get('findByCollectionId')
   findByPlantCollection(@Request() request: Express.Request, @Query('plantCollectionId') plantCollectionId: number) {

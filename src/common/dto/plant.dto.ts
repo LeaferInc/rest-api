@@ -2,16 +2,16 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNumber, IsEnum, IsOptional, IsBoolean, IsBase64 } from "class-validator";
 
 export enum Difficulty {
-  EASY = "easy",
-  MEDIUM = "medium",
-  HARD = "hard",
+  EASY = "facile",
+  MEDIUM = "moyen",
+  HARD = "difficile",
 }
 
 export enum Time {
-  HOUR = "hour",
-  DAY = "day",
-  WEEK = "week",
-  MONTH = "month",
+  HOUR = "heure",
+  DAY = "jour",
+  WEEK = "semaine",
+  MONTH = "mois",
 }
 
 export class CreatePlantDto {
@@ -53,9 +53,14 @@ export class CreatePlantDto {
   exposure: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  humidity: string;
+  humidityMin: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  humidityMax: number;
 
   @ApiProperty()
   @IsString()
@@ -82,7 +87,8 @@ export class PlantDto {
   wateringFrequencySpringToSummer: Time;
   wateringFrequencyAutumnToWinter: Time;
   exposure: string;
-  humidity: string;
+  humidityMin: number;
+  humidityMax: number;
   potting: string;
   toxicity: boolean;
   owner: number;

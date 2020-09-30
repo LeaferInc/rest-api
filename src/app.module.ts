@@ -25,10 +25,19 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { JwtCommonModule } from './jwt-common/jwt-common.module';
 import { PlantCollectionModule } from './plant-collection/plant-collection.module';
 import { PlantCollectionEntity } from './common/entity/plant-collection.entity';
+import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
 import { SensorModule } from './sensor/sensor.module';
 import { SensorEntity } from './common/entity/sensor.entity';
 import { PaymentModule } from './payment/payment.module';
+import { SensorDataModule } from './sensor-data/sensor-data.module';
+import { SensorDataEntity } from './common/entity/sensor-data.entity';
+import { RecognitionModule } from './recognition/recognition.module';
+import { BestPlantModule } from './best-plant/best-plant.module';
+import { BestPlantEntity } from './common/entity/best-plant.entity';
+import { NotificationAlertEntity } from './common/entity/notification-alert.entity';
+import { NotificationMessageEntity } from './common/entity/notification-message.entity';
+import { NotificationEntity } from './common/entity/notification.entity';
 
 @Module({
   imports: [
@@ -68,7 +77,12 @@ import { PaymentModule } from './payment/payment.module';
         RoomEntity,
         ParticipantEntity,
         PlantCollectionEntity,
-        SensorEntity
+        SensorEntity,
+        SensorDataEntity,
+        BestPlantEntity,
+        NotificationEntity,
+        NotificationAlertEntity,
+        NotificationMessageEntity,
       ],
       // synchronize: process.env.NODE_ENV === 'development' ? true : false,
       synchronize: true, // disable this when release
@@ -87,9 +101,13 @@ import { PaymentModule } from './payment/payment.module';
     RoomModule,
     JwtCommonModule,
     PlantCollectionModule,
+    NotificationModule,
     AdminModule,
+    RecognitionModule,
     SensorModule,
+    SensorDataModule,
     PaymentModule,
+    BestPlantModule,
   ],
   controllers: [AppController],
   providers: [AppService],

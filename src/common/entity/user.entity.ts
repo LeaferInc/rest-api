@@ -5,7 +5,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-  BeforeInsert
+  BeforeInsert, OneToOne
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { CommonEntity } from '../common.entity';
@@ -16,9 +16,11 @@ import { ParticipantEntity } from './participant.entity';
 import { PlantEntity } from './plant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { PlantCollectionEntity } from './plant-collection.entity';
-import { UserDto } from '../dto/user.dto';
+import { NotificationEntity } from './notification.entity';
+import { UserDto, EntrantDto } from '../dto/user.dto';
 import { ImageService, ImageType } from 'src/image/image.service';
 import * as bcrypt from 'bcryptjs';
+import { NotificationMessageEntity } from './notification-message.entity';
 
 export enum Role {
   USER,
@@ -81,6 +83,10 @@ export class UserEntity extends CommonEntity {
   @Column({ default: false })
   premium: boolean;
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  fcmToken: string;
+
   @ApiProperty({ type: () => [PlantEntity] })
   @OneToMany(() => PlantEntity, plant => plant.owner)
   plants: PlantEntity[]; // Plant ownn by user
@@ -130,6 +136,16 @@ export class UserEntity extends CommonEntity {
   )
   plantCollection: PlantCollectionEntity[];
 
+  @ApiProperty()
+  @OneToMany(
+    () => NotificationEntity,
+    notification => notification.notifier
+  )
+  notifications: NotificationEntity[];
+
+  @OneToOne(() => NotificationMessageEntity)
+  notificationMessage: NotificationMessageEntity;
+  
   toDto(): UserDto {
     const dto = new UserDto();
     dto.id = this.id;
@@ -142,6 +158,15 @@ export class UserEntity extends CommonEntity {
     dto.location = this.location;
     dto.role = this.role;
     dto.picture = ImageService.readFile(ImageType.AVATAR, this.pictureId);
+    return dto;
+  }
+
+  toEntrantDto(): EntrantDto {
+    const dto = new EntrantDto();
+    dto.id = this.id;
+    dto.username = this.username;
+    dto.firstname = this.firstname;
+    dto.lastname = this.lastname;
     return dto;
   }
 }
