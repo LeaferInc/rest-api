@@ -51,8 +51,8 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<UserEntity> {
-    return this.userService.findOneById(id);
+  async findOne(@Param('id') id: number): Promise<UserDto> {
+    return (await this.userService.findOneById(id)).toDto();
   }
 
   /**

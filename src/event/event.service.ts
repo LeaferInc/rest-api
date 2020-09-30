@@ -94,12 +94,15 @@ export class EventService {
     if (!user) {
       throw new NotFoundException();
     }
-    user.joinedEvents.filter(event => event.startDate > AppTime.now())
+    
+    const events = user.joinedEvents.filter(event => event.startDate > AppTime.now())
       .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
-      .map((event) => {
+      .map<EventEntity>((event) => {
         event.joined = true; // Indicate that event has been joined
+        return event;
       });
-    return user.joinedEvents;
+
+    return events;
   }
 
   /**
