@@ -1,3 +1,18 @@
+# [1.6.0](https://github.com/LeaferInc/rest-api/compare/v1.5.0...v1.6.0) (2020-09-30)
+
+
+### Bug Fixes
+
+* **appmodule:** fix app module import and comma ([3616cfe](https://github.com/LeaferInc/rest-api/commit/3616cfeb56cb34f34de96cd7d72bb623ca25d689))
+* **chat:** fix roomid undefined ([17611a0](https://github.com/LeaferInc/rest-api/commit/17611a0552ff41b139983f397a2d066e5f888152))
+* **notification:** comment useless route ([5cb6314](https://github.com/LeaferInc/rest-api/commit/5cb631412946e60b1cdc44a2eeb8a23ed33f0263))
+
+
+### Features
+
+* **notification:** add simple notification to the app ([8b607d3](https://github.com/LeaferInc/rest-api/commit/8b607d32f46ccc6aa737eecf2ef27f3a42aebef9))
+* **sensor:** add sensor backend ([8640eeb](https://github.com/LeaferInc/rest-api/commit/8640eeb037d9fee2ea09481d824329633686a443))
+
 # [1.5.0](https://github.com/LeaferInc/rest-api/compare/v1.4.0...v1.5.0) (2020-07-12)
 
 
