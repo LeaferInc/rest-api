@@ -9,9 +9,11 @@ import { NotificationGateway } from './notification.gateway';
 import { CronExpression, Cron } from '@nestjs/schedule';
 import * as firebase from 'firebase-admin';
 import { SensorService } from 'src/sensor/sensor.service';
-import { NotificationEntity } from 'src/common/entity/notification.entity';
+import { NotificationEntity, TypeNotification } from 'src/common/entity/notification.entity';
 import { NotificationAlertEntity } from 'src/common/entity/notification-alert.entity';
 import { NotificationMessageEntity } from 'src/common/entity/notification-message.entity';
+import { nextTick } from 'process';
+import { AppTime } from 'src/common/app.time';
 
 @Injectable()
 export class NotificationService implements OnModuleInit {
@@ -108,10 +110,16 @@ export class NotificationService implements OnModuleInit {
     "     GROUP BY sensor_id " +
     "  ) last_by_created_at ON s.id = last_by_created_at.sensor_id " +
     ") " +
-    "SELECT s.* " +
+    "SELECT s.\"id\" as id_sensor, s.\"plant_collection_id\", last_record_sensor.\"userId\", last_notif.\"created_at\" as last_notif_date, p.name as plant_name " +
     "FROM last_record_sensor " +
     "INNER JOIN \"plant\" p ON last_record_sensor.\"plantId\" = p.id " +
     "INNER JOIN \"sensor\" s ON last_record_sensor.\"sensorId\" = s.id " +
+    "LEFT JOIN ( " +
+    "  SELECT notifier_id, MAX(created_at) as \"created_at\" " +
+    "  FROM notification " +
+    "  WHERE type = 1 " +
+    "  GROUP BY notifier_id " +
+    ") last_notif ON last_record_sensor.\"userId\" = last_notif.notifier_id " +
     "INNER JOIN \"sensor_data\" sd ON ( " +
     "  sd.sensor_id = last_record_sensor.\"sensorId\" " +
     "  AND sd.created_at = last_record_sensor.created_at " +
@@ -124,6 +132,23 @@ export class NotificationService implements OnModuleInit {
     "     OR ground_humidity > humidity_max " +
     "  ); "
     );
-    console.log(res);
+    res.forEach((element, index) => {
+      const lastNotifDate = new Date(res[index]["last_notif_date"]);
+      const maxDate = AppTime.now();
+      maxDate.setMinutes(maxDate.getMinutes() - 5);
+      console.log("maxDate : " + maxDate.toLocaleString());
+      console.log("lastNotifDate : " + lastNotifDate.toLocaleString());
+      if(lastNotifDate == null || lastNotifDate < maxDate){
+        const notifContent = res[index]["plant_name"] + " a besoin d'attention !";
+        const newNotif = new CreateNotificationDto();
+        newNotif.title = "Alerte Plante";
+        newNotif.content = notifContent;
+        newNotif.href = "#";
+        newNotif.notifier_id = res[index]["userId"];
+        newNotif.type = TypeNotification.PLANT_ALERT;
+        console.log(newNotif);
+        this.create(newNotif);
+      }
+    });
   }
 }

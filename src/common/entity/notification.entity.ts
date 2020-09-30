@@ -6,7 +6,8 @@ import { NotificationAlertEntity } from "./notification-alert.entity";
 import { NotificationMessageEntity } from "./notification-message.entity";
 
 export enum TypeNotification {
-  NEW_CONVERSATION
+  NEW_CONVERSATION,
+  PLANT_ALERT
 }
 
 @Entity({ name: 'notification' })
