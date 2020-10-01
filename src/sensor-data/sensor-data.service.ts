@@ -6,7 +6,7 @@ import { SensorDto } from 'src/common/dto/sensor.dto';
 import { SensorDataEntity } from 'src/common/entity/sensor-data.entity';
 import { SensorEntity } from 'src/common/entity/sensor.entity';
 import { SensorService } from 'src/sensor/sensor.service';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, getRepository, Repository } from 'typeorm';
 
 @Injectable()
 export class SensorDataService {
@@ -26,10 +26,10 @@ export class SensorDataService {
         return this.sensorDataRepository.save(sensorData);
     }
 
-    async getDataFromId(sensor: SensorDto, user: Express.User): Promise<ResultData<SensorDataDto>> {
+    async getDataFromId(sensorId: number, user: Express.User): Promise<ResultData<SensorDataDto>> {
         const queryOptions: FindManyOptions<SensorDataEntity> = {
             where: {
-                sensorId: sensor.id
+                sensorId: sensorId
             },
             order: {
                 createdAt: "ASC"
@@ -37,6 +37,17 @@ export class SensorDataService {
         };
         const[items, count] = await this.sensorDataRepository.findAndCount(queryOptions);
         return {items: items.map((s: SensorDataEntity) => s.toDto()), count};
+    }
+
+    getAllDataByUser(userId: number) {
+      return getRepository(SensorDataEntity)
+        .createQueryBuilder('sd')
+        .innerJoin('sd.sensor', 'sensor')
+        .innerJoin('sensor.plantCollection', 'pc')
+        .innerJoin('pc.user', 'user')
+        .where('user.id = :userId', { userId: userId })
+        .orderBy('sd.createdAt', 'ASC')
+        .getMany();
     }
 
     async getLastDataFromId(sensor: SensorDto, user: Express.User): Promise<SensorDataDto> {

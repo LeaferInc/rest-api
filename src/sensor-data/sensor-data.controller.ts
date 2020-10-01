@@ -1,4 +1,4 @@
-import { Body, Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Body, Controller, Request, Post, UseGuards, Get, Query, Param } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateSensorDataDto } from 'src/common/dto/sensor-data.dto';
@@ -18,9 +18,14 @@ export class SensorDataController {
         return this.sensorDataService.create(sensorDataDto, request.user);
     }
 
-    @Get('all')
-    getDataById(@Request() request: Express.Request, @Body() sensorDto: SensorDto) {
-        return this.sensorDataService.getDataFromId(sensorDto, request.user);
+    @Get('all/:id')
+    getDataById(@Request() request: Express.Request, @Param('sensorId') sensorId: number) {
+        return this.sensorDataService.getDataFromId(sensorId, request.user);
+    }
+
+    @Get('allByUser')
+    getAllDataByUser(@Request() request: Express.Request) {
+      return this.sensorDataService.getAllDataByUser(request.user.userId);
     }
 
     @Get('last')
