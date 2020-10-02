@@ -1,3 +1,11 @@
+# [1.7.0](https://github.com/LeaferInc/rest-api/compare/v1.6.0...v1.7.0) (2020-10-02)
+
+
+### Features
+
+* **chart:** add chart ([9c295df](https://github.com/LeaferInc/rest-api/commit/9c295df7f0ff2e1c948fa6869974f08a7c7b6cdb))
+* **chart:** add chart live update ([df1f4da](https://github.com/LeaferInc/rest-api/commit/df1f4da1ce6eb97bf5b0ebc79796b535a6f538c1))
+
 # [1.6.0](https://github.com/LeaferInc/rest-api/compare/v1.5.0...v1.6.0) (2020-09-30)
 
 
