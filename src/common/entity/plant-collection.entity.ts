@@ -19,7 +19,7 @@ export class PlantCollectionEntity extends CommonEntity {
     user => user.plantCollection,
     { onDelete: 'CASCADE' }
   )
-  user: UserEntity
+  user: UserEntity;
 
   @ApiProperty()
   @RelationId((plantCollection: PlantCollectionEntity) => plantCollection.user)

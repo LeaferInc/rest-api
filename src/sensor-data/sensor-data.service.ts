@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResultData } from 'src/common/dto/query.dto';
 import { CreateSensorDataDto, SensorDataDto } from 'src/common/dto/sensor-data.dto';
@@ -7,23 +7,30 @@ import { SensorDataEntity } from 'src/common/entity/sensor-data.entity';
 import { SensorEntity } from 'src/common/entity/sensor.entity';
 import { SensorService } from 'src/sensor/sensor.service';
 import { FindManyOptions, FindOneOptions, getRepository, Repository } from 'typeorm';
+import { SensorDataGateway } from './sensor-data.gateway';
 
 @Injectable()
 export class SensorDataService {
     constructor(
         @InjectRepository(SensorDataEntity)
         private sensorDataRepository: Repository<SensorDataEntity>,
-        private sensorService: SensorService
+        private sensorService: SensorService,
+        private sensorDataGateway: SensorDataGateway,
     ) { }
 
     async create(sensorDataDto: CreateSensorDataDto, user: Express.User): Promise<SensorDataEntity> {
         let sensorData = new SensorDataEntity();
         const sensorEntity: SensorEntity = await this.sensorService.findById(sensorDataDto.sensorId);
+        if(!sensorEntity) {
+          throw new BadRequestException("Sensor not found");
+        }
         sensorData.sensor = sensorEntity;
         sensorData.groundHumidity = sensorDataDto.groundHumidity;
         sensorData.airHumidity = sensorDataDto.airHumidity;
         sensorData.temperature = sensorDataDto.temperature;
-        return this.sensorDataRepository.save(sensorData);
+        const sensorDataSaved = await this.sensorDataRepository.save(sensorData);
+        this.sensorDataGateway.sendSensorData(sensorDataSaved);
+        return sensorDataSaved;
     }
 
     async getDataFromId(sensorId: number, user: Express.User): Promise<ResultData<SensorDataDto>> {

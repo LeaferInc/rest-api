@@ -1,19 +1,19 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SensorGateway } from './sensor.gateway';
+import { SensorDataGateway } from './sensor-data.gateway';
 
 describe('SensorGateway', () => {
-  let gateway: SensorGateway;
+  let gateway: SensorDataGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SensorGateway,
+        SensorDataGateway,
         { provide: JwtService, useValue: {} }
       ],
     }).compile();
 
-    gateway = module.get<SensorGateway>(SensorGateway);
+    gateway = module.get<SensorDataGateway>(SensorDataGateway);
   });
 
   it('should be defined', () => {
