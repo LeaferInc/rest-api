@@ -12,10 +12,11 @@ import { NotificationEntity } from 'src/common/entity/notification.entity';
 import { JwtService } from '@nestjs/jwt';
 import { Server } from 'socket.io';
 
-function getKey(map, val) {
-  return Object.keys(map).find(key => map[key] === val);
+function getKey(map: Map<number, string>, val: string) {
+  return [...map.entries()]
+    .filter(({ 1: v }) => v === val)
+    .map(([k]) => k);
 }
-
 @WebSocketGateway({
   namespace: 'notification',
   handlePreflightRequest: (req, res) => {

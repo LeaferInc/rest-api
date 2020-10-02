@@ -68,6 +68,17 @@ export class PlantCollectionService {
     return {items: items.map((p: PlantCollectionEntity) => p.toDto()), count}
   }
 
+  findBySensor(sensorId: number) {
+    return this.plantCollectionRepository.findOne({
+      relations: ['sensor'],
+      where: {
+        sensor: {
+          id: sensorId
+        }
+      }
+    });
+  }
+
   async deleteByPlantId(plantId: number) {
     //TODO: need security
     return this.plantCollectionRepository.delete({

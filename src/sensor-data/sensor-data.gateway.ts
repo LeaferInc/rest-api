@@ -2,10 +2,15 @@ import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from '@nestjs/websockets';
 import { Socket } from 'dgram';
-import { Server } from 'http';
+import { Server } from 'socket.io';
+import { SensorDataEntity } from 'src/common/entity/sensor-data.entity';
+import { PlantCollectionService } from 'src/plant-collection/plant-collection.service';
+import { UserService } from 'src/user/user.service';
 
-function getKey(map, val) {
-  return Object.keys(map).find(key => map[key] === val);
+function getKey(map: Map<number, string>, val: string) {
+  return [...map.entries()]
+    .filter(({ 1: v }) => v === val)
+    .map(([k]) => k);
 }
 
 @WebSocketGateway({
@@ -20,9 +25,9 @@ function getKey(map, val) {
     res.end();
   },
 })
-export class SensorGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class SensorDataGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
-  private readonly logger = new Logger(SensorGateway.name);
+  private readonly logger = new Logger(SensorDataGateway.name);
 
   @WebSocketServer()
   server: Server;
@@ -30,7 +35,9 @@ export class SensorGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   private userStore = new Map<number, string>();
 
   constructor(
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private plantCollectionService: PlantCollectionService,
+    private userService: UserService,
   ) {}
 
   afterInit(server: any) {
@@ -63,7 +70,12 @@ export class SensorGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.userStore.delete(userId);
   }
 
-  async sendSensorData(data: any) {
-    this.logger.log(`Send sensor data ${data}`);
+  async sendSensorData(data: SensorDataEntity) {
+    this.logger.log(
+      `Send sensor data with : ground humidity ${data.groundHumidity} - air humidity ${data.airHumidity} - temperature ${data.temperature}`
+    );
+    const plantCollectionEntity = await this.plantCollectionService.findById(data.sensor.plantCollectionId);
+    const userEntity = await this.userService.findOneById(plantCollectionEntity.userId);
+    this.server.to(String(this.userStore.get(userEntity.id))).emit('newSensorData', data);
   }
 }
