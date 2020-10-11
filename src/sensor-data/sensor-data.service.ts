@@ -25,6 +25,9 @@ export class SensorDataService {
         if(!sensorEntity) {
           throw new BadRequestException("Sensor not found");
         }
+        if(!sensorEntity.enabled){
+          throw new BadRequestException("Sensor disabled");
+        }
         sensorData.sensor = sensorEntity;
         sensorData.groundHumidity = sensorDataDto.groundHumidity;
         sensorData.airHumidity = sensorDataDto.airHumidity;

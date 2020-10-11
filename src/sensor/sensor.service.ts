@@ -25,6 +25,10 @@ export class SensorService {
     });
 
     if (sensor) {
+      if(!sensor.enabled){
+        sensor.enabled = true;
+        return this.sensorRepository.save(sensor);
+      }
       return sensor;
     }
     sensor = new SensorEntity();
@@ -68,5 +72,16 @@ export class SensorService {
       }
     });
     return {items: items.map((s: SensorEntity) => s.toDto()), count}
+  }
+
+  async desync(sensordId: number): Promise<SensorEntity> {
+    let sensor = await this.sensorRepository.findOne({
+      where:{
+        id: sensordId,
+        enabled: true
+      }
+    });
+    sensor.enabled = false;
+    return this.sensorRepository.save(sensor);
   }
 }

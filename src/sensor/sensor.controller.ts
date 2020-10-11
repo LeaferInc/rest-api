@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Request, Put, Get, Query } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Request, Put, Get, Query, Param } from '@nestjs/common';
 import { SensorService } from './sensor.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -24,6 +24,11 @@ export class SensorController {
   @Get('findByCollectionId')
   findByPlantCollection(@Request() request: Express.Request, @Query('plantCollectionId') plantCollectionId: number) {
     return this.sensorService.getSensorByPlantCollectionId(request.user.userId, plantCollectionId);
+  }
+
+  @Put('desync/:sensorId')
+  desyncSensor(@Request() request: Express.Request, @Param('sensorId') sensorId: number) {
+    return this.sensorService.desync(sensorId);
   }
 
 }
