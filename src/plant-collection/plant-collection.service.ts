@@ -46,7 +46,7 @@ export class PlantCollectionService {
   async findByPlantAndUser(userId: number, plantId: number): Promise<PlantCollectionEntity> {
     try {
       return await this.plantCollectionRepository.findOneOrFail({
-        relations: ['user', 'plant'],
+        relations: ['user', 'plant', 'sensor', 'sensor.sensorData'],
         where: {
           user: { id: userId },
           plant: { id: plantId }
