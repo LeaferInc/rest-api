@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/LeaferInc/rest-api/compare/v1.7.0...v1.7.1) (2020-10-28)
+
+
+### Bug Fixes
+
+* **clean:** clean a little ([4755309](https://github.com/LeaferInc/rest-api/commit/4755309454371a86e65c4e4ebb6e4c500f38aa83))
+
 # [1.7.0](https://github.com/LeaferInc/rest-api/compare/v1.6.0...v1.7.0) (2020-10-02)
 
 
