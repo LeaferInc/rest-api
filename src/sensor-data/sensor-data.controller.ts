@@ -24,8 +24,8 @@ export class SensorDataController {
     }
 
     @Get('allByUser')
-    getAllDataByUser(@Request() request: Express.Request) {
-      return this.sensorDataService.getAllDataByUser(request.user.userId);
+    getAllDataByUser(@Request() request: Express.Request, @Query('start') start?: Date, @Query('end') end?: Date) {
+      return this.sensorDataService.getAllDataByUser(request.user.userId, start, end);
     }
 
     @Get('last')
