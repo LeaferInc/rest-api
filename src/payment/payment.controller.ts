@@ -8,7 +8,6 @@ import { PaymentService } from './payment.service';
 export class PaymentController implements OnModuleInit {
 
   private readonly logger = new Logger(PaymentController.name); 
-
   private stripe: Stripe;
 
   constructor(
