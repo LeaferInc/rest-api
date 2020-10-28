@@ -1,12 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isValid } from 'date-fns';
 import { ResultData } from 'src/common/dto/query.dto';
 import { CreateSensorDataDto, SensorDataDto } from 'src/common/dto/sensor-data.dto';
 import { SensorDto } from 'src/common/dto/sensor.dto';
 import { SensorDataEntity } from 'src/common/entity/sensor-data.entity';
 import { SensorEntity } from 'src/common/entity/sensor.entity';
 import { SensorService } from 'src/sensor/sensor.service';
-import { FindManyOptions, FindOneOptions, getRepository, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, getRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { SensorDataGateway } from './sensor-data.gateway';
 
 @Injectable()
@@ -23,6 +24,9 @@ export class SensorDataService {
         const sensorEntity: SensorEntity = await this.sensorService.findById(sensorDataDto.sensorId);
         if(!sensorEntity) {
           throw new BadRequestException("Sensor not found");
+        }
+        if(!sensorEntity.enabled){
+          throw new BadRequestException("Sensor disabled");
         }
         sensorData.sensor = sensorEntity;
         sensorData.groundHumidity = sensorDataDto.groundHumidity;
@@ -46,13 +50,18 @@ export class SensorDataService {
         return {items: items.map((s: SensorDataEntity) => s.toDto()), count};
     }
 
-    getAllDataByUser(userId: number) {
-      return getRepository(SensorDataEntity)
+    getAllDataByUser(userId: number, start?: Date, end?: Date) {
+      const query: SelectQueryBuilder<SensorDataEntity> = getRepository(SensorDataEntity)
         .createQueryBuilder('sd')
         .innerJoin('sd.sensor', 'sensor')
         .innerJoin('sensor.plantCollection', 'pc')
         .innerJoin('pc.user', 'user')
-        .where('user.id = :userId', { userId: userId })
+        .where('user.id = :userId', { userId: userId });
+
+      if(start && isValid(start)) query.andWhere('sd.createdAt >= :start', { start });
+      if(end && isValid(end)) query.andWhere('sd.createdAt <= :end', { end });
+
+      return query
         .orderBy('sd.createdAt', 'ASC')
         .getMany();
     }

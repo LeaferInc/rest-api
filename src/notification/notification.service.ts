@@ -130,7 +130,8 @@ export class NotificationService implements OnModuleInit {
     "  AND ( " +
     "     ground_humidity < humidity_min " +
     "     OR ground_humidity > humidity_max " +
-    "  ); "
+    "  ) " +
+    "  AND s.enabled = true; "
     );
     res.forEach((element, index) => {
       const lastNotifDate = new Date(res[index]["last_notif_date"]);
